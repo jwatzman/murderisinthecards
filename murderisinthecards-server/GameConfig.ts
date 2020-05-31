@@ -16,3 +16,9 @@ export enum Rooms {
 	LIBRARY = 'Library',
 	KITCHEN = 'Kitchen',
 }
+
+export enum PlayPhase {
+	SETUP,
+	MOVEMENT,
+	SUGGESTION_RESOLUTION,
+}
