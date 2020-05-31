@@ -1,9 +1,9 @@
-import { Room, Client } from "colyseus";
-import { Schema, type, MapSchema } from "@colyseus/schema";
-import * as GameConfig from "./GameConfig";
+import { Room, Client } from 'colyseus';
+import { Schema, type, MapSchema } from '@colyseus/schema';
+import * as GameConfig from './GameConfig';
 
 export class Player extends Schema {
-	@type("number")
+	@type('number')
 	numMessages = 0;
 }
 
@@ -35,7 +35,7 @@ export class MyRoom extends Room<State> {
 		console.log('Room created', options);
 		this.setState(new State());
 
-		this.onMessage("sendtestchat", (client, message) => {
+		this.onMessage('sendtestchat', (client, message) => {
 			const sessionId = client.sessionId;
 			console.log('Got testchat from', sessionId, ':', message);
 			this.state.messageReceived(sessionId);
