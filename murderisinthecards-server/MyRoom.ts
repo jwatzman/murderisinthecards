@@ -1,5 +1,6 @@
 import { Room, Client } from "colyseus";
 import { Schema, type, MapSchema } from "@colyseus/schema";
+import * as GameConfig from "./GameConfig";
 
 export class Player extends Schema {
 	@type("number")
