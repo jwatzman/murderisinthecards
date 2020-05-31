@@ -12,17 +12,17 @@ export class State extends Schema {
 	@type({ map: Player })
 	players = new MapSchema<Player>();
 
-	createPlayer(id: string) {
+	createPlayer(id: string): void {
 		console.log('Creating player', id);
 		this.players[id] = new Player();
 	}
 
-	removePlayer(id: string) {
+	removePlayer(id: string): void {
 		console.log('Removing player', id);
 		delete this.players[id];
 	}
 
-	messageReceived(id: string) {
+	messageReceived(id: string): void {
 		this.players[id].numMessages++;
 		console.log('Player', id, 'has now sent', this.players[id].numMessages);
 	}
@@ -31,7 +31,7 @@ export class State extends Schema {
 
 export class MyRoom extends Room<State> {
 
-	onCreate(options: any) {
+	onCreate(options: any): void {
 		console.log('Room created', options);
 		this.setState(new State());
 
@@ -44,21 +44,21 @@ export class MyRoom extends Room<State> {
 
 	}
 
-	onJoin(client: Client, options: any) {
+	onJoin(client: Client, _options: any): void {
 		const sessionId = client.sessionId;
 		console.log('Join', sessionId);
 		this.state.createPlayer(sessionId);
 		this.broadcast('receivetestchat', `${sessionId} joined.`);
 	}
 
-	onLeave(client: Client, consented: boolean) {
+	onLeave(client: Client, _consented: boolean): void {
 		const sessionId = client.sessionId;
 		console.log('Leave', sessionId);
 		this.state.removePlayer(sessionId);
 		this.broadcast('receivetestchat', `${sessionId} left.`);
 	}
 
-	onDispose() {
+	onDispose(): void {
 		console.log('Room disposed');
 	}
 
