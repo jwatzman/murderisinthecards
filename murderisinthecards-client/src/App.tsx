@@ -1,12 +1,17 @@
 import * as Colyseus from "colyseus.js";
 import React from 'react';
 
+type Player = {numMessages: number};
+type State = {players: {[id: string]: Player}};
+
 const MessageContext = React.createContext<string[]>([]);
 const SendMessageContext = React.createContext<(m:string) => void>(undefined!);
+const StateContext = React.createContext<State | null>(null);
 
 function App() {
 	const [room, setRoom] = React.useState<Colyseus.Room | null>(null);
 	const [messages, setMessages] = React.useState(['init message']);
+	const [state, setState] = React.useState(null);
 
 	React.useEffect(() => {
 		if (room) {
@@ -27,6 +32,10 @@ function App() {
 		room.onMessage('receivetestchat', message => {
 			setMessages(oldMessages => oldMessages.concat([message]));
 		});
+
+		room.onStateChange((newState) => {
+			setState(Object.assign({}, newState)); // XXX should be deep copy
+		});
 	}, [room]);
 
 	if (!room) {
@@ -41,8 +50,11 @@ function App() {
 	return (
 		<MessageContext.Provider value={messages}>
 			<SendMessageContext.Provider value={sendMessage}>
-				<MessageSend />
-				<MessageList />
+				<StateContext.Provider value={state}>
+					<MessageSend />
+					<MessageList />
+					<ConnectedPlayers />
+				</StateContext.Provider>
 			</SendMessageContext.Provider>
 		</MessageContext.Provider>
 	);
@@ -80,8 +92,29 @@ function MessageList() {
 	const messages = React.useContext(MessageContext);
 
 	return (
+		<ul>
+			{messages.map((message, n) => <li key={n}>{message}</li>)}
+		</ul>
+	);
+}
+
+function ConnectedPlayers() {
+	const state = React.useContext(StateContext);
+	if (!state) {
+		return null;
+	}
+
+	const players = state.players;
+	const playerList = Object.entries(players).map(([id, player]) => {
+		return <li key={id}>{id} has posted {player.numMessages} messages.</li>;
+	});
+
+	return (
 		<div>
-			{messages.map(message => <div>{message}</div>)}
+			Connected Players:
+			<ul>
+				{playerList}
+			</ul>
 		</div>
 	);
 }
