@@ -1,7 +1,7 @@
 import { Room, Client } from 'colyseus';
 
 import { GameState } from './GameState';
-import * as GameConfig from './GameConfig';
+import * as Consts from './Consts';
 
 export class GameRoom extends Room<GameState> {
 

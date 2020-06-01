@@ -1,6 +1,6 @@
 import * as Colyseus from 'colyseus.js';
 import React from 'react';
-import * as GameConfig from './GameConfig';
+import * as Consts from './Consts';
 
 type Player = {numMessages: number};
 type State = {players: {[id: string]: Player}};

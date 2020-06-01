@@ -1,1 +1,0 @@
-../../murderisinthecards-server/GameConfig.ts
