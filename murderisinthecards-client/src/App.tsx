@@ -2,12 +2,12 @@ import * as Colyseus from 'colyseus.js';
 import React from 'react';
 import * as Consts from './Consts';
 
-type Player = {numMessages: number};
-type State = {players: {[id: string]: Player}};
+type PlayerState = {suspect: Consts.Suspect, name: string};
+type GameState = {players: {[id: string]: PlayerState}, phase: Consts.PlayPhase};
 
 const MessageContext = React.createContext<string[]>([]);
 const SendMessageContext = React.createContext<(m:string) => void>(undefined!);
-const StateContext = React.createContext<State | null>(null);
+const StateContext = React.createContext<GameState | null>(null);
 
 function App() {
 	const [room, setRoom] = React.useState<Colyseus.Room | null>(null);
@@ -30,10 +30,6 @@ function App() {
 			return;
 		}
 
-		room.onMessage('receivetestchat', message => {
-			setMessages(oldMessages => oldMessages.concat([message]));
-		});
-
 		room.onStateChange((newState) => {
 			setState(Object.assign({}, newState)); // XXX should be deep copy
 		});
@@ -52,8 +48,7 @@ function App() {
 		<MessageContext.Provider value={messages}>
 			<SendMessageContext.Provider value={sendMessage}>
 				<StateContext.Provider value={state}>
-					<MessageSend />
-					<MessageList />
+					<SelectSuspect />
 					<ConnectedPlayers />
 				</StateContext.Provider>
 			</SendMessageContext.Provider>
@@ -61,42 +56,8 @@ function App() {
 	);
 }
 
-function MessageSend() {
-	const [message, setMessage] = React.useState('');
-	const sendMessage = React.useContext(SendMessageContext);
-
-	const handleSubmit = (evt: React.SyntheticEvent) => {
-		evt.preventDefault();
-		sendMessage(message);
-		setMessage('');
-	};
-
-	const handleChange = (evt: React.SyntheticEvent) => {
-		const target = evt.target as typeof evt.target & {
-			value: string;
-		};
-		setMessage(target.value);
-	}
-
-	return (
-		<form onSubmit={handleSubmit}>
-			<label>
-				Message:
-				<input type="text" value={message} onChange={handleChange} />
-			</label>
-			<input type="submit" value="Send" />
-		</form>
-	);
-}
-
-function MessageList() {
-	const messages = React.useContext(MessageContext);
-
-	return (
-		<ul>
-			{messages.map((message, n) => <li key={n}>{message}</li>)}
-		</ul>
-	);
+function SelectSuspect() {
+	return <div>TODO</div>;
 }
 
 function ConnectedPlayers() {
@@ -107,7 +68,11 @@ function ConnectedPlayers() {
 
 	const players = state.players;
 	const playerList = Object.entries(players).map(([id, player]) => {
-		return <li key={id}>{id} has posted {player.numMessages} messages.</li>;
+		if (!player.name || !player.suspect) {
+			return <li key={id}>New Player</li>;
+		}
+
+		return <li key={id}>{player.name} is... {player.suspect}!</li>;
 	});
 
 	return (

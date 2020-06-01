@@ -1,7 +1,7 @@
 import { Room, Client } from 'colyseus';
 
 import { GameState } from './GameState';
-import * as Consts from './Consts';
+import { ClientToServerMessage } from './Consts';
 
 export class GameRoom extends Room<GameState> {
 
@@ -9,11 +9,18 @@ export class GameRoom extends Room<GameState> {
 		console.log('Room created', options);
 		this.setState(new GameState());
 
-		this.onMessage('sendtestchat', (client, message) => {
+		this.onMessage(ClientToServerMessage.SELECT_SUSPECT, (client, suspect) => {
+			// TODO assert phase is setup
 			const sessionId = client.sessionId;
-			console.log('Got testchat from', sessionId, ':', message);
-			this.state.messageReceived(sessionId);
-			this.broadcast('receivetestchat', `${sessionId}: ${message}`);
+			console.log('Select suspect', sessionId, suspect);
+			this.state.getPlayer(sessionId).selectSuspect(suspect);
+		});
+
+		this.onMessage(ClientToServerMessage.SET_NAME, (client, name) => {
+			// TODO assert phase is setup
+			const sessionId = client.sessionId;
+			console.log('Set name', sessionId, name);
+			this.state.getPlayer(sessionId).setName(name);
 		});
 
 	}
