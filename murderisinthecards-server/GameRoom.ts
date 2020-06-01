@@ -1,39 +1,13 @@
 import { Room, Client } from 'colyseus';
-import { Schema, type, MapSchema } from '@colyseus/schema';
+
+import { GameState } from './GameState';
 import * as GameConfig from './GameConfig';
 
-export class Player extends Schema {
-	@type('number')
-	numMessages = 0;
-}
-
-export class State extends Schema {
-
-	@type({ map: Player })
-	players = new MapSchema<Player>();
-
-	createPlayer(id: string): void {
-		console.log('Creating player', id);
-		this.players[id] = new Player();
-	}
-
-	removePlayer(id: string): void {
-		console.log('Removing player', id);
-		delete this.players[id];
-	}
-
-	messageReceived(id: string): void {
-		this.players[id].numMessages++;
-		console.log('Player', id, 'has now sent', this.players[id].numMessages);
-	}
-
-}
-
-export class MyRoom extends Room<State> {
+export class GameRoom extends Room<GameState> {
 
 	onCreate(options: any): void {
 		console.log('Room created', options);
-		this.setState(new State());
+		this.setState(new GameState());
 
 		this.onMessage('sendtestchat', (client, message) => {
 			const sessionId = client.sessionId;
