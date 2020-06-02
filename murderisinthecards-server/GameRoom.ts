@@ -11,6 +11,7 @@ export class GameRoom extends Room<GameState> {
 
 		this.onMessage(ClientToServerMessage.SELECT_SUSPECT, (client, suspect) => {
 			// TODO assert phase is setup
+			// TODO assert no other player picked this suspect
 			const sessionId = client.sessionId;
 			console.log('Select suspect', sessionId, suspect);
 			this.state.getPlayer(sessionId).selectSuspect(suspect);
