@@ -24,7 +24,6 @@ export enum PlayPhase {
 }
 
 export enum ClientToServerMessage {
-	SELECT_SUSPECT = 'select_suspect',
-	SET_NAME = 'set_name',
+	PLAYER_SETUP = 'player_setup',
 	BEGIN_GAME = 'begin_game',
 }

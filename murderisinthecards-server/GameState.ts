@@ -8,7 +8,7 @@ export class PlayerState extends Schema {
 	@type('string')
 	name: string = null;
 
-	selectSuspect(suspect: Consts.Suspect): void {
+	setSuspect(suspect: Consts.Suspect): void {
 		this.suspect = suspect;
 	}
 

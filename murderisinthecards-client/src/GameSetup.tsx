@@ -21,8 +21,7 @@ function SelectSuspect() {
 
 	const submit = (e: React.SyntheticEvent) => {
 		e.preventDefault();
-		sendMessage(ClientToServerMessage.SET_NAME, name);
-		sendMessage(ClientToServerMessage.SELECT_SUSPECT, suspect);
+		sendMessage(ClientToServerMessage.PLAYER_SETUP, {name, suspect});
 	};
 
 	const changeName = (e: React.ChangeEvent<HTMLInputElement>) => {

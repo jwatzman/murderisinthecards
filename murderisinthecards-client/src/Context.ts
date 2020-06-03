@@ -5,5 +5,5 @@ import { GameState } from './GameState';
 
 export const GameStateContext = React.createContext<GameState | null>(null);
 export const SendMessageContext = React.createContext<
-	(ty: ClientToServerMessage, m: string) => void
+	(ty: ClientToServerMessage, m: any) => void
 >(undefined!);

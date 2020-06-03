@@ -34,7 +34,7 @@ function App() {
 		return <div>Connecting...</div>;
 	}
 
-	const sendMessage = (type: ClientToServerMessage, message: string) =>
+	const sendMessage = (type: ClientToServerMessage, message: any) =>
 		room.send(type, message);
 
 	return (
