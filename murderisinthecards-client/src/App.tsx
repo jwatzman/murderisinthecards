@@ -1,13 +1,15 @@
 import * as Colyseus from 'colyseus.js';
 import React from 'react';
 
-import { ClientToServerMessage } from './Consts';
+import { ClientToServerMessage, PlayPhase } from './Consts';
 import GameSetup from './GameSetup';
+import GamePlay from './GamePlay';
+import { GameState } from './GameState';
 import { GameStateContext, SendMessageContext } from './Context';
 
 function App() {
 	const [room, setRoom] = React.useState<Colyseus.Room | null>(null);
-	const [gameState, setGameState] = React.useState(null);
+	const [gameState, setGameState] = React.useState<GameState | null>(null);
 
 	React.useEffect(() => {
 		if (room) {
@@ -34,7 +36,7 @@ function App() {
 		});
 	}, [room]);
 
-	if (!room) {
+	if (!room || !gameState) {
 		return <div>Connecting...</div>;
 	}
 
@@ -42,12 +44,22 @@ function App() {
 		room.send(type, message);
 
 	return (
-		<GameStateContext.Provider value={gameState}>
-			<SendMessageContext.Provider value={sendMessage}>
-				<GameSetup />
-			</SendMessageContext.Provider>
-		</GameStateContext.Provider>
+		<SendMessageContext.Provider value={sendMessage}>
+			<GameStateContext.Provider value={gameState}>
+				<Game />
+			</GameStateContext.Provider>
+		</SendMessageContext.Provider>
 	);
+}
+
+function Game() {
+	const phase = React.useContext(GameStateContext).phase;
+	switch (phase) {
+		case PlayPhase.SETUP:
+			return <GameSetup />;
+		default:
+			return <GamePlay />;
+	}
 }
 
 export default App;

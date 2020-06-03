@@ -9,6 +9,7 @@ function GameSetup() {
 		<>
 			<SelectSuspect />
 			<ConnectedPlayers />
+			<BeginGame />
 		</>
 	);
 }
@@ -52,11 +53,8 @@ function SelectSuspect() {
 
 function ConnectedPlayers() {
 	const gameState = React.useContext(GameStateContext);
-	if (!gameState) {
-		return null;
-	}
-
 	const players = gameState.players;
+
 	const playerList = Object.entries(players).map(([id, player]) => {
 		if (!player.name || !player.suspect) {
 			return <li key={id}>New Player</li>;
@@ -73,6 +71,25 @@ function ConnectedPlayers() {
 			</ul>
 		</div>
 	);
+}
+
+function BeginGame() {
+	const gameState = React.useContext(GameStateContext);
+	const sendMessage = React.useContext(SendMessageContext);
+
+	let readyToBegin = true;
+	for (const player of Object.values(gameState.players)) {
+		if (!player.name || !player.suspect) {
+			readyToBegin = false;
+			break;
+		}
+	}
+
+	const start = () => {
+		sendMessage(ClientToServerMessage.BEGIN_GAME, null);
+	};
+
+	return <button disabled={!readyToBegin} onClick={start}>Begin Game</button>;
 }
 
 export default GameSetup;
