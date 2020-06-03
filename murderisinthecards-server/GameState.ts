@@ -3,27 +3,19 @@ import * as Consts from './Consts';
 
 export class PlayerState extends Schema {
 	@type('string')
-	suspect: Consts.Suspect = null;
+	public suspect: Consts.Suspect = null;
 
 	@type('string')
-	name: string = null;
-
-	setSuspect(suspect: Consts.Suspect): void {
-		this.suspect = suspect;
-	}
-
-	setName(name: string): void {
-		this.name = name;
-	}
+	public name: string = null;
 }
 
 export class GameState extends Schema {
 
 	@type({ map: PlayerState })
-	players = new MapSchema<PlayerState>();
+	private players = new MapSchema<PlayerState>();
 
 	@type('uint8')
-	phase = Consts.PlayPhase.SETUP;
+	public phase = Consts.PlayPhase.SETUP;
 
 	createPlayer(id: string): void {
 		console.log('Creating player', id);
@@ -37,6 +29,10 @@ export class GameState extends Schema {
 
 	getPlayer(id: string): PlayerState {
 		return this.players[id];
+	}
+
+	getAllPlayers(): PlayerState[] {
+		return Object.values(this.players);
 	}
 
 }

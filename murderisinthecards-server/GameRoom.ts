@@ -1,7 +1,7 @@
 import { Room, Client } from 'colyseus';
 
 import { GameState } from './GameState';
-import { ClientToServerMessage } from './Consts';
+import { ClientToServerMessage, PlayPhase } from './Consts';
 
 export class GameRoom extends Room<GameState> {
 
@@ -10,14 +10,33 @@ export class GameRoom extends Room<GameState> {
 		this.setState(new GameState());
 
 		this.onMessage(ClientToServerMessage.PLAYER_SETUP, (client, {name,suspect}) => {
-			// TODO assert phase is setup
-			// TODO assert no other player picked this suspect
 			const sessionId = client.sessionId;
 			console.log('Player setup', sessionId, name, suspect);
 
+			if (this.state.phase != PlayPhase.SETUP) {
+				client.error(
+					null,
+					'You can\'t select a name and suspect after the game has started!',
+				);
+				return;
+			}
+
+			// TODO: remove this restriction?
 			const player = this.state.getPlayer(sessionId);
-			player.setName(name);
-			player.setSuspect(suspect);
+			if (player.name && player.suspect) {
+				client.error(null, 'You\'ve already selected a name and suspect!');
+				return;
+			}
+
+			for (const otherPlayer of this.state.getAllPlayers()) {
+				if (otherPlayer.suspect == suspect) {
+					client.error(null, otherPlayer.name + ' already is ' + suspect);
+					return;
+				}
+			}
+
+			player.name = name;
+			player.suspect = suspect;
 		});
 
 	}

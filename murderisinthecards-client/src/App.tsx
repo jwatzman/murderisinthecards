@@ -28,6 +28,10 @@ function App() {
 		room.onStateChange((newState) => {
 			setGameState(Object.assign({}, newState)); // XXX should be deep copy
 		});
+
+		room.onError((_, message) => {
+			window.alert(message);
+		});
 	}, [room]);
 
 	if (!room) {
