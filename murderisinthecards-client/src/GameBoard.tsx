@@ -24,6 +24,7 @@ function BaseBoard() {
 			cols.push(<BaseBoardSquae coord={[x,y]} />);
 		}
 
+		// XXX should this be a table?
 		rows.push(<div>{cols}</div>);
 	}
 
@@ -43,17 +44,17 @@ function BaseBoardSquae({coord: [x,y]}: BaseBoardSquareProps) {
 
 		if (x >= minX && y >= minY && x <= maxX && y <= maxY) {
 			var borders = {} as React.CSSProperties;
-			if (x === minX) {
-				borders.borderTopColor = 'black';
+			if (x > minX) {
+				borders.borderTopColor = 'lightblue';
 			}
-			if (y === minY) {
-				borders.borderLeftColor = 'black';
+			if (y > minY) {
+				borders.borderLeftColor = 'lightblue';
 			}
-			if (x === maxX) {
-				borders.borderBottomColor = 'black';
+			if (x < maxX) {
+				borders.borderBottomColor = 'lightblue';
 			}
-			if (y === maxY) {
-				borders.borderRightColor = 'black';
+			if (y < maxY) {
+				borders.borderRightColor = 'lightblue';
 			}
 
 			const className = `${Styles.square} ${Styles.room}`;

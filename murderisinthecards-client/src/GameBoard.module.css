@@ -12,12 +12,12 @@
 
 .room {
 	background-color: lightblue;
-	border: 1px solid lightblue;
 }
 
 .roomLabel {
 	position: absolute;
-	top: 10px;
-	left: 0;
+	top: 4px;
+	left: 4px;
 	z-index: 1;
+	line-height: normal; /* XXX Is there a better way to do this? */
 }
