@@ -83,8 +83,9 @@ export class GameRoom extends Room<GameState> {
 		}
 
 		console.log('Begin game');
-		this.state.phase = PlayPhase.MOVEMENT;
-		// XXX who plays first? helper for next turn?
+		// XXX set up turn order? or does addPlayer do that?
+		// XXX helper for "next player begin turn"?
+		this.state.phase = PlayPhase.BEGIN_TURN;
 	}
 
 }

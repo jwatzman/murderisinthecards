@@ -1,4 +1,4 @@
-import { Schema, type, MapSchema } from '@colyseus/schema';
+import { Schema, type, ArraySchema, MapSchema } from '@colyseus/schema';
 import * as Consts from './Consts';
 
 export class PlayerState extends Schema {
@@ -16,6 +16,12 @@ export class GameState extends Schema {
 
 	@type('uint8')
 	public phase = Consts.PlayPhase.SETUP;
+
+	@type(['string'])
+	public turnOrder = new ArraySchema<string>();
+
+	@type('string')
+	public currentPlayer: string = null;
 
 	createPlayer(id: string): void {
 		console.log('Creating player', id);

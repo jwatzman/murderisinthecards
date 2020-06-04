@@ -19,6 +19,7 @@ export enum Room {
 
 export enum PlayPhase {
 	SETUP,
+	BEGIN_TURN,
 	MOVEMENT,
 	SUGGESTION_RESOLUTION,
 }
