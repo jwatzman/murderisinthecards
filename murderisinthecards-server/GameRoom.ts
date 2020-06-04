@@ -67,6 +67,7 @@ export class GameRoom extends Room<GameState> {
 
 		player.name = name;
 		player.suspect = suspect;
+		// TODO: set player initial location
 	}
 
 	private handleBeginGame(client: Client): void {

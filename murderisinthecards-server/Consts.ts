@@ -13,8 +13,8 @@ export enum Weapon {
 export enum Room {
 	GREENHOUSE = 'Greenhouse',
 	THEATER = 'Theater',
-	LIBRARY = 'Library',
-	KITCHEN = 'Kitchen',
+	//LIBRARY = 'Library',
+	//KITCHEN = 'Kitchen',
 }
 
 export enum PlayPhase {
@@ -28,3 +28,26 @@ export enum ClientToServerMessage {
 	PLAYER_SETUP = 'player_setup',
 	BEGIN_GAME = 'begin_game',
 }
+
+export type Coord = [number, number];
+type BoardConfigT = {
+	extent: Coord,
+	rooms: {[r in Room]: {
+		coords: [Coord, Coord],
+		doors: Coord[],
+	}},
+};
+
+export const BoardConfig: BoardConfigT = {
+	extent: [9,9],
+	rooms: {
+		[Room.GREENHOUSE]: {
+			coords: [[0,0],[2,2]],
+			doors: [[2,3]],
+		},
+		[Room.THEATER]: {
+			coords: [[9,8],[9,9]],
+			doors: [[9,7]],
+		},
+	},
+};

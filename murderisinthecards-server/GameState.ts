@@ -7,6 +7,12 @@ export class PlayerState extends Schema {
 
 	@type('string')
 	public name: string = null;
+
+	@type('uint8')
+	public x = 0;
+
+	@type('uint8')
+	public y = 0;
 }
 
 export class GameState extends Schema {
