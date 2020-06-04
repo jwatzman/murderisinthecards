@@ -28,6 +28,7 @@ function App() {
 		}
 
 		room.onStateChange((newState) => {
+			(window as any).debugGameState = newState;
 			setGameState(Object.assign({}, newState)); // XXX should be deep copy
 		});
 
