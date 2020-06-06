@@ -13,6 +13,9 @@ export class PlayerState extends Schema {
 
 	@type('uint8')
 	public y = 0;
+
+	@type('string')
+	public room: string = null;
 }
 
 export class GameState extends Schema {
@@ -28,6 +31,9 @@ export class GameState extends Schema {
 
 	@type('string')
 	public currentPlayer: string = null;
+
+	@type('int8')
+	public dieRoll = 0;
 
 	createPlayer(id: string): void {
 		console.log('Creating player', id);
