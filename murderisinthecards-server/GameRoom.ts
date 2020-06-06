@@ -87,9 +87,15 @@ export class GameRoom extends Room<GameState> {
 		}
 
 		console.log('Begin game');
-		// XXX set up turn order? or does addPlayer do that?
-		// XXX helper for "next player begin turn"?
+		// TODO: set up turn order
+		// TODO: shuffle cards
+		this.advanceTurn();
+	}
+
+	private advanceTurn(): void {
 		this.state.phase = PlayPhase.BEGIN_TURN;
+		// TODO: set currentPlayer from turn order
+		this.state.dieRoll = 0;
 	}
 
 }
