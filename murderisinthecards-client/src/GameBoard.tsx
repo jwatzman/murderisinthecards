@@ -1,75 +1,52 @@
 import React from 'react';
+import { $enum } from 'ts-enum-util';
 
-import { BoardConfig, BoardLayout, Coord } from './BoardLayout';
+import { BoardConfig  } from './BoardLayout';
+import { Room } from './Consts';
 
 import Styles from './GameBoard.module.css';
 
 export default function GameBoard() {
 	return (
-		<div>
-			<BaseBoard />
-			<PlayerOverlays/>
+		<div className={Styles.board}>
+			<Squares />
+			<Rooms />
 		</div>
 	);
 }
 
-function BaseBoard() {
-	const rows = [];
+function Squares() {
+	const squares = [];
 
 	const [maxX, maxY] = BoardConfig.extent;
 	for (let x = 0; x <= maxX; x++) {
-		const cols = [];
 		for (let y = 0; y <= maxY; y++) {
-			cols.push(<BaseBoardSquare coord={[x,y]} />);
+			const squareStyle = {
+				gridRowStart: x + 1,
+				gridColumnStart: y + 1,
+			};
+			squares.push(<div className={Styles.square} style={squareStyle} />);
 		}
-
-		// XXX should this be a table?
-		rows.push(<div>{cols}</div>);
 	}
 
-	return (
-		<div className={Styles.board}>
-			{rows}
-		</div>
-	);
+	return <>{squares}</>;
 }
 
-type BaseBoardSquareProps = {coord: Coord}
-function BaseBoardSquare({coord: [x,y]}: BaseBoardSquareProps) {
-	const roomName = BoardLayout[x][y];
-	if (roomName === null) {
-		return <span className={Styles.square} />;
-	}
+function Rooms() {
+	const rooms = [];
 
-	const roomConfig = BoardConfig.rooms[roomName];
-	const [[minX,minY],[maxX,maxY]] = roomConfig.coords;
-
-	let borders = {} as React.CSSProperties;
-	if (x > minX) {
-		borders.borderTopColor = 'lightblue';
-	}
-	if (y > minY) {
-		borders.borderLeftColor = 'lightblue';
-	}
-	if (x < maxX) {
-		borders.borderBottomColor = 'lightblue';
-	}
-	if (y < maxY) {
-		borders.borderRightColor = 'lightblue';
-	}
-
-	const className = `${Styles.square} ${Styles.room}`;
-	if (x === minX && y === minY) {
-		return (
-			<span className={className} style={borders}>
-				<span className={Styles.roomLabel}>{roomName}</span>
-			</span>
+	for (const roomName of $enum(Room).getValues()) {
+		const [[minX,minY],[maxX,maxY]] = BoardConfig.rooms[roomName].coords;
+		const roomStyle = {
+			gridRowStart: minX + 1,
+			gridRowEnd: maxX + 1 + 1,
+			gridColumnStart: minY + 1,
+			gridColumnEnd: maxY + 1 + 1,
+		};
+		rooms.push(
+			<div className={Styles.room} style={roomStyle}>{roomName}</div>
 		);
-	} else {
-		return <span className={className} style={borders} />;
 	}
-}
 
-function PlayerOverlays() {
-	return null;
+	return <>{rooms}</>;
 }

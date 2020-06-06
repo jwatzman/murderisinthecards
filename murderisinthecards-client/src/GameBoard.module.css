@@ -1,23 +1,16 @@
 .board {
-	line-height: 0;
+	display: grid;
+	grid-template-columns: repeat(10, 50px);
+	grid-template-rows: repeat(10, 50px);
 }
 
 .square {
-	display: inline-block;
-	height: 50px;
-	width: 50px;
 	border: 1px solid black;
-	position: relative;
+	grid-row-end: span 1;
+	grid-column-end: span 1;
 }
 
 .room {
 	background-color: lightblue;
-}
-
-.roomLabel {
-	position: absolute;
-	top: 4px;
-	left: 4px;
-	z-index: 1;
-	line-height: normal; /* XXX Is there a better way to do this? */
+	border: 1px solid black;
 }
