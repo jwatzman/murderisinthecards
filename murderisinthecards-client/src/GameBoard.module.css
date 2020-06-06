@@ -15,6 +15,10 @@
 .room {
 	background-color: darkkhaki;
 	border: 1px solid darkred;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .door {
