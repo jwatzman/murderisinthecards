@@ -36,7 +36,9 @@ function Rooms() {
 	const rooms = [];
 
 	for (const roomName of $enum(Room).getValues()) {
-		const [[minX,minY],[maxX,maxY]] = BoardConfig.rooms[roomName].coords;
+		const roomConfig = BoardConfig.rooms[roomName];
+
+		const [[minX,minY],[maxX,maxY]] = roomConfig.coords;
 		const roomStyle = {
 			gridRowStart: minX + 1,
 			gridRowEnd: maxX + 1 + 1,
@@ -46,6 +48,14 @@ function Rooms() {
 		rooms.push(
 			<div className={Styles.room} style={roomStyle}>{roomName}</div>
 		);
+
+		for (const [x,y] of roomConfig.doors) {
+			const doorStyle = {
+				gridRowStart: x + 1,
+				gridColumnStart: y + 1,
+			};
+			rooms.push(<div className={Styles.door} style={doorStyle} />);
+		}
 	}
 
 	return <>{rooms}</>;

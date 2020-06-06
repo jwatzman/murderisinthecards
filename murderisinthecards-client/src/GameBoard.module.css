@@ -14,3 +14,10 @@
 	background-color: lightblue;
 	border: 1px solid black;
 }
+
+.door {
+	background-color: lightyellow;
+	border: 1px solid black;
+	grid-row-end: span 1;
+	grid-column-end: span 1;
+}
