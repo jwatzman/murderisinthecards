@@ -1,8 +1,9 @@
 import React from 'react';
 import { $enum } from 'ts-enum-util';
 
-import { BoardConfig  } from './BoardLayout';
-import { Room } from './Consts';
+import { Coord, BoardConfig } from './BoardLayout';
+import { SendMessageContext } from './Context';
+import { ClientToServerMessage, Room } from './Consts';
 
 import Styles from './GameBoard.module.css';
 
@@ -10,14 +11,25 @@ export default function GameBoard() {
 	return (
 		<div className={Styles.board}>
 			<Squares />
-			<Rooms />
+			<Suspects />
 		</div>
 	);
 }
 
 function Squares() {
-	const squares = [];
+	const sendMessage = React.useContext(SendMessageContext);
 
+	const handleMoveToCoord = (coord: Coord) => (evt: React.SyntheticEvent) => {
+		evt.preventDefault();
+		sendMessage(ClientToServerMessage.MOVE_TO_COORD, coord);
+	};
+
+	const handleMoveToRoom = (room: Room) => (evt: React.SyntheticEvent) => {
+		evt.preventDefault();
+		sendMessage(ClientToServerMessage.MOVE_TO_ROOM, room);
+	};
+
+	const squares = [];
 	const [maxX, maxY] = BoardConfig.extent;
 	for (let x = 0; x <= maxX; x++) {
 		for (let y = 0; y <= maxY; y++) {
@@ -25,16 +37,17 @@ function Squares() {
 				gridRowStart: x + 1,
 				gridColumnStart: y + 1,
 			};
-			squares.push(<div className={Styles.square} style={squareStyle} />);
+			squares.push(
+				<div
+					onClick={handleMoveToCoord([x,y])}
+					className={Styles.square}
+					style={squareStyle}
+				/>
+			);
 		}
 	}
 
-	return <>{squares}</>;
-}
-
-function Rooms() {
 	const rooms = [];
-
 	for (const roomName of $enum(Room).getValues()) {
 		const roomConfig = BoardConfig.rooms[roomName];
 
@@ -46,7 +59,12 @@ function Rooms() {
 			gridColumnEnd: maxY + 1 + 1,
 		};
 		rooms.push(
-			<div className={Styles.room} style={roomStyle}>{roomName}</div>
+			<div
+				onClick={handleMoveToRoom(roomName)}
+				className={Styles.room}
+				style={roomStyle}>
+				{roomName}
+			</div>
 		);
 
 		for (const [x,y] of roomConfig.doors) {
@@ -54,9 +72,23 @@ function Rooms() {
 				gridRowStart: x + 1,
 				gridColumnStart: y + 1,
 			};
-			rooms.push(<div className={Styles.door} style={doorStyle} />);
+			rooms.push(
+				<div
+					onClick={handleMoveToCoord([x,y])}
+					className={Styles.door}
+					style={doorStyle}
+				/>);
 		}
 	}
 
-	return <>{rooms}</>;
+	return (
+		<>
+			{squares}
+			{rooms}
+		</>
+	);
+}
+
+function Suspects() {
+	return null;
 }

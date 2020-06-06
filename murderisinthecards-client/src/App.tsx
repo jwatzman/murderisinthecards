@@ -2,10 +2,10 @@ import * as Colyseus from 'colyseus.js';
 import React from 'react';
 
 import { ClientToServerMessage, PlayPhase } from './Consts';
+import { GameStateContext, SendMessageContext } from './Context';
 import GameSetup from './GameSetup';
 import GamePlay from './GamePlay';
 import { GameState } from './GameState';
-import { GameStateContext, SendMessageContext } from './Context';
 
 function App() {
 	const [room, setRoom] = React.useState<Colyseus.Room | null>(null);
