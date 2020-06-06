@@ -3,10 +3,10 @@ import * as Consts from './Consts';
 
 export class PlayerState extends Schema {
 	@type('string')
-	public suspect: Consts.Suspect = null;
+	public suspect: Consts.Suspect = ('' as Consts.Suspect);
 
 	@type('string')
-	public name: string = null;
+	public name = '';
 
 	@type('uint8')
 	public x = 0;
@@ -15,7 +15,7 @@ export class PlayerState extends Schema {
 	public y = 0;
 
 	@type('string')
-	public room: string = null;
+	public room = null;
 }
 
 export class GameState extends Schema {
@@ -30,7 +30,7 @@ export class GameState extends Schema {
 	public turnOrder = new ArraySchema<string>();
 
 	@type('string')
-	public currentPlayer: string = null;
+	public currentPlayer = '';
 
 	@type('int8')
 	public dieRoll = 0;

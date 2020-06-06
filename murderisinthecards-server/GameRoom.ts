@@ -45,7 +45,7 @@ export class GameRoom extends Room<GameState> {
 
 		if (this.state.phase != PlayPhase.SETUP) {
 			client.error(
-				null,
+				0,
 				'You can\'t select a name and suspect after the game has started!',
 			);
 			return;
@@ -54,13 +54,13 @@ export class GameRoom extends Room<GameState> {
 		// TODO: remove this restriction?
 		const player = this.state.getPlayer(sessionId);
 		if (player.name && player.suspect) {
-			client.error(null, 'You\'ve already selected a name and suspect!');
+			client.error(0, 'You\'ve already selected a name and suspect!');
 			return;
 		}
 
 		for (const otherPlayer of this.state.getAllPlayers()) {
 			if (otherPlayer.suspect == suspect) {
-				client.error(null, otherPlayer.name + ' already is ' + suspect);
+				client.error(0, otherPlayer.name + ' already is ' + suspect);
 				return;
 			}
 		}
@@ -72,13 +72,13 @@ export class GameRoom extends Room<GameState> {
 
 	private handleBeginGame(client: Client): void {
 		if (this.state.phase != PlayPhase.SETUP) {
-			client.error(null, 'The game has already begun!');
+			client.error(0, 'The game has already begun!');
 			return;
 		}
 
 		for (const otherPlayer of this.state.getAllPlayers()) {
 			if (!otherPlayer.name || !otherPlayer.suspect) {
-				client.error(null, 'Not all players are ready!');
+				client.error(0, 'Not all players are ready!');
 				return;
 			}
 		}
