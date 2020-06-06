@@ -12,15 +12,43 @@ type BoardConfig = {
 };
 
 export const BoardConfig: BoardConfig = {
-	extent: [9,9],
+	extent: [22,21],
 	rooms: {
+		[Room.DINING_ROOM]: {
+			coords: [[9,0],[14,6]],
+			doors: [[11,7],[15,5]],
+		},
+		[Room.FOYER]: {
+			coords: [[17,8],[22,13]],
+			doors: [[16,10],[16,11]],
+		},
+		[Room.GAME_ROOM]: {
+			coords: [[7,17],[11,21]],
+			doors: [[8,16],[12,21]],
+		},
 		[Room.GREENHOUSE]: {
-			coords: [[0,0],[2,2]],
-			doors: [[2,3]],
+			coords: [[0,18],[4,21]],
+			doors: [[4,17]],
+		},
+		[Room.KITCHEN]: {
+			coords: [[0,0],[5,4]],
+			doors: [[6,3]],
+		},
+		[Room.LIBRARY]: {
+			coords: [[13,16],[17,21]],
+			doors: [[12,19],[15,15]],
+		},
+		[Room.LOUNGE]: {
+			coords: [[18,0],[22,5]],
+			doors: [[17,5]],
+		},
+		[Room.STUDY]: {
+			coords: [[20,16],[22,21]],
+			doors: [[19,16]],
 		},
 		[Room.THEATER]: {
-			coords: [[9,8],[9,9]],
-			doors: [[9,7]],
+			coords: [[0,7],[6,14]],
+			doors: [[4,6],[7,8],[7,13],[4,15]],
 		},
 	},
 };

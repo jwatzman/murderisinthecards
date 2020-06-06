@@ -11,10 +11,15 @@ export enum Weapon {
 }
 
 export enum Room {
+	DINING_ROOM = 'Dining Room',
+	FOYER = 'Foyer',
+	GAME_ROOM = 'Game Room',
 	GREENHOUSE = 'Greenhouse',
+	KITCHEN = 'Kitchen',
+	LIBRARY = 'Library',
+	LOUNGE = 'Lounge',
+	STUDY = 'Study',
 	THEATER = 'Theater',
-	//LIBRARY = 'Library',
-	//KITCHEN = 'Kitchen',
 }
 
 export enum PlayPhase {

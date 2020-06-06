@@ -1,7 +1,7 @@
 .board {
 	display: grid;
-	grid-template-columns: repeat(10, 50px);
-	grid-template-rows: repeat(10, 50px);
+	grid-template-rows: repeat(23, 30px);
+	grid-template-columns: repeat(22, 30px);
 }
 
 .square {
