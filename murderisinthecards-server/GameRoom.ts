@@ -2,6 +2,7 @@ import { Room, Client } from 'colyseus';
 
 import { GameState } from './GameState';
 import { ClientToServerMessage, PlayPhase, Suspect } from './Consts';
+import getInitialCoords from './InitialCoords';
 
 export class GameRoom extends Room<GameState> {
 
@@ -65,9 +66,11 @@ export class GameRoom extends Room<GameState> {
 			}
 		}
 
+		const [x,y] = getInitialCoords(suspect);
 		player.name = name;
 		player.suspect = suspect;
-		// TODO: set player initial location
+		player.x = x;
+		player.y = y;
 	}
 
 	private handleBeginGame(client: Client): void {

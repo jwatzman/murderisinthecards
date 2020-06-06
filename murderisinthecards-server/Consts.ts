@@ -1,7 +1,7 @@
 export enum Suspect {
 	BLOOD = 'Mr. Blood',
 	EMERALD = 'Mrs. Emerald',
-	PRUPLE = 'Dr. Purple',
+	PURPLE = 'Dr. Purple',
 }
 
 export enum Weapon {
