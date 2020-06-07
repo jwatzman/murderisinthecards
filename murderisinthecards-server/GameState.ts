@@ -49,6 +49,10 @@ export class GameState extends Schema {
 		return this.players[id];
 	}
 
+	getAllPlayerIds(): string[] {
+		return Object.keys(this.players);
+	}
+
 	getAllPlayers(): PlayerState[] {
 		return Object.values(this.players);
 	}

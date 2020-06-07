@@ -4,6 +4,7 @@ import { Coord } from './BoardLayout';
 import { GameState } from './GameState';
 import { ClientToServerMessage, PlayPhase, Room, Suspect } from './Consts';
 import getInitialCoords from './InitialCoords';
+import shuffle from './Shuffle';
 
 export class GameRoom extends ColRoom<GameState> {
 
@@ -96,7 +97,13 @@ export class GameRoom extends ColRoom<GameState> {
 		}
 
 		console.log('Begin game');
-		// TODO: set up turn order
+
+		const turnOrderArr = this.state.getAllPlayerIds();
+		shuffle(turnOrderArr);
+		for (const player of turnOrderArr) {
+			this.state.turnOrder.push(player);
+		}
+
 		// TODO: shuffle cards
 		this.advanceTurn();
 	}
@@ -124,8 +131,16 @@ export class GameRoom extends ColRoom<GameState> {
 
 	private advanceTurn(): void {
 		this.state.phase = PlayPhase.BEGIN_TURN;
-		// TODO: set currentPlayer from turn order
 		this.state.dieRoll = 0;
+
+		if (this.state.currentPlayer) {
+			const playerIdx =
+				this.state.turnOrder.indexOf(this.state.currentPlayer);
+			const nextPlayerIdx = (playerIdx + 1) % this.state.turnOrder.length;
+			this.state.currentPlayer = this.state.turnOrder[nextPlayerIdx];
+		} else {
+			this.state.currentPlayer = this.state.turnOrder[0];
+		}
 	}
 
 }
