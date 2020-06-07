@@ -5,7 +5,7 @@ export type PlayerState = {
 	name: string,
 	x: number,
 	y: number,
-	room: string,
+	room: Consts.Room | '',
 };
 
 export type GameState = {

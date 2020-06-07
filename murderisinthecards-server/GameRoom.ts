@@ -1,10 +1,11 @@
-import { Room, Client } from 'colyseus';
+import { Client, Room as ColRoom } from 'colyseus';
 
+import { Coord } from './BoardLayout';
 import { GameState } from './GameState';
-import { ClientToServerMessage, PlayPhase, Suspect } from './Consts';
+import { ClientToServerMessage, PlayPhase, Room, Suspect } from './Consts';
 import getInitialCoords from './InitialCoords';
 
-export class GameRoom extends Room<GameState> {
+export class GameRoom extends ColRoom<GameState> {
 
 	onCreate(): void {
 		console.log('Room created');
@@ -17,6 +18,14 @@ export class GameRoom extends Room<GameState> {
 		this.onMessage(
 			ClientToServerMessage.BEGIN_GAME,
 			this.handleBeginGame.bind(this)
+		);
+		this.onMessage(
+			ClientToServerMessage.MOVE_TO_COORD,
+			this.handleMoveToCoord.bind(this),
+		);
+		this.onMessage(
+			ClientToServerMessage.MOVE_TO_ROOM,
+			this.handleMoveToRoom.bind(this),
 		);
 	}
 
@@ -90,6 +99,27 @@ export class GameRoom extends Room<GameState> {
 		// TODO: set up turn order
 		// TODO: shuffle cards
 		this.advanceTurn();
+	}
+
+	private handleMoveToCoord(
+		client: Client,
+		coord: Coord,
+	) {
+		// TODO: check move validity
+		const sessionId = client.sessionId;
+		const player = this.state.getPlayer(sessionId);
+		[player.x, player.y] = coord;
+		player.room = '';
+	}
+
+	private handleMoveToRoom(
+		client: Client,
+		room: Room,
+	) {
+		// TODO: check move validity
+		const sessionId = client.sessionId;
+		const player = this.state.getPlayer(sessionId);
+		player.room = room;
 	}
 
 	private advanceTurn(): void {

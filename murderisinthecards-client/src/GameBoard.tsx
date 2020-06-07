@@ -2,8 +2,9 @@ import React from 'react';
 import { $enum } from 'ts-enum-util';
 
 import { Coord, BoardConfig } from './BoardLayout';
-import { SendMessageContext } from './Context';
+import { GameStateContext, SendMessageContext } from './Context';
 import { ClientToServerMessage, Room } from './Consts';
+import getSuspectColor from './SuspectColor';
 
 import Styles from './GameBoard.module.css';
 
@@ -21,11 +22,13 @@ function Squares() {
 
 	const handleMoveToCoord = (coord: Coord) => (evt: React.SyntheticEvent) => {
 		evt.preventDefault();
+		// TODO: check move validity
 		sendMessage(ClientToServerMessage.MOVE_TO_COORD, coord);
 	};
 
 	const handleMoveToRoom = (room: Room) => (evt: React.SyntheticEvent) => {
 		evt.preventDefault();
+		// TODO: check move validity
 		sendMessage(ClientToServerMessage.MOVE_TO_ROOM, room);
 	};
 
@@ -90,5 +93,32 @@ function Squares() {
 }
 
 function Suspects() {
-	return null;
+	const gameState = React.useContext(GameStateContext);
+
+	const suspects = [];
+	for (const playerId in gameState.players) {
+		const playerState = gameState.players[playerId];
+
+		let x, y;
+		if (playerState.room) {
+			// TODO: don't overlap >1 player in the same room
+			const room = BoardConfig.rooms[playerState.room];
+			[x,y] = room.coords[0];
+		} else {
+			x = playerState.x;
+			y = playerState.y;
+		}
+
+		const style = {
+			color: getSuspectColor(playerState.suspect),
+			gridRowStart: x + 1,
+			gridColumnStart: y + 1,
+		};
+
+		suspects.push(
+			<div className={Styles.suspect} style={style}>{'\u265f'}</div>
+		);
+	}
+
+	return <>{suspects}</>;
 }

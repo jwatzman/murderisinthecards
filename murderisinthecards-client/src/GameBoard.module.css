@@ -1,6 +1,7 @@
 .board {
 	border: 3px solid black;
 	display: inline-grid;
+	/* TODO: figure out how to sync this with BoardConfig.extent */
 	grid-template-rows: repeat(23, 30px);
 	grid-template-columns: repeat(22, 30px);
 }
@@ -12,13 +13,16 @@
 	grid-column-end: span 1;
 }
 
-.room {
-	background-color: darkkhaki;
-	border: 1px solid darkred;
-
+.centerText {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+.room {
+	composes: centerText;
+	background-color: darkkhaki;
+	border: 1px solid darkred;
 }
 
 .door {
@@ -26,4 +30,11 @@
 	border: 1px solid black;
 	grid-row-end: span 1;
 	grid-column-end: span 1;
+}
+
+.suspect {
+	composes: centerText;
+	grid-row-end: span 1;
+	grid-column-end: span 1;
+	font-size: 30px; /* TODO: figure out how to sync this with grid-template */
 }

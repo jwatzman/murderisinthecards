@@ -15,7 +15,7 @@ export class PlayerState extends Schema {
 	public y = 0;
 
 	@type('string')
-	public room = null;
+	public room: (Consts.Room | '') = '';
 }
 
 export class GameState extends Schema {
