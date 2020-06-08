@@ -1,7 +1,10 @@
 import React from 'react';
 import { $enum } from 'ts-enum-util';
 
-import { ClientToServerMessage, Suspect } from './Consts';
+import {
+	ClientToServerMessage, Suspect
+} from 'murderisinthecards-common/Consts';
+
 import { GameStateContext, SendMessageContext } from './Context'
 
 function GameSetup() {

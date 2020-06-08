@@ -1,19 +1,11 @@
 {
-  "name": "my-app",
+  "name": "murderisinthecards-server",
   "version": "1.0.0",
-  "description": "npm init template for bootstraping an empty Colyseus project",
-  "main": "lib/index.js",
+  "private": true,
   "scripts": {
     "start": "ts-node index.ts",
-    "lint": "eslint .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint ."
   },
-  "author": "",
-  "license": "UNLICENSED",
-  "bugs": {
-    "url": "https://github.com/colyseus/create-colyseus/issues"
-  },
-  "homepage": "https://github.com/colyseus/create-colyseus#readme",
   "devDependencies": {
     "@colyseus/loadtest": "^0.13.1",
     "@types/cors": "^2.8.6",
@@ -31,6 +23,7 @@
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "express-jwt": "^5.3.1",
+    "murderisinthecards-common": "1.0.0",
     "ts-enum-util": "^4.0.1"
   }
 }

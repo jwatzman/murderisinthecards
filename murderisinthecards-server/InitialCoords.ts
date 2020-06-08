@@ -1,5 +1,5 @@
-import { Coord } from './BoardLayout';
-import { Suspect } from './Consts';
+import { Coord } from 'murderisinthecards-common/BoardLayout';
+import { Suspect } from 'murderisinthecards-common/Consts';
 
 export default function getInitialCoords(s: Suspect): Coord {
 	switch (s) {

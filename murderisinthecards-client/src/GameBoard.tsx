@@ -1,9 +1,12 @@
 import React from 'react';
 import { $enum } from 'ts-enum-util';
 
-import { Coord, BoardConfig } from './BoardLayout';
+import { Coord, BoardConfig } from 'murderisinthecards-common/BoardLayout';
+import {
+	ClientToServerMessage, Room
+} from 'murderisinthecards-common/Consts';
+
 import { GameStateContext, SendMessageContext } from './Context';
-import { ClientToServerMessage, Room } from './Consts';
 import getSuspectColor from './SuspectColor';
 
 import Styles from './GameBoard.module.css';

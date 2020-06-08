@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { ClientToServerMessage } from './Consts';
+import { ClientToServerMessage } from 'murderisinthecards-common/Consts';
+
 import { GameState } from './GameState';
 
 export const GameStateContext = React.createContext<GameState>(undefined!);

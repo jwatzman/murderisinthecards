@@ -1,8 +1,11 @@
 import { Client, Room as ColRoom } from 'colyseus';
 
-import { Coord } from './BoardLayout';
+import { Coord } from 'murderisinthecards-common/BoardLayout';
+import {
+	ClientToServerMessage, PlayPhase, Room, Suspect
+} from 'murderisinthecards-common/Consts';
+
 import { GameState } from './GameState';
-import { ClientToServerMessage, PlayPhase, Room, Suspect } from './Consts';
 import getInitialCoords from './InitialCoords';
 import shuffle from './Shuffle';
 

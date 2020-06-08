@@ -1,0 +1,16 @@
+{
+  "name": "murderisinthecards-common",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^3.0.2",
+    "@typescript-eslint/parser": "^3.0.0",
+    "eslint": "^7.1.0"
+  },
+  "dependencies": {
+    "ts-enum-util": "^4.0.1"
+  }
+}

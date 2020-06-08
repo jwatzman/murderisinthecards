@@ -1,7 +1,11 @@
 import * as Colyseus from 'colyseus.js';
 import React from 'react';
 
-import { ClientToServerMessage, PlayPhase } from './Consts';
+import {
+	ClientToServerMessage,
+	PlayPhase,
+} from 'murderisinthecards-common/Consts';
+
 import { GameStateContext, SendMessageContext } from './Context';
 import GameSetup from './GameSetup';
 import GamePlay from './GamePlay';

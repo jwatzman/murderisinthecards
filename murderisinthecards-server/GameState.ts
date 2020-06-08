@@ -1,9 +1,10 @@
 import { Schema, type, ArraySchema, MapSchema } from '@colyseus/schema';
-import * as Consts from './Consts';
+
+import { Room, Suspect, PlayPhase } from 'murderisinthecards-common/Consts';
 
 export class PlayerState extends Schema {
 	@type('string')
-	public suspect: Consts.Suspect = ('' as Consts.Suspect);
+	public suspect: Suspect = ('' as Suspect);
 
 	@type('string')
 	public name = '';
@@ -15,7 +16,7 @@ export class PlayerState extends Schema {
 	public y = 0;
 
 	@type('string')
-	public room: (Consts.Room | '') = '';
+	public room: (Room | '') = '';
 }
 
 export class GameState extends Schema {
@@ -24,7 +25,7 @@ export class GameState extends Schema {
 	private players = new MapSchema<PlayerState>();
 
 	@type('uint8')
-	public phase = Consts.PlayPhase.SETUP;
+	public phase = PlayPhase.SETUP;
 
 	@type(['string'])
 	public turnOrder = new ArraySchema<string>();
