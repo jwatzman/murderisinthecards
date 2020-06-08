@@ -2,12 +2,12 @@ import { $enum } from 'ts-enum-util';
 
 import { Room } from './Consts';
 
-export type Coord = [number, number];
+export type Coord = readonly [number, number];
 type BoardConfig = {
-	extent: Coord,
-	rooms: {[r in Room]: {
-		coords: [Coord, Coord],
-		doors: Coord[],
+	readonly extent: Coord,
+	readonly rooms: {[r in Room]: {
+		readonly coords: readonly [Coord, Coord],
+		readonly doors: readonly Coord[],
 	}},
 };
 
@@ -51,10 +51,10 @@ export const BoardConfig: BoardConfig = {
 			doors: [[4,6],[7,8],[7,13],[4,15]],
 		},
 	},
-};
+} as const;
 
 type BoardSquare = Room | null;
-type BoardLayout = BoardSquare[][];
+type BoardLayout = readonly BoardSquare[][];
 
 function computeBoardLayout(): BoardLayout {
 	const layout = [];
