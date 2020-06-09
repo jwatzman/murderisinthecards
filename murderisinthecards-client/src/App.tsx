@@ -5,15 +5,15 @@ import {
 	ClientToServerMessage,
 	PlayPhase,
 } from 'murderisinthecards-common/Consts';
+import { ConstGameState } from 'murderisinthecards-common/ConstGameState';
 
 import { GameStateContext, SendMessageContext } from './Context';
 import GameSetup from './GameSetup';
 import GamePlay from './GamePlay';
-import { GameState } from './GameState';
 
 function App() {
 	const [room, setRoom] = React.useState<Colyseus.Room | null>(null);
-	const [gameState, setGameState] = React.useState<GameState | null>(null);
+	const [gameState, setGameState] = React.useState<ConstGameState | null>(null);
 
 	React.useEffect(() => {
 		if (room) {

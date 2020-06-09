@@ -1,6 +1,6 @@
 import { Room, Suspect, PlayPhase } from 'murderisinthecards-common/Consts';
 
-export type PlayerState = {
+export type ConstPlayerState = {
 	readonly suspect: Suspect,
 	readonly name: string,
 	readonly x: number,
@@ -8,8 +8,8 @@ export type PlayerState = {
 	readonly room: Room | '',
 };
 
-export type GameState = {
-	readonly players: {readonly [id: string]: PlayerState},
+export type ConstGameState = {
+	readonly players: {readonly [id: string]: ConstPlayerState},
 	readonly phase: PlayPhase,
 	readonly turnOrder: string[],
 	readonly currentPlayer: string,
