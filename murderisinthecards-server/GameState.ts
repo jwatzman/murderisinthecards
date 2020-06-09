@@ -1,6 +1,7 @@
 import { Schema, type, ArraySchema, MapSchema } from '@colyseus/schema';
 
 import { Room, Suspect, PlayPhase } from 'murderisinthecards-common/Consts';
+import { ConstGameState } from 'murderisinthecards-common/ConstGameState';
 
 export class PlayerState extends Schema {
 	@type('string')
@@ -35,6 +36,12 @@ export class GameState extends Schema {
 
 	@type('int8')
 	public dieRoll = 0;
+
+	toConstGameState(): ConstGameState {
+		// This is a dirty lie, but close enough to the truth to work, and
+		// incredibly useful.
+		return (this as any) as ConstGameState;
+	}
 
 	createPlayer(id: string): void {
 		console.log('Creating player', id);

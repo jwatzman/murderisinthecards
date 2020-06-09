@@ -1,6 +1,7 @@
 import { Client, Room as ColRoom } from 'colyseus';
 
 import { Coord } from 'murderisinthecards-common/BoardLayout';
+import * as CanDo from 'murderisinthecards-common/CanDo';
 import {
 	ClientToServerMessage, PlayPhase, Room, Suspect
 } from 'murderisinthecards-common/Consts';
@@ -57,28 +58,18 @@ export class GameRoom extends ColRoom<GameState> {
 		const sessionId = client.sessionId;
 		console.log('Player setup', sessionId, name, suspect);
 
-		if (this.state.phase != PlayPhase.SETUP) {
-			client.error(
-				0,
-				'You can\'t select a name and suspect after the game has started!',
-			);
+		const err = CanDo.playerSetup(
+			sessionId,
+			this.state.toConstGameState(),
+			name,
+			suspect,
+		);
+		if (err) {
+			client.error(0, err);
 			return;
 		}
 
-		// TODO: remove this restriction?
 		const player = this.state.getPlayer(sessionId);
-		if (player.name && player.suspect) {
-			client.error(0, 'You\'ve already selected a name and suspect!');
-			return;
-		}
-
-		for (const otherPlayer of this.state.getAllPlayers()) {
-			if (otherPlayer.suspect == suspect) {
-				client.error(0, otherPlayer.name + ' already is ' + suspect);
-				return;
-			}
-		}
-
 		const [x,y] = getInitialCoords(suspect);
 		player.name = name;
 		player.suspect = suspect;
@@ -87,16 +78,13 @@ export class GameRoom extends ColRoom<GameState> {
 	}
 
 	private handleBeginGame(client: Client): void {
-		if (this.state.phase != PlayPhase.SETUP) {
-			client.error(0, 'The game has already begun!');
+		const err = CanDo.beginGame(
+			client.sessionId,
+			this.state.toConstGameState(),
+		);
+		if (err) {
+			client.error(0, err);
 			return;
-		}
-
-		for (const otherPlayer of this.state.getAllPlayers()) {
-			if (!otherPlayer.name || !otherPlayer.suspect) {
-				client.error(0, 'Not all players are ready!');
-				return;
-			}
 		}
 
 		console.log('Begin game');
