@@ -1,11 +1,16 @@
 import React from 'react';
 import { $enum } from 'ts-enum-util';
 
+import * as CanDo from 'murderisinthecards-common/CanDo';
 import {
 	ClientToServerMessage, Suspect
 } from 'murderisinthecards-common/Consts';
 
-import { GameStateContext, SendMessageContext } from './Context'
+import {
+	GameStateContext,
+	SecretStateContext,
+	SendMessageContext,
+} from './Context'
 
 function GameSetup() {
 	return (
@@ -18,6 +23,8 @@ function GameSetup() {
 }
 
 function SelectSuspect() {
+	const gameState = React.useContext(GameStateContext);
+	const secretState = React.useContext(SecretStateContext);
 	const sendMessage = React.useContext(SendMessageContext);
 
 	const [name, setName] = React.useState('');
@@ -40,6 +47,14 @@ function SelectSuspect() {
 		s => <option value={s} key={s}>{s}</option>
 	);
 
+	const err = CanDo.playerSetup(
+		secretState,
+		gameState,
+		name,
+		suspect,
+	);
+	const canSetUp = err === null;
+
 	return (
 		<form onSubmit={submit}>
 			<label>
@@ -49,7 +64,7 @@ function SelectSuspect() {
 			<select value={suspect} onChange={changeSuspect}>
 				{suspectOptions}
 			</select>
-			<input type="submit" value="Submit" />
+			<input disabled={!canSetUp} type="submit" value="Submit" />
 		</form>
 	);
 }
@@ -78,15 +93,11 @@ function ConnectedPlayers() {
 
 function BeginGame() {
 	const gameState = React.useContext(GameStateContext);
+	const secretState = React.useContext(SecretStateContext);
 	const sendMessage = React.useContext(SendMessageContext);
 
-	let readyToBegin = true;
-	for (const player of Object.values(gameState.players)) {
-		if (!player.name || !player.suspect) {
-			readyToBegin = false;
-			break;
-		}
-	}
+	const err = CanDo.beginGame(secretState, gameState);
+	const readyToBegin = err === null;
 
 	const start = () => {
 		sendMessage(ClientToServerMessage.BEGIN_GAME, null);

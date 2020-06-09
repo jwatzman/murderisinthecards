@@ -11,6 +11,10 @@ export function playerSetup(
 		return 'You can\'t select a name and suspect after the game has started!';
 	}
 
+	if (!name) {
+		return 'You must set a name!';
+	}
+
 	// TODO: remove this restriction?
 	const player = state.players[playerId];
 	if (player.name && player.suspect) {
