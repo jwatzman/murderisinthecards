@@ -6,7 +6,13 @@ export default function getSuspectColor(s: Suspect): string {
 			return 'red';
 		case Suspect.EMERALD:
 			return 'green';
-		case Suspect.PURPLE:
-			return 'purple';
+		case Suspect.PEPPER:
+			return 'black';
+		case Suspect.SAND:
+			return 'yellow';
+		case Suspect.SILVER:
+			return 'white';
+		case Suspect.VIOLET:
+			return 'blue';
 	}
 }

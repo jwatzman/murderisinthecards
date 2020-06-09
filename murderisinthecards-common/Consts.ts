@@ -1,12 +1,18 @@
 export enum Suspect {
-	BLOOD = 'Mr. Blood',
-	EMERALD = 'Mrs. Emerald',
-	PURPLE = 'Dr. Purple',
+	BLOOD = 'Col. Blood', // Scarlett
+	EMERALD = 'Ms. Emerald', // Green
+	PEPPER = 'Dr. Pepper', // Plum
+	SAND = 'Rev. Sand', // Mustard
+	SILVER = 'Mr. Silver', // White
+	VIOLET = 'Ms. Violet', // Peacock
 }
 
 export enum Weapon {
+	AK47 = 'AK-47',
+	CANDLESTICK = 'Candlestick',
+	GOLF_CLUB = 'Golf Club',
+	HAMMER = 'Hammer',
 	LETTER_OPENER = 'Letter Opener',
-	PISTOL = 'Pistol',
 	NECKTIE = 'Necktie',
 }
 

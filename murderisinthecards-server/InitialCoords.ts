@@ -7,7 +7,13 @@ export default function getInitialCoords(s: Suspect): Coord {
 			return [22,6];
 		case Suspect.EMERALD:
 			return [0,15];
-		case Suspect.PURPLE:
-			return [18,21];
+		case Suspect.PEPPER:
+			return [18, 21];
+		case Suspect.SAND:
+			return [16, 0];
+		case Suspect.SILVER:
+			return [0, 6];
+		case Suspect.VIOLET:
+			return [5, 21];
 	}
 }

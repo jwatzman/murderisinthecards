@@ -37,4 +37,7 @@
 	grid-row-end: span 1;
 	grid-column-end: span 1;
 	font-size: 30px; /* TODO: figure out how to sync this with grid-template */
+
+	-webkit-text-stroke: 1px black;
+	text-stroke: 1px black;
 }
