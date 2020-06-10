@@ -10,7 +10,7 @@ module.exports = {
 			process.cwd(),
 			'../murderisinthecards-common'
 		));
-		console.log(common);
+		//console.log(common);
 		loader.include = [loader.include, common];
 		//console.log(util.inspect(config, {showHidden: false, depth: null}));
 		return config;
