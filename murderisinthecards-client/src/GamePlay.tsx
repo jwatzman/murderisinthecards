@@ -1,6 +1,7 @@
 import React from 'react';
 
 import GameBoard from './GameBoard';
+import TurnActions from './TurnActions';
 import TurnOrder from './TurnOrder';
 
 export default function GamePlay() {
@@ -8,6 +9,7 @@ export default function GamePlay() {
 		<>
 			<GameBoard />
 			<TurnOrder />
+			<TurnActions />
 		</>
 	);
 }
