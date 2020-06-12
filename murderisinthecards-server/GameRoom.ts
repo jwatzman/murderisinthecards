@@ -25,6 +25,14 @@ export class GameRoom extends ColRoom<GameState> {
 			this.handleBeginGame.bind(this)
 		);
 		this.onMessage(
+			ClientToServerMessage.ROLL_DIE,
+			this.handleRollDie.bind(this)
+		);
+		this.onMessage(
+			ClientToServerMessage.END_TURN,
+			this.handleEndTurn.bind(this)
+		);
+		this.onMessage(
 			ClientToServerMessage.MOVE_TO_COORD,
 			this.handleMoveToCoord.bind(this),
 		);
@@ -99,6 +107,37 @@ export class GameRoom extends ColRoom<GameState> {
 		this.advanceTurn();
 	}
 
+	private handleRollDie(
+		client: Client,
+	) {
+		const err = CanDo.rollDie(
+			client.sessionId,
+			this.state.toConstGameState(),
+		);
+		if (err) {
+			client.error(0, err);
+			return;
+		}
+
+		this.state.dieRoll = Math.floor(Math.random() * 6) + 1;
+		this.state.phase = PlayPhase.MOVEMENT;
+	}
+
+	private handleEndTurn(
+		client: Client
+	) {
+		const err = CanDo.endTurn(
+			client.sessionId,
+			this.state.toConstGameState(),
+		);
+		if (err) {
+			client.error(0, err);
+			return;
+		}
+
+		this.advanceTurn();
+	}
+
 	private handleMoveToCoord(
 		client: Client,
 		coord: Coord,
@@ -108,6 +147,7 @@ export class GameRoom extends ColRoom<GameState> {
 		const player = this.state.getPlayer(sessionId);
 		[player.x, player.y] = coord;
 		player.room = '';
+		this.state.dieRoll--;
 	}
 
 	private handleMoveToRoom(
@@ -118,6 +158,7 @@ export class GameRoom extends ColRoom<GameState> {
 		const sessionId = client.sessionId;
 		const player = this.state.getPlayer(sessionId);
 		player.room = room;
+		this.state.dieRoll = 0;
 	}
 
 	private advanceTurn(): void {

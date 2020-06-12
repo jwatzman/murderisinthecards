@@ -46,3 +46,33 @@ export function beginGame(
 
 	return null;
 }
+
+export function rollDie(
+	playerId: string,
+	state: ConstGameState,
+): string | null {
+	if (playerId != state.currentPlayer) {
+		return 'Not your turn!';
+	}
+
+	if (state.phase != PlayPhase.BEGIN_TURN) {
+		return 'You can only roll at the beginning of your turn!';
+	}
+
+	return null;
+}
+
+export function endTurn(
+	playerId: string,
+	state: ConstGameState,
+): string | null {
+	if (playerId != state.currentPlayer) {
+		return 'Not your turn!';
+	}
+
+	if (state.phase !== PlayPhase.MOVEMENT) {
+		return 'You can\'t do that now!';
+	}
+
+	return null;
+}
