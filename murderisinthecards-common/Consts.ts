@@ -28,6 +28,8 @@ export enum Room {
 	THEATER = 'Theater',
 }
 
+export type Card = Suspect | Weapon | Room;
+
 export enum PlayPhase {
 	SETUP,
 	BEGIN_TURN,
@@ -48,5 +50,5 @@ export enum ClientToServerMessage {
 
 export enum ServerToClientMessage {
 	GAME_MESSAGE = 'game_message',
-	SECRET_STATE = 'secret_state',
+	YOUR_CARDS = 'your_cards',
 }

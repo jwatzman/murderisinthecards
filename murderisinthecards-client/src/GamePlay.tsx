@@ -5,6 +5,7 @@ import GameBoard from './GameBoard';
 import GameMessages from './GameMessages';
 import TurnActions from './TurnActions';
 import TurnOrder from './TurnOrder';
+import YourCards from './YourCards';
 
 import Styles from './GamePlay.module.css';
 
@@ -15,6 +16,7 @@ export default function GamePlay() {
 				<GameBoard />
 				<div className={Styles.controls}>
 					<TurnOrder />
+					<YourCards />
 					<DieRoll />
 					<TurnActions />
 				</div>

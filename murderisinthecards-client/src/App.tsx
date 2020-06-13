@@ -2,6 +2,7 @@ import * as Colyseus from 'colyseus.js';
 import React from 'react';
 
 import {
+	Card,
 	ClientToServerMessage,
 	PlayPhase,
 	ServerToClientMessage,
@@ -13,11 +14,13 @@ import {
 	GameStateContext,
 	SendMessageContext,
 	SessionIdContext,
+	YourCardsContext,
 } from './Context';
 import GameSetup from './GameSetup';
 import GamePlay from './GamePlay';
 
 function App() {
+	const [cards, setCards] = React.useState<Card[]>([]);
 	const [gameMessages, setGameMessages] = React.useState<string[]>([]);
 	const [gameState, setGameState] = React.useState<ConstGameState | null>(null);
 	const [room, setRoom] = React.useState<Colyseus.Room | null>(null);
@@ -55,6 +58,10 @@ function App() {
 			});
 		});
 
+		room.onMessage(ServerToClientMessage.YOUR_CARDS, cards => {
+			setCards(cards);
+		});
+
 		room.onError((_, message) => {
 			window.alert(message);
 		});
@@ -70,11 +77,13 @@ function App() {
 	return (
 		<SendMessageContext.Provider value={sendMessage}>
 			<SessionIdContext.Provider value={sessionId!}>
-				<GameMessagesContext.Provider value={gameMessages}>
-					<GameStateContext.Provider value={gameState}>
-						<Game />
-					</GameStateContext.Provider>
-				</GameMessagesContext.Provider>
+				<YourCardsContext.Provider value={cards}>
+					<GameMessagesContext.Provider value={gameMessages}>
+						<GameStateContext.Provider value={gameState}>
+							<Game />
+						</GameStateContext.Provider>
+					</GameMessagesContext.Provider>
+				</YourCardsContext.Provider>
 			</SessionIdContext.Provider>
 		</SendMessageContext.Provider>
 	);

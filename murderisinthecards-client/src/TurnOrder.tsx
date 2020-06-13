@@ -13,7 +13,7 @@ export default function TurnOrder() {
 
 	return (
 		<div>
-			Turn Order: {names.join(', ')}
+			Turn order: {names.join(', ')}
 		</div>
 	);
 }
