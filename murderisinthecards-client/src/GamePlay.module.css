@@ -1,0 +1,8 @@
+.wrap {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.controls {
+	margin-left: 20px;
+}
