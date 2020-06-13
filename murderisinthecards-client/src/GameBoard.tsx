@@ -60,8 +60,10 @@ function Squares() {
 				gridRowStart: x + 1,
 				gridColumnStart: y + 1,
 			};
+			const squareKey = `sq.x${x}y${y}`;
 			squares.push(
 				<div
+					key={squareKey}
 					onClick={handleMoveToCoord([x,y])}
 					className={Styles.square}
 					style={squareStyle}
@@ -83,6 +85,7 @@ function Squares() {
 		};
 		rooms.push(
 			<div
+				key={roomName}
 				onClick={handleMoveToRoom(roomName)}
 				className={Styles.room}
 				style={roomStyle}>
@@ -95,8 +98,10 @@ function Squares() {
 				gridRowStart: x + 1,
 				gridColumnStart: y + 1,
 			};
+			const doorKey = `d.x${x}y${y}`;
 			rooms.push(
 				<div
+					key={doorKey}
 					onClick={handleMoveToCoord([x,y])}
 					className={Styles.door}
 					style={doorStyle}
@@ -136,7 +141,12 @@ function Suspects() {
 		};
 
 		suspects.push(
-			<div className={Styles.suspect} style={style}>{'\u265f'}</div>
+			<div
+				key={playerId}
+				className={Styles.suspect}
+				style={style}>
+				{'\u265f'}
+			</div>
 		);
 	}
 
