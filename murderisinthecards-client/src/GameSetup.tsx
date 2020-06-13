@@ -8,8 +8,8 @@ import {
 
 import {
 	GameStateContext,
-	SecretStateContext,
 	SendMessageContext,
+	SessionIdContext,
 } from './Context'
 
 function GameSetup() {
@@ -24,7 +24,7 @@ function GameSetup() {
 
 function SelectSuspect() {
 	const gameState = React.useContext(GameStateContext);
-	const secretState = React.useContext(SecretStateContext);
+	const sessionId = React.useContext(SessionIdContext);
 	const sendMessage = React.useContext(SendMessageContext);
 
 	const [name, setName] = React.useState('');
@@ -48,7 +48,7 @@ function SelectSuspect() {
 	);
 
 	const err = CanDo.playerSetup(
-		secretState,
+		sessionId,
 		gameState,
 		name,
 		suspect,
@@ -93,10 +93,10 @@ function ConnectedPlayers() {
 
 function BeginGame() {
 	const gameState = React.useContext(GameStateContext);
-	const secretState = React.useContext(SecretStateContext);
 	const sendMessage = React.useContext(SendMessageContext);
+	const sessionId = React.useContext(SessionIdContext);
 
-	const err = CanDo.beginGame(secretState, gameState);
+	const err = CanDo.beginGame(sessionId, gameState);
 	const readyToBegin = err === null;
 
 	const start = () => {

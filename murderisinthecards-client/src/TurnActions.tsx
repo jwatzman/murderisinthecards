@@ -5,15 +5,15 @@ import { ClientToServerMessage } from 'murderisinthecards-common/Consts';
 
 import {
 	GameStateContext,
-	SecretStateContext,
 	SendMessageContext,
+	SessionIdContext,
 } from './Context'
 
 export default function TurnActions() {
 	const gameState = React.useContext(GameStateContext);
-	const secretState = React.useContext(SecretStateContext);
+	const sessionId = React.useContext(SessionIdContext);
 
-	if (gameState.currentPlayer !== secretState) {
+	if (gameState.currentPlayer !== sessionId) {
 		return null;
 	}
 
@@ -30,10 +30,10 @@ export default function TurnActions() {
 
 function RollDie() {
 	const gameState = React.useContext(GameStateContext);
-	const secretState = React.useContext(SecretStateContext);
 	const sendMessage = React.useContext(SendMessageContext);
+	const sessionId = React.useContext(SessionIdContext);
 
-	const err = CanDo.rollDie(secretState, gameState);
+	const err = CanDo.rollDie(sessionId, gameState);
 	const canRoll = err === null;
 	if (!canRoll) {
 		return null;
@@ -51,10 +51,10 @@ function RollDie() {
 
 function EndTurn() {
 	const gameState = React.useContext(GameStateContext);
-	const secretState = React.useContext(SecretStateContext);
 	const sendMessage = React.useContext(SendMessageContext);
+	const sessionId = React.useContext(SessionIdContext);
 
-	const err = CanDo.endTurn(secretState, gameState);
+	const err = CanDo.endTurn(sessionId, gameState);
 	const canEnd = err === null;
 	if (!canEnd) {
 		return null;

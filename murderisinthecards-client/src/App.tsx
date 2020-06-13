@@ -11,8 +11,8 @@ import { ConstGameState } from 'murderisinthecards-common/ConstGameState';
 import {
 	GameMessagesContext,
 	GameStateContext,
-	SecretStateContext,
 	SendMessageContext,
+	SessionIdContext,
 } from './Context';
 import GameSetup from './GameSetup';
 import GamePlay from './GamePlay';
@@ -21,7 +21,7 @@ function App() {
 	const [gameMessages, setGameMessages] = React.useState<string[]>([]);
 	const [gameState, setGameState] = React.useState<ConstGameState | null>(null);
 	const [room, setRoom] = React.useState<Colyseus.Room | null>(null);
-	const [secretState, setSecretState] = React.useState<string | null>(null);
+	const [sessionId, setSessionId] = React.useState<string | null>(null);
 
 	React.useEffect(() => {
 		if (room) {
@@ -31,7 +31,7 @@ function App() {
 		const client = new Colyseus.Client('ws://localhost:2567');
 		client.joinOrCreate('my_room').then(room => {
 			setRoom(room);
-			setSecretState(room.sessionId); // TODO figure out lifecycle for this
+			setSessionId(room.sessionId);
 		});
 	}, [room]);
 
@@ -69,13 +69,13 @@ function App() {
 
 	return (
 		<SendMessageContext.Provider value={sendMessage}>
-			<SecretStateContext.Provider value={secretState!}>
+			<SessionIdContext.Provider value={sessionId!}>
 				<GameMessagesContext.Provider value={gameMessages}>
 					<GameStateContext.Provider value={gameState}>
 						<Game />
 					</GameStateContext.Provider>
 				</GameMessagesContext.Provider>
-			</SecretStateContext.Provider>
+			</SessionIdContext.Provider>
 		</SendMessageContext.Provider>
 	);
 }

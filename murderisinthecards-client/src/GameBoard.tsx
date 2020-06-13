@@ -10,7 +10,7 @@ import {
 import {
 	GameStateContext,
 	SendMessageContext,
-	SecretStateContext,
+	SessionIdContext,
 } from './Context';
 import getSuspectColor from './SuspectColor';
 
@@ -27,13 +27,13 @@ export default function GameBoard() {
 
 function Squares() {
 	const gameState = React.useContext(GameStateContext);
+	const sessionId = React.useContext(SessionIdContext);
 	const sendMessage = React.useContext(SendMessageContext);
-	const secretState = React.useContext(SecretStateContext);
 
 	const handleMoveToCoord = (coord: Coord) => (evt: React.SyntheticEvent) => {
 		evt.preventDefault();
 
-		const err = CanDo.moveToCoord(secretState, gameState, coord);
+		const err = CanDo.moveToCoord(sessionId, gameState, coord);
 		if (err != null) {
 			return;
 		}
@@ -44,7 +44,7 @@ function Squares() {
 	const handleMoveToRoom = (room: Room) => (evt: React.SyntheticEvent) => {
 		evt.preventDefault();
 
-		const err = CanDo.moveToRoom(secretState, gameState, room);
+		const err = CanDo.moveToRoom(sessionId, gameState, room);
 		if (err != null) {
 			return;
 		}
