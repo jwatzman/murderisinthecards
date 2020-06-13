@@ -1,11 +1,19 @@
 import { Schema, type, ArraySchema, MapSchema } from '@colyseus/schema';
 
-import { Room, Suspect, PlayPhase } from 'murderisinthecards-common/Consts';
+import {
+	Card,
+	Room,
+	Suspect,
+	PlayPhase,
+	Weapon,
+} from 'murderisinthecards-common/Consts';
 import { ConstGameState } from 'murderisinthecards-common/ConstGameState';
+
+type Solution = [Suspect, Weapon, Room];
 
 export class PlayerState extends Schema {
 	@type('string')
-	public suspect: Suspect = ('' as Suspect);
+	public suspect: Suspect = null!;
 
 	@type('string')
 	public name = '';
@@ -18,6 +26,9 @@ export class PlayerState extends Schema {
 
 	@type('string')
 	public room: (Room | '') = '';
+
+	// Not sync'd in main state:
+	public cards: Card[] = [];
 }
 
 export class GameState extends Schema {
@@ -32,10 +43,13 @@ export class GameState extends Schema {
 	public turnOrder = new ArraySchema<string>();
 
 	@type('string')
-	public currentPlayer = '';
+	public currentPlayer: string = null!;
 
 	@type('int8')
 	public dieRoll = 0;
+
+	// Not sync'd in main state:
+	public solution: Solution = null!;
 
 	toConstGameState(): ConstGameState {
 		// This is a dirty lie, but close enough to the truth to work, and

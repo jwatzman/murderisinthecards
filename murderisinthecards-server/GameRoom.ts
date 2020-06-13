@@ -3,7 +3,12 @@ import { Client, Room as ColRoom } from 'colyseus';
 import { Coord } from 'murderisinthecards-common/BoardLayout';
 import * as CanDo from 'murderisinthecards-common/CanDo';
 import {
-	ClientToServerMessage, PlayPhase, Room, ServerToClientMessage, Suspect
+	ClientToServerMessage,
+	PlayPhase,
+	Room,
+	ServerToClientMessage,
+	Suspect,
+	Weapon,
 } from 'murderisinthecards-common/Consts';
 
 import { GameState } from './GameState';
@@ -101,7 +106,11 @@ export class GameRoom extends ColRoom<GameState> {
 			this.state.turnOrder.push(player);
 		}
 
-		// TODO: shuffle cards
+		this.shuffleCards();
+		for (const client of this.clients) {
+			this.sendCardsToPlayer(client);
+		}
+
 		this.broadcastGameMessage('The game begins!');
 		this.advanceTurn();
 	}
@@ -188,18 +197,50 @@ export class GameRoom extends ColRoom<GameState> {
 		this.broadcast(ServerToClientMessage.GAME_MESSAGE, message);
 	}
 
-	private advanceTurn(): void {
+	private sendCardsToPlayer(client: Client) {
+		client.send(
+			ServerToClientMessage.YOUR_CARDS,
+			this.state.getPlayer(client.sessionId).cards
+		);
+	}
+
+	private shuffleCards() {
+		const suspects = Object.values(Suspect);
+		shuffle(suspects);
+
+		const weapons = Object.values(Weapon);
+		shuffle(weapons);
+
+		const rooms = Object.values(Room);
+		shuffle(rooms);
+
+		this.state.solution = [suspects.pop()!, weapons.pop()!, rooms.pop()!];
+
+		const cards = [...suspects, ...weapons, ...rooms];
+		shuffle(cards);
+
+		let player = null;
+		while (cards.length > 0) {
+			player = this.getNextPlayer(player);
+			this.state.getPlayer(player).cards.push(cards.pop()!);
+		}
+	}
+
+	private getNextPlayer(player: string | null): string {
+		if (player) {
+			const playerIdx =
+				this.state.turnOrder.indexOf(player);
+			const nextPlayerIdx = (playerIdx + 1) % this.state.turnOrder.length;
+			return this.state.turnOrder[nextPlayerIdx];
+		} else {
+			return this.state.turnOrder[0];
+		}
+	}
+
+	private advanceTurn() {
 		this.state.phase = PlayPhase.BEGIN_TURN;
 		this.state.dieRoll = 0;
-
-		if (this.state.currentPlayer) {
-			const playerIdx =
-				this.state.turnOrder.indexOf(this.state.currentPlayer);
-			const nextPlayerIdx = (playerIdx + 1) % this.state.turnOrder.length;
-			this.state.currentPlayer = this.state.turnOrder[nextPlayerIdx];
-		} else {
-			this.state.currentPlayer = this.state.turnOrder[0];
-		}
+		this.state.currentPlayer = this.getNextPlayer(this.state.currentPlayer);
 
 		this.broadcastGameMessage(
 			this.state.getPlayer(this.state.currentPlayer).name + '\'s turn'
