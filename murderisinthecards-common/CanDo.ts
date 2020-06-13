@@ -110,8 +110,11 @@ export function moveToCoord(
 
 	const [maxX, maxY] = BoardConfig.extent;
 	if (x < 0 || y < 0 || x > maxX || y > maxY) {
-		return 'Can\'t momve off the edge of the board!';
+		return 'Can\'t move off the edge of the board!';
 	}
+
+	// TODO: make sure coord isn't under a room
+	// TODO: make sure coord isn't occupied
 
 	const player = state.players[playerId];
 	const currentRoom = player.room;
@@ -152,7 +155,7 @@ export function moveToRoom(
 		return 'Already in a room!';
 	}
 
-	// XXX check if you left this room this turn
+	// TODO check if you left this room this turn
 
 	if (!isDoorOf(room, [player.x, player.y])) {
 		return 'Can only enter through the doors!';
