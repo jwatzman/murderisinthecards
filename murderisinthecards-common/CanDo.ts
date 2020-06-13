@@ -1,5 +1,6 @@
-import { PlayPhase } from './Consts';
+import { PlayPhase, Room } from './Consts';
 import { ConstGameState } from './ConstGameState';
+import { BoardConfig, Coord } from './BoardLayout';
 
 export function playerSetup(
 	playerId: string,
@@ -72,6 +73,89 @@ export function endTurn(
 
 	if (state.phase !== PlayPhase.MOVEMENT) {
 		return 'You can\'t do that now!';
+	}
+
+	return null;
+}
+
+function isDoorOf(
+	room: Room,
+	[x,y]: Coord,
+): boolean {
+	for (const [doorX,doorY] of BoardConfig.rooms[room].doors) {
+		if (x == doorX && y == doorY) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+export function moveToCoord(
+	playerId: string,
+	state: ConstGameState,
+	[x,y]: Coord,
+): string | null {
+	if (playerId != state.currentPlayer) {
+		return 'Not your turn!';
+	}
+
+	if (state.phase != PlayPhase.MOVEMENT) {
+		return 'You can\'t do that now!';
+	}
+
+	if (state.dieRoll == 0) {
+		return 'You can\'t move any more!';
+	}
+
+	const [maxX, maxY] = BoardConfig.extent;
+	if (x < 0 || y < 0 || x > maxX || y > maxY) {
+		return 'Can\'t momve off the edge of the board!';
+	}
+
+	const player = state.players[playerId];
+	const currentRoom = player.room;
+	if (currentRoom) {
+		if (!isDoorOf(currentRoom, [x,y])) {
+			return 'Can only leave through the doors!';
+		}
+	} else {
+		const deltaX = player.x - x;
+		const deltaY = player.y - y;
+		if (Math.abs(deltaX) + Math.abs(deltaY) != 1) {
+			return 'Can\'t move that much!';
+		}
+	}
+
+	return null;
+}
+
+export function moveToRoom(
+	playerId: string,
+	state: ConstGameState,
+	room: Room,
+): string | null {
+	if (playerId != state.currentPlayer) {
+		return 'Not your turn!';
+	}
+
+	if (state.phase != PlayPhase.MOVEMENT) {
+		return 'You can\'t do that now!';
+	}
+
+	if (state.dieRoll == 0) {
+		return 'You can\'t move any more!';
+	}
+
+	const player = state.players[playerId];
+	if (player.room) {
+		return 'Already in a room!';
+	}
+
+	// XXX check if you left this room this turn
+
+	if (!isDoorOf(room, [player.x, player.y])) {
+		return 'Can only enter through the doors!';
 	}
 
 	return null;

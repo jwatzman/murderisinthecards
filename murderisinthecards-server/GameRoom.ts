@@ -142,8 +142,18 @@ export class GameRoom extends ColRoom<GameState> {
 		client: Client,
 		coord: Coord,
 	) {
-		// TODO: check move validity
 		const sessionId = client.sessionId;
+
+		const err = CanDo.moveToCoord(
+			sessionId,
+			this.state.toConstGameState(),
+			coord,
+		);
+		if (err) {
+			client.error(0, err);
+			return;
+		}
+
 		const player = this.state.getPlayer(sessionId);
 		[player.x, player.y] = coord;
 		player.room = '';
@@ -154,8 +164,18 @@ export class GameRoom extends ColRoom<GameState> {
 		client: Client,
 		room: Room,
 	) {
-		// TODO: check move validity
 		const sessionId = client.sessionId;
+
+		const err = CanDo.moveToRoom(
+			sessionId,
+			this.state.toConstGameState(),
+			room,
+		);
+		if (err) {
+			client.error(0, err);
+			return;
+		}
+
 		const player = this.state.getPlayer(sessionId);
 		player.room = room;
 		this.state.dieRoll = 0;

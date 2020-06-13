@@ -2,11 +2,16 @@ import React from 'react';
 import { $enum } from 'ts-enum-util';
 
 import { Coord, BoardConfig } from 'murderisinthecards-common/BoardLayout';
+import * as CanDo from 'murderisinthecards-common/CanDo';
 import {
 	ClientToServerMessage, Room
 } from 'murderisinthecards-common/Consts';
 
-import { GameStateContext, SendMessageContext } from './Context';
+import {
+	GameStateContext,
+	SendMessageContext,
+	SecretStateContext,
+} from './Context';
 import getSuspectColor from './SuspectColor';
 
 import Styles from './GameBoard.module.css';
@@ -21,17 +26,29 @@ export default function GameBoard() {
 }
 
 function Squares() {
+	const gameState = React.useContext(GameStateContext);
 	const sendMessage = React.useContext(SendMessageContext);
+	const secretState = React.useContext(SecretStateContext);
 
 	const handleMoveToCoord = (coord: Coord) => (evt: React.SyntheticEvent) => {
 		evt.preventDefault();
-		// TODO: check move validity
+
+		const err = CanDo.moveToCoord(secretState, gameState, coord);
+		if (err != null) {
+			return;
+		}
+
 		sendMessage(ClientToServerMessage.MOVE_TO_COORD, coord);
 	};
 
 	const handleMoveToRoom = (room: Room) => (evt: React.SyntheticEvent) => {
 		evt.preventDefault();
-		// TODO: check move validity
+
+		const err = CanDo.moveToRoom(secretState, gameState, room);
+		if (err != null) {
+			return;
+		}
+
 		sendMessage(ClientToServerMessage.MOVE_TO_ROOM, room);
 	};
 
