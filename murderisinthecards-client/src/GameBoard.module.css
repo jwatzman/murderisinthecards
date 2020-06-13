@@ -1,9 +1,11 @@
+@value grid-size: 30px;
+
 .board {
 	border: 3px solid black;
 	display: inline-grid;
 	/* TODO: figure out how to sync this with BoardConfig.extent */
-	grid-template-rows: repeat(23, 30px);
-	grid-template-columns: repeat(22, 30px);
+	grid-template-rows: repeat(23, grid-size);
+	grid-template-columns: repeat(22, grid-size);
 }
 
 .square {
@@ -37,7 +39,7 @@
 	composes: centerText;
 	grid-row-end: span 1;
 	grid-column-end: span 1;
-	font-size: 30px; /* TODO: figure out how to sync this with grid-template */
+	font-size: grid-size;
 
 	-webkit-text-stroke: 1px black;
 	text-stroke: 1px black;
