@@ -4,10 +4,12 @@ import React from 'react';
 import {
 	ClientToServerMessage,
 	PlayPhase,
+	ServerToClientMessage,
 } from 'murderisinthecards-common/Consts';
 import { ConstGameState } from 'murderisinthecards-common/ConstGameState';
 
 import {
+	GameMessagesContext,
 	GameStateContext,
 	SecretStateContext,
 	SendMessageContext,
@@ -16,6 +18,7 @@ import GameSetup from './GameSetup';
 import GamePlay from './GamePlay';
 
 function App() {
+	const [gameMessages, setGameMessages] = React.useState<string[]>([]);
 	const [gameState, setGameState] = React.useState<ConstGameState | null>(null);
 	const [room, setRoom] = React.useState<Colyseus.Room | null>(null);
 	const [secretState, setSecretState] = React.useState<string | null>(null);
@@ -42,6 +45,16 @@ function App() {
 			setGameState(Object.assign({}, newState)); // XXX should be deep copy
 		});
 
+		room.onMessage(ServerToClientMessage.GAME_MESSAGE, message => {
+			setGameMessages(oldMessages => {
+				const newMessages = oldMessages.concat([message]);
+				while (newMessages.length > 10) {
+					newMessages.shift();
+				}
+				return newMessages;
+			});
+		});
+
 		room.onError((_, message) => {
 			window.alert(message);
 		});
@@ -57,9 +70,11 @@ function App() {
 	return (
 		<SendMessageContext.Provider value={sendMessage}>
 			<SecretStateContext.Provider value={secretState!}>
-				<GameStateContext.Provider value={gameState}>
-					<Game />
-				</GameStateContext.Provider>
+				<GameMessagesContext.Provider value={gameMessages}>
+					<GameStateContext.Provider value={gameState}>
+						<Game />
+					</GameStateContext.Provider>
+				</GameMessagesContext.Provider>
 			</SecretStateContext.Provider>
 		</SendMessageContext.Provider>
 	);

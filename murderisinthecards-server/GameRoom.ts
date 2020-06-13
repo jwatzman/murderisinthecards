@@ -3,7 +3,7 @@ import { Client, Room as ColRoom } from 'colyseus';
 import { Coord } from 'murderisinthecards-common/BoardLayout';
 import * as CanDo from 'murderisinthecards-common/CanDo';
 import {
-	ClientToServerMessage, PlayPhase, Room, Suspect
+	ClientToServerMessage, PlayPhase, Room, ServerToClientMessage, Suspect
 } from 'murderisinthecards-common/Consts';
 
 import { GameState } from './GameState';
@@ -95,8 +95,6 @@ export class GameRoom extends ColRoom<GameState> {
 			return;
 		}
 
-		console.log('Begin game');
-
 		const turnOrderArr = this.state.getAllPlayerIds();
 		shuffle(turnOrderArr);
 		for (const player of turnOrderArr) {
@@ -104,14 +102,16 @@ export class GameRoom extends ColRoom<GameState> {
 		}
 
 		// TODO: shuffle cards
+		this.broadcastGameMessage('The game begins!');
 		this.advanceTurn();
 	}
 
 	private handleRollDie(
 		client: Client,
 	) {
+		const sessionId = client.sessionId;
 		const err = CanDo.rollDie(
-			client.sessionId,
+			sessionId,
 			this.state.toConstGameState(),
 		);
 		if (err) {
@@ -121,6 +121,9 @@ export class GameRoom extends ColRoom<GameState> {
 
 		this.state.dieRoll = Math.floor(Math.random() * 6) + 1;
 		this.state.phase = PlayPhase.MOVEMENT;
+		this.broadcastGameMessage(
+			this.state.getPlayer(sessionId).name + ' rolls a ' + this.state.dieRoll
+		);
 	}
 
 	private handleEndTurn(
@@ -181,6 +184,10 @@ export class GameRoom extends ColRoom<GameState> {
 		this.state.dieRoll = 0;
 	}
 
+	private broadcastGameMessage(message: string) {
+		this.broadcast(ServerToClientMessage.GAME_MESSAGE, message);
+	}
+
 	private advanceTurn(): void {
 		this.state.phase = PlayPhase.BEGIN_TURN;
 		this.state.dieRoll = 0;
@@ -193,6 +200,10 @@ export class GameRoom extends ColRoom<GameState> {
 		} else {
 			this.state.currentPlayer = this.state.turnOrder[0];
 		}
+
+		this.broadcastGameMessage(
+			this.state.getPlayer(this.state.currentPlayer).name + '\'s turn'
+		);
 	}
 
 }

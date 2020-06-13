@@ -45,3 +45,8 @@ export enum ClientToServerMessage {
 
 	END_TURN = 'end_turn',
 }
+
+export enum ServerToClientMessage {
+	GAME_MESSAGE = 'game_message',
+	SECRET_STATE = 'secret_state',
+}
