@@ -10,6 +10,7 @@ import {
 import { ConstGameState } from 'murderisinthecards-common/ConstGameState';
 
 import {
+	GameMessage,
 	GameMessagesContext,
 	GameStateContext,
 	SendMessageContext,
@@ -19,9 +20,11 @@ import {
 import GameSetup from './GameSetup';
 import GamePlay from './GamePlay';
 
+let nextGameMessageId = 0;
+
 function App() {
 	const [cards, setCards] = React.useState<Card[]>([]);
-	const [gameMessages, setGameMessages] = React.useState<string[]>([]);
+	const [gameMessages, setGameMessages] = React.useState<GameMessage[]>([]);
 	const [gameState, setGameState] = React.useState<ConstGameState | null>(null);
 	const [room, setRoom] = React.useState<Colyseus.Room | null>(null);
 	const [sessionId, setSessionId] = React.useState<string | null>(null);
@@ -50,7 +53,8 @@ function App() {
 
 		room.onMessage(ServerToClientMessage.GAME_MESSAGE, message => {
 			setGameMessages(oldMessages => {
-				const newMessages = oldMessages.concat([message]);
+				const newMessage = {message, id: nextGameMessageId++};
+				const newMessages = oldMessages.concat(newMessage);
 				while (newMessages.length > 10) {
 					newMessages.shift();
 				}

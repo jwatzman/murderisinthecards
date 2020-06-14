@@ -8,7 +8,7 @@ export default function GameMessages() {
 	return (
 		<div>
 			<ul>
-				{messages.map(m => <li key={m}>{m}</li>).reverse()}
+				{messages.map(m => <li key={m.id}>{m.message}</li>).reverse()}
 			</ul>
 		</div>
 	);
