@@ -3,6 +3,7 @@ import { Client, Room as ColRoom } from 'colyseus';
 import { Coord } from 'murderisinthecards-common/BoardLayout';
 import * as CanDo from 'murderisinthecards-common/CanDo';
 import {
+	Card,
 	ClientToServerMessage,
 	PlayPhase,
 	Room,
@@ -52,6 +53,10 @@ export class GameRoom extends ColRoom<GameState> {
 		this.onMessage(
 			ClientToServerMessage.MAKE_SUGGESTION,
 			this.handleMakeSuggestion.bind(this),
+		);
+		this.onMessage(
+			ClientToServerMessage.DISPROVE_SUGGESTION,
+			this.handleDisproveSuggestion.bind(this),
 		);
 	}
 
@@ -231,6 +236,47 @@ export class GameRoom extends ColRoom<GameState> {
 		// TODO: move suspect into room
 
 		this.advanceDisproving();
+	}
+
+	private handleDisproveSuggestion(
+		client: Client,
+		card: Card | null,
+	) {
+		const sessionId = client.sessionId;
+		const player = this.state.getPlayer(sessionId);
+
+		const err = CanDo.disproveSuggestion(
+			sessionId,
+			this.state.toConstGameState(),
+			player.cards,
+			card,
+		);
+		if (err) {
+			client.error(0, err);
+			return;
+		}
+
+		if (card) {
+			this.broadcastGameMessage(`${player.name} disproves the suggestion!`);
+
+			// Ugh, I wish there were a better way to do this.
+			for (const otherClient of this.clients) {
+				if (otherClient.sessionId === this.state.currentPlayer) {
+					otherClient.send(
+						ServerToClientMessage.GAME_MESSAGE,
+						`${player.name} shows you their ${card} card!`
+					);
+					break;
+				}
+			}
+
+			this.state.currentPlayerDisprovingSuggestion = '';
+		} else {
+			this.broadcastGameMessage(
+				`${player.name} cannot disprove the suggestion!`
+			);
+			this.advanceDisproving();
+		}
 	}
 
 	private broadcastGameMessage(message: string) {

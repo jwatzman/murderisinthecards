@@ -1,4 +1,4 @@
-import { PlayPhase, Room, Solution } from './Consts';
+import { Card, PlayPhase, Room, Solution } from './Consts';
 import { ConstGameState } from './ConstGameState';
 import { BoardConfig, Coord } from './BoardLayout';
 
@@ -71,11 +71,16 @@ export function endTurn(
 		return 'Not your turn!';
 	}
 
-	if (state.phase !== PlayPhase.MOVEMENT) {
-		return 'You can\'t do that now!';
+	if (state.phase === PlayPhase.MOVEMENT) {
+		return null;
 	}
 
-	return null;
+	if (state.phase === PlayPhase.SUGGESTION_RESOLUTION &&
+			!state.currentPlayerDisprovingSuggestion) {
+		return null;
+	}
+
+	return 'You can\'t do that now!';
 }
 
 function isDoorOf(
@@ -198,6 +203,51 @@ export function makeSuggestion(
 	const [, , room] = suggestion;
 	if (state.players[playerId].room !== room) {
 		return 'You must suggest the room you\'re in!';
+	}
+
+	return null;
+}
+
+export function disproveAnySuggestion(
+	playerId: string,
+	state: ConstGameState,
+): string | null {
+	if (state.phase != PlayPhase.SUGGESTION_RESOLUTION) {
+		return 'You can\'t do that now!';
+	}
+
+	if (playerId != state.currentPlayerDisprovingSuggestion) {
+		return 'Not your turn!';
+	}
+
+	return null;
+}
+
+export function disproveSuggestion(
+	playerId: string,
+	state: ConstGameState,
+	playerCards: Card[],
+	card: Card | null,
+): string | null {
+	const err = disproveAnySuggestion(playerId, state);
+	if (err) {
+		return err;
+	}
+
+	if (card) {
+		if (!playerCards.includes(card)) {
+			return 'That isn\'t one of your cards!';
+		}
+
+		if (!state.suggestion.includes(card)) {
+			return 'That wasn\'t suggested!';
+		}
+	} else {
+		for (const sugCard of state.suggestion) {
+			if (playerCards.includes(sugCard)) {
+				return 'You have a card that can disprove the suggestion!';
+			}
+		}
 	}
 
 	return null;
