@@ -1,6 +1,6 @@
 import { Card, PlayPhase, Room, Solution } from './Consts';
 import { ConstGameState } from './ConstGameState';
-import { BoardConfig, Coord } from './BoardLayout';
+import { BoardConfig, BoardLayout, Coord } from './BoardLayout';
 
 export function playerSetup(
 	playerId: string,
@@ -118,8 +118,15 @@ export function moveToCoord(
 		return 'Can\'t move off the edge of the board!';
 	}
 
-	// TODO: make sure coord isn't under a room
-	// TODO: make sure coord isn't occupied
+	if (BoardLayout[x][y]) {
+		return 'Can\'t move under a room!';
+	}
+
+	for (const otherPlayer of Object.values(state.players)) {
+		if (!otherPlayer.room && otherPlayer.x == x && otherPlayer.y == y) {
+			return 'Can\'t move on top of another player!';
+		}
+	}
 
 	const player = state.players[playerId];
 	const currentRoom = player.room;
