@@ -7,6 +7,7 @@ type BoardConfig = {
 		readonly coords: readonly [Coord, Coord],
 		readonly doors: readonly Coord[],
 	}},
+	readonly void: readonly [Coord, Coord],
 };
 
 export const BoardConfig: BoardConfig = {
@@ -49,9 +50,10 @@ export const BoardConfig: BoardConfig = {
 			doors: [[4,6],[7,8],[7,13],[4,15]],
 		},
 	},
+	void: [[9,9],[15,13]],
 } as const;
 
-type BoardSquare = Room | null;
+type BoardSquare = Room | 'VOID' | null;
 type BoardLayout = readonly BoardSquare[][];
 
 function computeBoardLayout(): BoardLayout {
@@ -59,7 +61,7 @@ function computeBoardLayout(): BoardLayout {
 	const [maxX, maxY] = BoardConfig.extent;
 
 	for (let x = 0; x <= maxX; x++) {
-		const minor = [];
+		const minor: BoardSquare[] = [];
 		for (let y = 0; y <= maxY; y++) {
 			minor.push(computeBoardSquare(x, y));
 		}
@@ -79,6 +81,11 @@ function computeBoardSquare(x: number, y: number): BoardSquare {
 			return roomName;
 		}
 	} 
+
+	const [[voidMinX,voidMinY],[voidMaxX,voidMaxY]] = BoardConfig.void;
+	if (x >= voidMinX && y >= voidMinY && x <= voidMaxX && y <= voidMaxY) {
+		return 'VOID';
+	}
 
 	return null;
 }

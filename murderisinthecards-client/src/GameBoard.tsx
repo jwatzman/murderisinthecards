@@ -108,10 +108,21 @@ function Squares() {
 		}
 	}
 
+	const [[voidMinX,voidMinY],[voidMaxX,voidMaxY]] = BoardConfig.void;
+	const voidStyle = {
+		gridRowStart: voidMinX + 1,
+		gridRowEnd: voidMaxX + 1 + 1,
+		gridColumnStart: voidMinY + 1,
+		gridColumnEnd: voidMaxY + 1 + 1,
+	};
+	const voidRoom =
+		<div key="void" className={Styles.void} style={voidStyle} />;
+
 	return (
 		<>
 			{squares}
 			{rooms}
+			{voidRoom}
 		</>
 	);
 }
