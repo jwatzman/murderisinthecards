@@ -53,7 +53,11 @@ function SelectSuspect() {
 				Name:
 				<input type="text" value={name} onChange={changeName} />
 			</label>
-			<SelectEnum onChange={setSuspect} values={Object.values(Suspect)} />
+			<SelectEnum
+				onChange={setSuspect}
+				values={Object.values(Suspect)}
+				value={suspect}
+			/>
 			<input disabled={!canSetUp} type="submit" value="Submit" />
 		</form>
 	);
