@@ -87,13 +87,27 @@ function MakeSuggestion() {
 	const sendMessage = React.useContext(SendMessageContext);
 	const sessionId = React.useContext(SessionIdContext);
 
+	const [expanded, setExpanded] = React.useState(false);
+
 	const [suspect, setSuspect] = React.useState(Suspect.BLOOD);
 	const [weapon, setWeapon] = React.useState(Weapon.AK47);
 
 	const err = CanDo.makeAnySuggestion(sessionId, gameState);
 	const canSuggest = err === null;
 	if (!canSuggest) {
+		if (expanded) {
+			setExpanded(false);
+		}
+
 		return null;
+	}
+
+	if (!expanded) {
+		const expand = (e: React.SyntheticEvent) => {
+			e.preventDefault();
+			setExpanded(true);
+		};
+		return <li><button onClick={expand}>Make suggestion</button></li>;
 	}
 
 	const room = gameState.players[sessionId].room;
