@@ -41,10 +41,16 @@ export class GameState extends Schema {
 	public turnOrder = new ArraySchema<string>();
 
 	@type('string')
-	public currentPlayer: string = null!;
+	public currentPlayer = '';
 
-	@type('int8')
+	@type('uint8')
 	public dieRoll = 0;
+
+	@type(['string'])
+	public suggestion = new ArraySchema<Card>();
+
+	@type('string')
+	public currentPlayerDisprovingSuggestion = '';
 
 	// Not sync'd in main state:
 	public solution: Solution = null!;
@@ -67,6 +73,10 @@ export class GameState extends Schema {
 
 	getPlayer(id: string): PlayerState {
 		return this.players[id];
+	}
+
+	getCurrentPlayer(): PlayerState {
+		return this.getPlayer(this.currentPlayer);
 	}
 
 	getAllPlayerIds(): string[] {

@@ -1,4 +1,9 @@
-import { Room, Suspect, PlayPhase } from 'murderisinthecards-common/Consts';
+import {
+	Room,
+	Suspect,
+	PlayPhase,
+	Solution,
+} from 'murderisinthecards-common/Consts';
 
 export type ConstPlayerState = {
 	readonly suspect: Suspect,
@@ -14,4 +19,6 @@ export type ConstGameState = {
 	readonly turnOrder: string[],
 	readonly currentPlayer: string,
 	readonly dieRoll: number,
+	readonly suggestion: Solution;
+	readonly currentPlayerDisprovingSuggestion: string;
 };

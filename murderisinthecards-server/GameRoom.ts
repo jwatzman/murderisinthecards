@@ -7,6 +7,7 @@ import {
 	PlayPhase,
 	Room,
 	ServerToClientMessage,
+	Solution,
 	Suspect,
 	Weapon,
 } from 'murderisinthecards-common/Consts';
@@ -47,6 +48,10 @@ export class GameRoom extends ColRoom<GameState> {
 		this.onMessage(
 			ClientToServerMessage.MOVE_TO_ROOM,
 			this.handleMoveToRoom.bind(this),
+		);
+		this.onMessage(
+			ClientToServerMessage.MAKE_SUGGESTION,
+			this.handleMakeSuggestion.bind(this),
 		);
 	}
 
@@ -196,6 +201,38 @@ export class GameRoom extends ColRoom<GameState> {
 		this.state.dieRoll = 0;
 	}
 
+	private handleMakeSuggestion(
+		client: Client,
+		suggestion: Solution,
+	) {
+		const sessionId = client.sessionId;
+
+		const err = CanDo.makeSuggestion(
+			sessionId,
+			this.state.toConstGameState(),
+			suggestion,
+		);
+		if (err) {
+			client.error(0, err);
+			return;
+		}
+
+		this.state.phase = PlayPhase.SUGGESTION_RESOLUTION;
+		for (let i = 0; i < suggestion.length; i++) {
+			this.state.suggestion[i] = suggestion[i];
+		}
+
+		const [suspect, weapon, room] = suggestion;
+		const name = this.state.getCurrentPlayer().name;
+		this.broadcastGameMessage(
+			`${name} suggests ${suspect} with the ${weapon} in the ${room}`
+		);
+
+		// TODO: move suspect into room
+
+		this.advanceDisproving();
+	}
+
 	private broadcastGameMessage(message: string) {
 		this.broadcast(ServerToClientMessage.GAME_MESSAGE, message);
 	}
@@ -222,14 +259,14 @@ export class GameRoom extends ColRoom<GameState> {
 		const cards = [...suspects, ...weapons, ...rooms];
 		shuffle(cards);
 
-		let player = null;
+		let player = '';
 		while (cards.length > 0) {
 			player = this.getNextPlayer(player);
 			this.state.getPlayer(player).cards.push(cards.pop()!);
 		}
 	}
 
-	private getNextPlayer(player: string | null): string {
+	private getNextPlayer(player: string): string {
 		if (player) {
 			const playerIdx =
 				this.state.turnOrder.indexOf(player);
@@ -245,9 +282,27 @@ export class GameRoom extends ColRoom<GameState> {
 		this.state.dieRoll = 0;
 		this.state.currentPlayer = this.getNextPlayer(this.state.currentPlayer);
 
-		this.broadcastGameMessage(
-			this.state.getPlayer(this.state.currentPlayer).name + '\'s turn'
-		);
+		const name = this.state.getCurrentPlayer().name;
+		this.broadcastGameMessage(`${name}'s turn`);
+	}
+
+	private advanceDisproving() {
+		if (!this.state.currentPlayerDisprovingSuggestion) {
+			this.state.currentPlayerDisprovingSuggestion = this.state.currentPlayer;
+		}
+
+		const next =
+			this.getNextPlayer(this.state.currentPlayerDisprovingSuggestion);
+
+		if (next == this.state.currentPlayer) {
+			const name = this.state.getCurrentPlayer().name;
+			this.broadcastGameMessage(
+				`No one was able to disprove ${name}'s suggestion!`
+			);
+			this.state.currentPlayerDisprovingSuggestion = '';
+		} else {
+			this.state.currentPlayerDisprovingSuggestion = next;
+		}
 	}
 
 }
