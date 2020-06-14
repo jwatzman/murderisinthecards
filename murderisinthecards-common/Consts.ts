@@ -49,6 +49,8 @@ export enum ClientToServerMessage {
 	MAKE_SUGGESTION = 'make_suggestion',
 	DISPROVE_SUGGESTION = 'disprove_suggestion',
 
+	MAKE_ACCUSATION = 'make_accusation',
+
 	END_TURN = 'end_turn',
 }
 

@@ -63,6 +63,22 @@ export function rollDie(
 	return null;
 }
 
+export function makeAccusation(
+	playerId: string,
+	state: ConstGameState,
+): string | null {
+	if (playerId != state.currentPlayer) {
+		return 'Not your turn!';
+	}
+
+	if (state.phase === PlayPhase.SUGGESTION_RESOLUTION &&
+			state.currentPlayerDisprovingSuggestion) {
+		return 'You can\'t do that now!';
+	}
+
+	return null;
+}
+
 export function endTurn(
 	playerId: string,
 	state: ConstGameState,

@@ -5,6 +5,7 @@ import {
 	Card,
 	ClientToServerMessage,
 	PlayPhase,
+	Room,
 	Solution,
 	Suspect,
 	Weapon,
@@ -55,6 +56,7 @@ export default function TurnActions() {
 				<RollDie />
 				<MakeSuggestion />
 				<DisproveSuggestion />
+				<MakeAccusation />
 				<EndTurn />
 			</ul>
 		</div>
@@ -181,6 +183,67 @@ function DisproveSuggestion() {
 	}
 
 	return <>{disproveButtons}</>;
+}
+
+function MakeAccusation() {
+	const gameState = React.useContext(GameStateContext);
+	const sendMessage = React.useContext(SendMessageContext);
+	const sessionId = React.useContext(SessionIdContext);
+
+	const [expanded, setExpanded] = React.useState(false);
+
+	const [suspect, setSuspect] = React.useState(Suspect.BLOOD);
+	const [weapon, setWeapon] = React.useState(Weapon.AK47);
+	const [room, setRoom] = React.useState(Room.DINING_ROOM);
+
+	const err = CanDo.makeAccusation(sessionId, gameState);
+	const canAccuse = err === null;
+	if (!canAccuse) {
+		if (expanded) {
+			setExpanded(false);
+		}
+
+		return null;
+	}
+
+	if (!expanded) {
+		const expand = (e: React.SyntheticEvent) => {
+			e.preventDefault();
+			setExpanded(true);
+		};
+		return <li><button onClick={expand}>Make accusation</button></li>;
+	}
+
+	const submit = (e: React.SyntheticEvent) => {
+		e.preventDefault();
+		const accusation: Solution = [suspect, weapon, room];
+		sendMessage(ClientToServerMessage.MAKE_ACCUSATION, accusation);
+	}
+
+	return (
+		<li>
+			<form onSubmit={submit}>
+				<SelectEnum
+					onChange={setSuspect}
+					values={Object.values(Suspect)}
+					value={suspect}
+				/>
+				with the
+				<SelectEnum
+					onChange={setWeapon}
+					values={Object.values(Weapon)}
+					value={weapon}
+				/>
+				in the
+				<SelectEnum
+					onChange={setRoom}
+					values={Object.values(Room)}
+					value={room}
+				/>
+				<input type="submit" value="Accuse" />
+			</form>
+		</li>
+	);
 }
 
 function EndTurn() {
