@@ -1,5 +1,3 @@
-import { $enum } from 'ts-enum-util';
-
 import { Room } from './Consts';
 
 export type Coord = readonly [number, number];
@@ -73,7 +71,7 @@ function computeBoardLayout(): BoardLayout {
 }
 
 function computeBoardSquare(x: number, y: number): BoardSquare {
-	for (const roomName of $enum(Room).getValues()) {
+	for (const roomName of Object.values(Room)) {
 		const roomConfig = BoardConfig.rooms[roomName];
 		const [[minX,minY],[maxX,maxY]] = roomConfig.coords;
 

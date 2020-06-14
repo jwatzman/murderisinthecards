@@ -1,5 +1,4 @@
 import React from 'react';
-import { $enum } from 'ts-enum-util';
 
 import { Coord, BoardConfig } from 'murderisinthecards-common/BoardLayout';
 import * as CanDo from 'murderisinthecards-common/CanDo';
@@ -73,7 +72,7 @@ function Squares() {
 	}
 
 	const rooms = [];
-	for (const roomName of $enum(Room).getValues()) {
+	for (const roomName of Object.values(Room)) {
 		const roomConfig = BoardConfig.rooms[roomName];
 
 		const [[minX,minY],[maxX,maxY]] = roomConfig.coords;
