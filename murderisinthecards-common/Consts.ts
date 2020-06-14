@@ -29,6 +29,7 @@ export enum Room {
 }
 
 export type Card = Suspect | Weapon | Room;
+export type Solution = [Suspect, Weapon, Room];
 
 export enum PlayPhase {
 	SETUP,
@@ -44,6 +45,9 @@ export enum ClientToServerMessage {
 	ROLL_DIE = 'roll_die',
 	MOVE_TO_COORD = 'move_to_coord',
 	MOVE_TO_ROOM = 'move_to_room',
+
+	MAKE_SUGGESTION = 'make_suggestion',
+	DISPROVE_SUGGESTION = 'disprove_suggestion',
 
 	END_TURN = 'end_turn',
 }

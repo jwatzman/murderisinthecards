@@ -1,4 +1,4 @@
-import { PlayPhase, Room } from './Consts';
+import { PlayPhase, Room, Solution } from './Consts';
 import { ConstGameState } from './ConstGameState';
 import { BoardConfig, Coord } from './BoardLayout';
 
@@ -159,6 +159,45 @@ export function moveToRoom(
 
 	if (!isDoorOf(room, [player.x, player.y])) {
 		return 'Can only enter through the doors!';
+	}
+
+	return null;
+}
+
+export function makeAnySuggestion(
+	playerId: string,
+	state: ConstGameState,
+): string | null {
+	if (playerId != state.currentPlayer) {
+		return 'Not your turn!';
+	}
+
+	if (state.phase != PlayPhase.MOVEMENT || state.dieRoll !== 0) {
+		return 'You can\'t do that now!';
+	}
+
+	if (!state.players[playerId].room) {
+		return 'You must be in a room!';
+	}
+
+	// TODO: allow to make suggestion after being teleported
+
+	return null;
+}
+
+export function makeSuggestion(
+	playerId: string,
+	state: ConstGameState,
+	suggestion: Solution,
+): string | null {
+	const err = makeAnySuggestion(playerId, state);
+	if (err) {
+		return err;
+	}
+
+	const [, , room] = suggestion;
+	if (state.players[playerId].room !== room) {
+		return 'You must suggest the room you\'re in!';
 	}
 
 	return null;

@@ -21,6 +21,9 @@ export class GameRoom extends ColRoom<GameState> {
 		console.log('Room created');
 		this.setState(new GameState());
 
+		// TODO: how does type safety work for these handlers? What happens if the
+		// client sends down something that isn't a Suspect for player setup, or
+		// that isn't the right format of object at all?
 		this.onMessage(
 			ClientToServerMessage.PLAYER_SETUP,
 			this.handlePlayerSetup.bind(this)

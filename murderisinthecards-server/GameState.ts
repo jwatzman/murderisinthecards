@@ -5,11 +5,9 @@ import {
 	Room,
 	Suspect,
 	PlayPhase,
-	Weapon,
+	Solution,
 } from 'murderisinthecards-common/Consts';
 import { ConstGameState } from 'murderisinthecards-common/ConstGameState';
-
-type Solution = [Suspect, Weapon, Room];
 
 export class PlayerState extends Schema {
 	@type('string')
