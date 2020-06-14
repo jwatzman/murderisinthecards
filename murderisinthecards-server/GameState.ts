@@ -54,7 +54,7 @@ export class GameState extends Schema {
 	toConstGameState(): ConstGameState {
 		// This is a dirty lie, but close enough to the truth to work, and
 		// incredibly useful.
-		return (this as any) as ConstGameState;
+		return (this as unknown) as ConstGameState;
 	}
 
 	createPlayer(id: string): void {

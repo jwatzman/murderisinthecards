@@ -1,5 +1,4 @@
 import React from 'react';
-import { $enum } from 'ts-enum-util';
 
 import * as CanDo from 'murderisinthecards-common/CanDo';
 import {
@@ -11,6 +10,7 @@ import {
 	SendMessageContext,
 	SessionIdContext,
 } from './Context'
+import SelectEnum from './SelectEnum';
 
 function GameSetup() {
 	return (
@@ -39,14 +39,6 @@ function SelectSuspect() {
 		setName(e.currentTarget.value);
 	};
 
-	const changeSuspect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		setSuspect(e.currentTarget.value as Suspect);
-	};
-
-	const suspectOptions = $enum(Suspect).map(
-		s => <option value={s} key={s}>{s}</option>
-	);
-
 	const err = CanDo.playerSetup(
 		sessionId,
 		gameState,
@@ -61,9 +53,7 @@ function SelectSuspect() {
 				Name:
 				<input type="text" value={name} onChange={changeName} />
 			</label>
-			<select value={suspect} onChange={changeSuspect}>
-				{suspectOptions}
-			</select>
+			<SelectEnum onChange={setSuspect} values={Object.values(Suspect)} />
 			<input disabled={!canSetUp} type="submit" value="Submit" />
 		</form>
 	);
