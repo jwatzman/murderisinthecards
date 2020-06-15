@@ -34,7 +34,20 @@ function App() {
 			return;
 		}
 
-		const client = new Colyseus.Client('ws://localhost:2567');
+		const location = document.location;
+		const protocol = location.protocol.replace('http', 'ws');
+		const host = location.host.replace(/:.*/, '');
+
+		let port = '';
+		if (process.env.NODE_ENV === 'production') {
+			if (location.port) {
+				port = ':' + location.port;
+			}
+		} else {
+			port = ':2567';
+		}
+
+		const client = new Colyseus.Client(`${protocol}//${host}${port}`);
 		client.joinOrCreate('my_room').then(room => {
 			setRoom(room);
 			setSessionId(room.sessionId);

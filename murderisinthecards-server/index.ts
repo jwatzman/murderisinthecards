@@ -1,9 +1,9 @@
-import http from 'http';
-import express from 'express';
-import cors from 'cors';
 import { Server } from 'colyseus';
 import { monitor } from '@colyseus/monitor';
-// import socialRoutes from "@colyseus/social/express"
+import cors from 'cors';
+import express from 'express';
+import http from 'http';
+import path from 'path';
 
 import { GameRoom } from './GameRoom';
 
@@ -18,18 +18,8 @@ const gameServer = new Server({
 	server,
 });
 
-// register your room handlers
 gameServer.define('my_room', GameRoom);
-
-/**
- * Register @colyseus/social routes
- *
- * - uncomment if you want to use default authentication (https://docs.colyseus.io/authentication/)
- * - also uncomment the import statement
- */
-// app.use("/", socialRoutes);
-
-// register colyseus monitor AFTER registering your room handlers
+app.use('/', express.static(path.join(__dirname, 'build')));
 app.use('/colyseus', monitor());
 
 gameServer.listen(port);
