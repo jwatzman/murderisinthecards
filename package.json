@@ -2,6 +2,10 @@
   "name": "murderisinthecards",
   "version": "1.0.0",
   "private": true,
+  "scripts": {
+    "build": "yarn workspace murderisinthecards-client build",
+    "start": "yarn workspace murderisinthecards-server start"
+  },
   "workspaces": [
     "murderisinthecards-common",
     "murderisinthecards-server",
