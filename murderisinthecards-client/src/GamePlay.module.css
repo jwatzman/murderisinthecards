@@ -2,6 +2,10 @@
 	display: flex;
 }
 
-.controls {
+.col {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 	margin-left: 20px;
+	min-width: 250px;
 }

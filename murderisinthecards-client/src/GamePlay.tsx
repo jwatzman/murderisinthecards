@@ -14,14 +14,16 @@ export default function GamePlay() {
 		<>
 			<div className={Styles.wrap}>
 				<GameBoard />
-				<div className={Styles.controls}>
-					<TurnOrder />
-					<YourCards />
-					<DieRoll />
-					<TurnActions />
+				<div className={Styles.col}>
+					<div>
+						<TurnOrder />
+						<YourCards />
+						<DieRoll />
+						<TurnActions />
+					</div>
+					<GameMessages />
 				</div>
 			</div>
-			<GameMessages />
 		</>
 	);
 }
