@@ -133,6 +133,9 @@ function Suspects() {
 	const suspects = [];
 	for (const playerId in gameState.players) {
 		const playerState = gameState.players[playerId];
+		if (playerState.eliminated) {
+			continue;
+		}
 
 		let x, y;
 		if (playerState.room) {

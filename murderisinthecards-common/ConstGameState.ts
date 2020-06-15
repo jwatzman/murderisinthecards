@@ -8,6 +8,7 @@ import {
 export type ConstPlayerState = {
 	readonly suspect: Suspect,
 	readonly name: string,
+	readonly eliminated: boolean;
 	readonly x: number,
 	readonly y: number,
 	readonly room: Room | '',

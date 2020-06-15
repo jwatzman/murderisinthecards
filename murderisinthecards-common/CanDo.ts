@@ -139,6 +139,10 @@ export function moveToCoord(
 	}
 
 	for (const otherPlayer of Object.values(state.players)) {
+		if (otherPlayer.eliminated) {
+			continue;
+		}
+
 		if (!otherPlayer.room && otherPlayer.x == x && otherPlayer.y == y) {
 			return 'Can\'t move on top of another player!';
 		}

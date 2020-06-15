@@ -23,6 +23,10 @@ export default function TurnActions() {
 	const gameState = React.useContext(GameStateContext);
 	const sessionId = React.useContext(SessionIdContext);
 
+	if (!gameState.currentPlayer) {
+		return null;
+	}
+
 	const yourTurn = gameState.currentPlayer === sessionId;
 	const currentPlayerName = gameState.players[gameState.currentPlayer].name;
 

@@ -16,6 +16,9 @@ export class PlayerState extends Schema {
 	@type('string')
 	public name = '';
 
+	@type('boolean')
+	public eliminated = false;
+
 	@type('uint8')
 	public x = 0;
 

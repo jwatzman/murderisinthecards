@@ -58,6 +58,10 @@ export class GameRoom extends ColRoom<GameState> {
 			ClientToServerMessage.DISPROVE_SUGGESTION,
 			this.handleDisproveSuggestion.bind(this),
 		);
+		this.onMessage(
+			ClientToServerMessage.MAKE_ACCUSATION,
+			this.handleMakeAccusation.bind(this),
+		);
 	}
 
 	onJoin(client: Client): void {
@@ -279,6 +283,39 @@ export class GameRoom extends ColRoom<GameState> {
 		}
 	}
 
+	private handleMakeAccusation(
+		client: Client,
+		accusation: Solution,
+	) {
+		const err = CanDo.makeAccusation(
+			client.sessionId,
+			this.state.toConstGameState(),
+		);
+		if (err) {
+			client.error(0, err);
+			return;
+		}
+
+		const [suspect, weapon, room] = accusation;
+		const currentPlayer = this.state.getCurrentPlayer();
+		const name = currentPlayer.name;
+
+		this.broadcastGameMessage(
+			`${name} accuses ${suspect} with the ${weapon} in the ${room}!`
+		);
+
+		if (this.isCorrectAccusation(accusation)) {
+			this.broadcastGameMessage(`${name} wins!`);
+			this.endGame();
+		} else {
+			this.broadcastGameMessage(
+				`${name} made an incorrect accusation and is eliminated!`
+			);
+			currentPlayer.eliminated = true;
+			this.advanceTurn();
+		}
+	}
+
 	private broadcastGameMessage(message: string) {
 		this.broadcast(ServerToClientMessage.GAME_MESSAGE, message);
 	}
@@ -326,7 +363,21 @@ export class GameRoom extends ColRoom<GameState> {
 	private advanceTurn() {
 		this.state.phase = PlayPhase.BEGIN_TURN;
 		this.state.dieRoll = 0;
-		this.state.currentPlayer = this.getNextPlayer(this.state.currentPlayer);
+
+		let playersTried = 0;
+		const numPlayers = this.state.getAllPlayerIds().length;
+		do {
+			this.state.currentPlayer = this.getNextPlayer(this.state.currentPlayer);
+			playersTried++;
+		} while (this.state.getCurrentPlayer().eliminated && playersTried < numPlayers);
+
+		if (this.state.getCurrentPlayer().eliminated) {
+			this.broadcastGameMessage(
+				'All players have been eliminated. Game over.'
+			);
+			this.endGame();
+			return;
+		}
 
 		const name = this.state.getCurrentPlayer().name;
 		this.broadcastGameMessage(`${name}'s turn`);
@@ -349,6 +400,20 @@ export class GameRoom extends ColRoom<GameState> {
 		} else {
 			this.state.currentPlayerDisprovingSuggestion = next;
 		}
+	}
+
+	private isCorrectAccusation(accusation: Solution) {
+		for (let i = 0; i < this.state.solution.length; i++) {
+			if (this.state.solution[i] !== accusation[i]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	private endGame() {
+		this.state.currentPlayer = '';
 	}
 
 }
