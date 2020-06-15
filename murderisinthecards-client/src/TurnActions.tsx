@@ -60,8 +60,8 @@ export default function TurnActions() {
 				<RollDie />
 				<MakeSuggestion />
 				<DisproveSuggestion />
-				<MakeAccusation />
 				<EndTurn />
+				<MakeAccusation />
 			</ul>
 		</div>
 	);
