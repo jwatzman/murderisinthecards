@@ -158,7 +158,7 @@ function Suspects() {
 				key={playerId}
 				className={Styles.suspect}
 				style={style}>
-				{'\u265f'}
+				{'\u2666'}
 			</div>
 		);
 	}
