@@ -20,6 +20,6 @@ will set up a server on `$PORT` (default 2567).
 
 ## Tech
 
-[https://colyseus.io/](Colyseus) for game state sync, websockets, etc. NodeJS on the server, React on the client, all TypeScript.
+[Colyseus](https://colyseus.io/) for game state sync, websockets, etc. NodeJS on the server, React on the client, all TypeScript.
 
 This is my first Node project, first React project, and in general the largest body of Javascript I've written. It's an experiment and for fun with my family during the Covid-19 lockdown --- it's not supposed to be, and likely isn't, a fantastic example of how to organise these projects, or of great code style, or really of anything at all.
