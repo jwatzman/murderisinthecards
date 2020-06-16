@@ -20,7 +20,27 @@ import {
 import GameSetup from './GameSetup';
 import GamePlay from './GamePlay';
 
+const ROOM_ID_LOCALSTORAGE_ID = 'roomId';
+const SESSION_ID_LOCALSTORAGE_KEY = 'sessionId';
+
 let nextGameMessageId = 0;
+
+function getConnectionURL() {
+	const location = document.location;
+	const protocol = location.protocol.replace('http', 'ws');
+	const host = location.host.replace(/:.*/, '');
+
+	let port = '';
+	if (process.env.NODE_ENV === 'production') {
+		if (location.port) {
+			port = ':' + location.port;
+		}
+	} else {
+		port = ':2567';
+	}
+
+	return `${protocol}//${host}${port}`;
+}
 
 function App() {
 	const [cards, setCards] = React.useState<Card[]>([]);
@@ -34,24 +54,29 @@ function App() {
 			return;
 		}
 
-		const location = document.location;
-		const protocol = location.protocol.replace('http', 'ws');
-		const host = location.host.replace(/:.*/, '');
-
-		let port = '';
-		if (process.env.NODE_ENV === 'production') {
-			if (location.port) {
-				port = ':' + location.port;
-			}
-		} else {
-			port = ':2567';
-		}
-
-		const client = new Colyseus.Client(`${protocol}//${host}${port}`);
-		client.joinOrCreate('my_room').then(room => {
+		const connectionSuccess = (room: Colyseus.Room) => {
 			setRoom(room);
 			setSessionId(room.sessionId);
-		});
+
+			localStorage.setItem(ROOM_ID_LOCALSTORAGE_ID, room.id);
+			localStorage.setItem(SESSION_ID_LOCALSTORAGE_KEY, room.sessionId);
+		};
+
+		const createNewRoom = () =>
+			client.joinOrCreate('murder').then(connectionSuccess);
+
+		const client = new Colyseus.Client(getConnectionURL());
+
+		const savedRoomId = localStorage.getItem(ROOM_ID_LOCALSTORAGE_ID);
+		const savedSessionId = localStorage.getItem(SESSION_ID_LOCALSTORAGE_KEY);
+
+		if (savedRoomId && savedSessionId) {
+			client.reconnect(savedRoomId, savedSessionId)
+				.then(connectionSuccess)
+				.catch(createNewRoom);
+		} else {
+			createNewRoom();
+		}
 	}, [room]);
 
 	React.useEffect(() => {

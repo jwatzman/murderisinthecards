@@ -18,7 +18,7 @@ const gameServer = new Server({
 	server,
 });
 
-gameServer.define('my_room', GameRoom);
+gameServer.define('murder', GameRoom);
 app.use('/', express.static(path.join(__dirname, 'build')));
 app.use('/colyseus', monitor());
 

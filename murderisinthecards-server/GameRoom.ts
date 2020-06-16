@@ -71,10 +71,33 @@ export class GameRoom extends ColRoom<GameState> {
 		this.state.createPlayer(sessionId);
 	}
 
-	onLeave(client: Client, _consented: boolean): void {
+	async onLeave(client: Client, _consented: boolean): Promise<void> {
 		const sessionId = client.sessionId;
-		console.log('Leave', sessionId);
-		this.state.removePlayer(sessionId);
+		console.log('Disconnected', sessionId);
+
+		if (this.state.phase == PlayPhase.SETUP) {
+			this.state.removePlayer(sessionId);
+			return;
+		}
+
+		const name = this.state.getPlayer(sessionId).name;
+		this.broadcastGameMessage(`${name} disconnected`);
+
+		// XXX if game is over, don't allow reconnection
+
+		try {
+			await this.allowReconnection(client, 60*3);
+			console.log('Reconnected', sessionId);
+
+			this.sendCardsToPlayer(client);
+			this.broadcastGameMessage(`${name} reconnected`);
+		} catch (_e) {
+			console.log('Did not reconnect', sessionId);
+			this.broadcastGameMessage(
+				`${name} did not reconnect; the game cannot continue`
+			);
+			this.endGame();
+		}
 	}
 
 	onDispose(): void {
