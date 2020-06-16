@@ -65,7 +65,10 @@ export class GameRoom extends ColRoom<GameState> {
 	}
 
 	onJoin(client: Client): void {
-		// TODO: make sure we are in setup... what do we do otherwise?
+		if (this.state.phase !== PlayPhase.SETUP) {
+			throw new Error('Conncting at wrong phase?!');
+		}
+
 		const sessionId = client.sessionId;
 		console.log('Join', sessionId);
 		this.state.createPlayer(sessionId);
@@ -141,6 +144,8 @@ export class GameRoom extends ColRoom<GameState> {
 			client.error(0, err);
 			return;
 		}
+
+		this.lock();
 
 		const turnOrderArr = this.state.getAllPlayerIds();
 		shuffle(turnOrderArr);
