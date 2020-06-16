@@ -23,7 +23,7 @@ export default function TurnActions() {
 	const gameState = React.useContext(GameStateContext);
 	const sessionId = React.useContext(SessionIdContext);
 
-	if (!gameState.currentPlayer) {
+	if (gameState.phase === PlayPhase.GAME_OVER) {
 		return null;
 	}
 

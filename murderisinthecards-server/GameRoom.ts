@@ -83,7 +83,9 @@ export class GameRoom extends ColRoom<GameState> {
 		const name = this.state.getPlayer(sessionId).name;
 		this.broadcastGameMessage(`${name} disconnected`);
 
-		// XXX if game is over, don't allow reconnection
+		if (this.state.phase == PlayPhase.GAME_OVER) {
+			return;
+		}
 
 		try {
 			await this.allowReconnection(client, 60*3);
@@ -436,7 +438,9 @@ export class GameRoom extends ColRoom<GameState> {
 	}
 
 	private endGame() {
+		console.log('Game over');
 		this.state.currentPlayer = '';
+		this.state.phase = PlayPhase.GAME_OVER;
 	}
 
 }

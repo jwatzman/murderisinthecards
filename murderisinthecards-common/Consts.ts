@@ -36,6 +36,7 @@ export enum PlayPhase {
 	BEGIN_TURN,
 	MOVEMENT,
 	SUGGESTION_RESOLUTION,
+	GAME_OVER,
 }
 
 export enum ClientToServerMessage {
