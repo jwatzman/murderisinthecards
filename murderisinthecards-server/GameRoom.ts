@@ -23,44 +23,41 @@ export class GameRoom extends ColRoom<GameState> {
 		console.log('Room created');
 		this.setState(new GameState());
 
-		// TODO: how does type safety work for these handlers? What happens if the
-		// client sends down something that isn't a Suspect for player setup, or
-		// that isn't the right format of object at all?
 		this.onMessage(
 			ClientToServerMessage.PLAYER_SETUP,
-			this.handlePlayerSetup.bind(this)
+			this.wrapHandler(this.handlePlayerSetup.bind(this)),
 		);
 		this.onMessage(
 			ClientToServerMessage.BEGIN_GAME,
-			this.handleBeginGame.bind(this)
+			this.wrapHandler(this.handleBeginGame.bind(this)),
 		);
 		this.onMessage(
 			ClientToServerMessage.ROLL_DIE,
-			this.handleRollDie.bind(this)
+			this.wrapHandler(this.handleRollDie.bind(this)),
 		);
 		this.onMessage(
 			ClientToServerMessage.END_TURN,
-			this.handleEndTurn.bind(this)
+			this.wrapHandler(this.handleEndTurn.bind(this)),
 		);
 		this.onMessage(
 			ClientToServerMessage.MOVE_TO_COORD,
-			this.handleMoveToCoord.bind(this),
+			this.wrapHandler(this.handleMoveToCoord.bind(this)),
 		);
 		this.onMessage(
 			ClientToServerMessage.MOVE_TO_ROOM,
-			this.handleMoveToRoom.bind(this),
+			this.wrapHandler(this.handleMoveToRoom.bind(this)),
 		);
 		this.onMessage(
 			ClientToServerMessage.MAKE_SUGGESTION,
-			this.handleMakeSuggestion.bind(this),
+			this.wrapHandler(this.handleMakeSuggestion.bind(this)),
 		);
 		this.onMessage(
 			ClientToServerMessage.DISPROVE_SUGGESTION,
-			this.handleDisproveSuggestion.bind(this),
+			this.wrapHandler(this.handleDisproveSuggestion.bind(this)),
 		);
 		this.onMessage(
 			ClientToServerMessage.MAKE_ACCUSATION,
-			this.handleMakeAccusation.bind(this),
+			this.wrapHandler(this.handleMakeAccusation.bind(this)),
 		);
 	}
 
@@ -107,6 +104,17 @@ export class GameRoom extends ColRoom<GameState> {
 
 	onDispose(): void {
 		console.log('Room disposed');
+	}
+
+	private wrapHandler<T>(fn: (client: Client, arg: T) => void) {
+		return (client: Client, arg: T) => {
+			try {
+				fn(client, arg);
+			} catch (e) {
+				console.error(e);
+				client.error(0, `Server error: ${e.message}`);
+			}
+		};
 	}
 
 	private handlePlayerSetup(
