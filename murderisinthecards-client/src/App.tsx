@@ -54,6 +54,11 @@ function App() {
 			return;
 		}
 
+		// TODO: instead of just creating a new room, check a room id URL param; if
+		// it's there, join that room, otherwise create a new room. Display URL
+		// during setup to give to other people. Server should make room private
+		// after creating it? Eventual option for public rooms?
+
 		const connectionSuccess = (room: Colyseus.Room) => {
 			setRoom(room);
 			setSessionId(room.sessionId);
