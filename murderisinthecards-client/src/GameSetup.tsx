@@ -12,12 +12,15 @@ import {
 } from './Context'
 import SelectEnum from './SelectEnum';
 
+import Styles from './GameSetup.module.css';
+
 function GameSetup() {
 	return (
 		<>
 			<SelectSuspect />
 			<ConnectedPlayers />
 			<BeginGame />
+			<License />
 		</>
 	);
 }
@@ -98,6 +101,17 @@ function BeginGame() {
 	};
 
 	return <button disabled={!readyToBegin} onClick={start}>Begin Game</button>;
+}
+
+function License() {
+	const homepage = 'https://github.com/jwatzman/murderisinthecards';
+	return (
+		<div className={Styles.license}>
+			Murder Is In The Cards. Homepage:
+			{' '}
+			<a href={homepage}>{homepage}</a>
+		</div>
+	);
 }
 
 export default GameSetup;
