@@ -227,6 +227,9 @@ export class GameRoom extends ColRoom<GameState> {
 
 		const player = this.state.getPlayer(sessionId);
 		[player.x, player.y] = coord;
+		if (player.room) {
+			this.state.leftRoom = player.room;
+		}
 		player.room = '';
 		this.state.dieRoll--;
 	}
@@ -427,6 +430,7 @@ export class GameRoom extends ColRoom<GameState> {
 	private advanceTurn() {
 		this.state.phase = PlayPhase.BEGIN_TURN;
 		this.state.dieRoll = 0;
+		this.state.leftRoom = '';
 
 		let playersTried = 0;
 		const numPlayers = this.state.getAllPlayerIds().length;

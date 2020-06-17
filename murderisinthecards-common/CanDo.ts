@@ -187,10 +187,12 @@ export function moveToRoom(
 		return 'Already in a room!';
 	}
 
-	// TODO check if you left this room this turn
-
 	if (!isDoorOf(room, [player.x, player.y])) {
 		return 'Can only enter through the doors!';
+	}
+
+	if (room === state.leftRoom) {
+		return 'Can\'t re-enter the same room on the same turn!';
 	}
 
 	return null;

@@ -22,4 +22,5 @@ export type ConstGameState = {
 	readonly dieRoll: number,
 	readonly suggestion: Solution;
 	readonly currentPlayerDisprovingSuggestion: string;
+	readonly leftRoom: Room | '',
 };

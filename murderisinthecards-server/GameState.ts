@@ -55,6 +55,9 @@ export class GameState extends Schema {
 	@type('string')
 	public currentPlayerDisprovingSuggestion = '';
 
+	@type('string')
+	public leftRoom: (Room | '') = '';
+
 	// Not sync'd in main state:
 	public solution: Solution = null!;
 
