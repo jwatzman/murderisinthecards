@@ -10,6 +10,7 @@ import YourCards from './YourCards';
 import Styles from './GamePlay.module.css';
 
 export default function GamePlay() {
+	// TODO: add notes textarea, saved to localstorage
 	return (
 		<>
 			<div className={Styles.wrap}>

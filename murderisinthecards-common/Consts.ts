@@ -31,6 +31,9 @@ export enum Room {
 export type Card = Suspect | Weapon | Room;
 export type Solution = [Suspect, Weapon, Room];
 
+/**
+ * TODO: document what each phase means, what is allowed when.
+ */
 export enum PlayPhase {
 	SETUP,
 	BEGIN_TURN,
