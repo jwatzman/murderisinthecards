@@ -10,6 +10,7 @@ import {
 	Suspect,
 	Weapon,
 } from 'murderisinthecards-common/Consts';
+import { BoardConfig } from 'murderisinthecards-common/BoardLayout';
 
 import {
 	GameStateContext,
@@ -58,6 +59,7 @@ export default function TurnActions() {
 			{disproving}
 			<ul>
 				<RollDie />
+				<MoveThroughPassage />
 				<MakeSuggestion />
 				<DisproveSuggestion />
 				<EndTurn />
@@ -85,6 +87,41 @@ function RollDie() {
 
 	return (
 		<li><button onClick={roll}>Roll die</button></li>
+	);
+}
+
+function MoveThroughPassage() {
+	const gameState = React.useContext(GameStateContext);
+	const sendMessage = React.useContext(SendMessageContext);
+	const sessionId = React.useContext(SessionIdContext);
+
+	const currentRoom = gameState.players[sessionId].room;
+	if (!currentRoom) {
+		return null;
+	}
+
+	const passage = BoardConfig.rooms[currentRoom].passage;
+	if (!passage) {
+		return null;
+	}
+
+	const err = CanDo.moveThroughPassage(sessionId, gameState, passage);
+	const canMove = err === null;
+	if (!canMove) {
+		return null;
+	}
+
+	const move = (e: React.SyntheticEvent) => {
+		e.preventDefault();
+		sendMessage(ClientToServerMessage.MOVE_THROUGH_PASSAGE, passage);
+	};
+
+	return (
+		<li>
+			<button onClick={move}>
+				Move through secret passage to {passage}
+			</button>
+		</li>
 	);
 }
 

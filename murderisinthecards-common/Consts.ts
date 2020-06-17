@@ -46,6 +46,7 @@ export enum ClientToServerMessage {
 	ROLL_DIE = 'roll_die',
 	MOVE_TO_COORD = 'move_to_coord',
 	MOVE_TO_ROOM = 'move_to_room',
+	MOVE_THROUGH_PASSAGE = 'move_through_passage',
 
 	MAKE_SUGGESTION = 'make_suggestion',
 	DISPROVE_SUGGESTION = 'disprove_suggestion',

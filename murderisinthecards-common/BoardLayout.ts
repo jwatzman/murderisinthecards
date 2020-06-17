@@ -6,6 +6,7 @@ type BoardConfig = {
 	readonly rooms: {[r in Room]: {
 		readonly coords: readonly [Coord, Coord],
 		readonly doors: readonly Coord[],
+		readonly passage?: Room,
 	}},
 	readonly void: readonly [Coord, Coord],
 };
@@ -28,10 +29,12 @@ export const BoardConfig: BoardConfig = {
 		[Room.GREENHOUSE]: {
 			coords: [[0,18],[4,21]],
 			doors: [[4,17]],
+			passage: Room.LOUNGE,
 		},
 		[Room.KITCHEN]: {
 			coords: [[0,0],[5,4]],
 			doors: [[6,3]],
+			passage: Room.STUDY,
 		},
 		[Room.LIBRARY]: {
 			coords: [[13,16],[17,21]],
@@ -40,10 +43,12 @@ export const BoardConfig: BoardConfig = {
 		[Room.LOUNGE]: {
 			coords: [[18,0],[22,5]],
 			doors: [[17,5]],
+			passage: Room.GREENHOUSE,
 		},
 		[Room.STUDY]: {
 			coords: [[20,16],[22,21]],
 			doors: [[19,16]],
+			passage: Room.KITCHEN,
 		},
 		[Room.THEATER]: {
 			coords: [[0,7],[6,14]],

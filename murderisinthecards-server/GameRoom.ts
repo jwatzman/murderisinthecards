@@ -48,6 +48,10 @@ export class GameRoom extends ColRoom<GameState> {
 			this.wrapHandler(this.handleMoveToRoom.bind(this)),
 		);
 		this.onMessage(
+			ClientToServerMessage.MOVE_THROUGH_PASSAGE,
+			this.wrapHandler(this.handleMoveThroughPassage.bind(this)),
+		);
+		this.onMessage(
 			ClientToServerMessage.MAKE_SUGGESTION,
 			this.wrapHandler(this.handleMakeSuggestion.bind(this)),
 		);
@@ -244,6 +248,28 @@ export class GameRoom extends ColRoom<GameState> {
 		}
 
 		const player = this.state.getPlayer(sessionId);
+		player.room = room;
+		this.state.dieRoll = 0;
+	}
+
+	private handleMoveThroughPassage(
+		client: Client,
+		room: Room,
+	) {
+		const sessionId = client.sessionId;
+
+		const err = CanDo.moveThroughPassage(
+			sessionId,
+			this.state.toConstGameState(),
+			room,
+		);
+		if (err) {
+			client.error(0, err);
+			return;
+		}
+
+		const player = this.state.getPlayer(sessionId);
+		this.state.phase = PlayPhase.MOVEMENT;
 		player.room = room;
 		this.state.dieRoll = 0;
 	}

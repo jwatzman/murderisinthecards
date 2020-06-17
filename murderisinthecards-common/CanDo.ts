@@ -196,6 +196,32 @@ export function moveToRoom(
 	return null;
 }
 
+export function moveThroughPassage(
+	playerId: string,
+	state: ConstGameState,
+	destination: Room,
+): string | null {
+	if (playerId != state.currentPlayer) {
+		return 'Not your turn!';
+	}
+
+	if (state.phase != PlayPhase.BEGIN_TURN) {
+		return 'You can\'t do that now!';
+	}
+
+	const currentRoom = state.players[playerId].room;
+	if (!currentRoom) {
+		return 'You must be in a room!';
+	}
+
+	const passage = BoardConfig.rooms[currentRoom].passage;
+	if (passage !== destination) {
+		return 'Invalid passage!';
+	}
+
+	return null;
+}
+
 export function makeAnySuggestion(
 	playerId: string,
 	state: ConstGameState,
