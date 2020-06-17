@@ -131,6 +131,7 @@ function Suspects() {
 	const gameState = React.useContext(GameStateContext);
 
 	const suspects = [];
+	const numSuspectsInRoom: {[r: string]: number} = {};
 	for (const playerId in gameState.players) {
 		const playerState = gameState.players[playerId];
 		if (playerState.eliminated) {
@@ -139,9 +140,22 @@ function Suspects() {
 
 		let x, y;
 		if (playerState.room) {
-			// TODO: don't overlap >1 player in the same room
 			const room = BoardConfig.rooms[playerState.room];
-			[x,y] = room.coords[0];
+			const nthInRoom = numSuspectsInRoom[playerState.room] || 0;
+
+			const [[minX,minY],[,maxY]] = room.coords;
+
+			x = minX;
+			y = minY + nthInRoom;
+
+			// Could be "while" instead of "if", but the smallest room is 4 wide, so
+			// even all 6 suspects can still fit on two rows.
+			if (y > maxY) {
+				x++;
+				y -= (maxY - minY + 1);
+			}
+
+			numSuspectsInRoom[playerState.room] = nthInRoom + 1;
 		} else {
 			x = playerState.x;
 			y = playerState.y;
