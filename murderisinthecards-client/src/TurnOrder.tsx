@@ -1,19 +1,35 @@
 import React from 'react';
 
 import { GameStateContext } from './Context';
+import getSupectColor from './SuspectColor';
+
+import Styles from './TurnOrder.module.css';
 
 export default function TurnOrder() {
 	const gameState = React.useContext(GameStateContext);
 	const names = [];
 
-	for (const player of gameState.turnOrder) {
-		// TODO: include suspect somehow? Color the text?
-		names.push(gameState.players[player].name);
+	for (const playerId of gameState.turnOrder) {
+		const player = gameState.players[playerId];
+		const style = {
+			borderColor: getSupectColor(player.suspect),
+		};
+		names.push(
+			<li key={playerId}>
+				<span className={Styles.turn} style={style}>
+					{player.name}
+				</span>
+			</li>
+		);
 	}
 
 	return (
 		<div>
-			Turn order: {names.join(', ')}
+			Turn order:
+			{' '}
+			<ol className={Styles.turnList}>
+				{names}
+			</ol>
 		</div>
 	);
 }
