@@ -28,6 +28,9 @@ export class PlayerState extends Schema {
 	@type('string')
 	public room: (Room | '') = '';
 
+	@type('boolean')
+	public teleported = false;
+
 	// Not sync'd in main state:
 	public cards: Card[] = [];
 }

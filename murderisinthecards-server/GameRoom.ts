@@ -304,7 +304,12 @@ export class GameRoom extends ColRoom<GameState> {
 			`${name} suggests ${suspect} with the ${weapon} in the ${room}`
 		);
 
-		// TODO: move suspect into room
+		for (const player of this.state.getAllPlayers()) {
+			if (player.room !== room) {
+				player.room = room;
+				player.teleported = true;
+			}
+		}
 
 		this.advanceDisproving();
 	}
@@ -431,6 +436,11 @@ export class GameRoom extends ColRoom<GameState> {
 		this.state.phase = PlayPhase.BEGIN_TURN;
 		this.state.dieRoll = 0;
 		this.state.leftRoom = '';
+
+		const prevPlayer = this.state.getCurrentPlayer();
+		if (prevPlayer) {
+			prevPlayer.teleported = false;
+		}
 
 		let playersTried = 0;
 		const numPlayers = this.state.getAllPlayerIds().length;

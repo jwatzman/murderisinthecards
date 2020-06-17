@@ -232,17 +232,20 @@ export function makeAnySuggestion(
 		return 'Not your turn!';
 	}
 
-	if (state.phase != PlayPhase.MOVEMENT || state.dieRoll !== 0) {
-		return 'You can\'t do that now!';
-	}
-
-	if (!state.players[playerId].room) {
+	const player = state.players[playerId];
+	if (!player.room) {
 		return 'You must be in a room!';
 	}
 
-	// TODO: allow to make suggestion after being teleported
+	if (state.phase == PlayPhase.BEGIN_TURN && player.teleported) {
+		return null;
+	}
 
-	return null;
+	if (state.phase == PlayPhase.MOVEMENT && state.dieRoll == 0) {
+		return null;
+	}
+
+	return 'You can\'t do that now!';
 }
 
 export function makeSuggestion(
