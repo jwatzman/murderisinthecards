@@ -5,6 +5,7 @@ type BoardConfig = {
 	readonly extent: Coord,
 	readonly rooms: {[r in Room]: {
 		readonly coords: readonly [Coord, Coord],
+		// TODO: have a door direction, render it.
 		readonly doors: readonly Coord[],
 		readonly passage?: Room,
 	}},
