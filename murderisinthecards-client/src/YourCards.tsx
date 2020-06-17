@@ -1,25 +1,36 @@
 import React from 'react';
 
-import { Room, Suspect, Weapon } from 'murderisinthecards-common/Consts';
+import {
+	Card,
+	Room,
+	Suspect,
+	Weapon
+} from 'murderisinthecards-common/Consts';
 
 import { YourCardsContext } from './Context';
 
 export default function YourCards() {
 	const cards = React.useContext(YourCardsContext);
 
-	const suspects = [];
-	const weapons = [];
-	const rooms = [];
+	const suspects: Suspect[] = [];
+	const weapons: Weapon[] = [];
+	const rooms: Room[] = [];
 
-	for (const card of cards) {
-		if (Object.values(Suspect).includes(card as Suspect)) {
-			suspects.push(card);
-		} else if (Object.values(Weapon).includes(card as Weapon)) {
-			weapons.push(card);
-		} else if (Object.values(Room).includes(card as Room)) {
-			rooms.push(card);
+	const checkAndPush = <T extends Card>(src: T[], target: T[]) => {
+		for (const elem of src) {
+			if (cards.includes(elem)) {
+				target.push(elem);
+			}
 		}
-	}
+	};
+
+	// This is a somewhat inefficient way to deal with this, but it's simple,
+	// preserves the types, and keeps the cards displayed in the UI in a
+	// consistent order. There aren't enough cards in the game for the
+	// inefficiency to really matter.
+	checkAndPush(Object.values(Suspect), suspects);
+	checkAndPush(Object.values(Weapon), weapons);
+	checkAndPush(Object.values(Room), rooms);
 
 	return (
 		<div>
