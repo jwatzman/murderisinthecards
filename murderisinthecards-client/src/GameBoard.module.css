@@ -29,8 +29,10 @@
 }
 
 .door {
+	composes: centerText;
 	background-color: yellow;
 	border: 1px solid black;
+	font-size: grid-size;
 	grid-row-end: span 1;
 	grid-column-end: span 1;
 }

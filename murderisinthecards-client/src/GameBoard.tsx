@@ -1,6 +1,10 @@
 import React from 'react';
 
-import { Coord, BoardConfig } from 'murderisinthecards-common/BoardLayout';
+import {
+	BoardConfig,
+	Coord,
+	DoorDirection,
+} from 'murderisinthecards-common/BoardLayout';
 import * as CanDo from 'murderisinthecards-common/CanDo';
 import {
 	ClientToServerMessage, Room
@@ -92,7 +96,7 @@ function Squares() {
 			</div>
 		);
 
-		for (const [x,y] of roomConfig.doors) {
+		for (const [[x,y],dir] of roomConfig.doors) {
 			const doorStyle = {
 				gridRowStart: x + 1,
 				gridColumnStart: y + 1,
@@ -103,8 +107,10 @@ function Squares() {
 					key={doorKey}
 					onClick={handleMoveToCoord([x,y])}
 					className={Styles.door}
-					style={doorStyle}
-				/>);
+					style={doorStyle}>
+					{doorDirectionGlyph(dir)}
+				</div>
+			);
 		}
 	}
 
@@ -178,4 +184,17 @@ function Suspects() {
 	}
 
 	return <>{suspects}</>;
+}
+
+function doorDirectionGlyph(dir: DoorDirection): string {
+	switch (dir) {
+		case DoorDirection.POS_X:
+			return '\u{1f83b}';
+		case DoorDirection.NEG_X:
+			return '\u{1f839}';
+		case DoorDirection.POS_Y:
+			return '\u{1f83a}';
+		case DoorDirection.NEG_Y:
+			return '\u{1f838}';
+	}
 }

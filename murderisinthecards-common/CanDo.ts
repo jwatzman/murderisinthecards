@@ -102,7 +102,7 @@ function isDoorOf(
 	room: Room,
 	[x,y]: Coord,
 ): boolean {
-	for (const [doorX,doorY] of BoardConfig.rooms[room].doors) {
+	for (const [[doorX,doorY],] of BoardConfig.rooms[room].doors) {
 		if (x == doorX && y == doorY) {
 			return true;
 		}
