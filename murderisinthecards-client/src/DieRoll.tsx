@@ -7,8 +7,11 @@ import { GameStateContext } from './Context';
 export default function DieRoll() {
 	const gameState = React.useContext(GameStateContext);
 
-	// TODO: is this the rigt condition?
 	if (gameState.phase !== PlayPhase.MOVEMENT) {
+		return null;
+	}
+
+	if (gameState.dieRoll === 0) {
 		return null;
 	}
 
