@@ -13,6 +13,7 @@ import {
 	GameMessage,
 	GameMessagesContext,
 	GameStateContext,
+	RoomIdContext,
 	SendMessageContext,
 	SessionIdContext,
 	YourCardsContext,
@@ -47,6 +48,7 @@ function App() {
 	const [gameMessages, setGameMessages] = React.useState<GameMessage[]>([]);
 	const [gameState, setGameState] = React.useState<ConstGameState | null>(null);
 	const [room, setRoom] = React.useState<Colyseus.Room | null>(null);
+	const [roomId, setRoomId] = React.useState<string | null>(null);
 	const [sessionId, setSessionId] = React.useState<string | null>(null);
 
 	React.useEffect(() => {
@@ -54,34 +56,48 @@ function App() {
 			return;
 		}
 
-		// TODO: instead of just creating a new room, check a room id URL param; if
-		// it's there, join that room, otherwise create a new room. Display URL
-		// during setup to give to other people. Server should make room private
-		// after creating it? Eventual option for public rooms?
-
 		const connectionSuccess = (room: Colyseus.Room) => {
 			setRoom(room);
+			setRoomId(room.id);
 			setSessionId(room.sessionId);
 
 			localStorage.setItem(ROOM_ID_LOCALSTORAGE_ID, room.id);
 			localStorage.setItem(SESSION_ID_LOCALSTORAGE_KEY, room.sessionId);
 		};
 
-		const createNewRoom = () =>
-			client.joinOrCreate('murder').then(connectionSuccess);
-
+		// There *has* to be a better way to build this up.
 		const client = new Colyseus.Client(getConnectionURL());
 
-		const savedRoomId = localStorage.getItem(ROOM_ID_LOCALSTORAGE_ID);
-		const savedSessionId = localStorage.getItem(SESSION_ID_LOCALSTORAGE_KEY);
+		const createNewRoom = () =>
+			client.create('murder').then(connectionSuccess);
 
-		if (savedRoomId && savedSessionId) {
-			client.reconnect(savedRoomId, savedSessionId)
-				.then(connectionSuccess)
-				.catch(createNewRoom);
-		} else {
-			createNewRoom();
-		}
+		const joinSpecifiedRoom = () => {
+			let specifiedRoomId =
+				(new URL(window.location.toString())).searchParams.get('r');
+			console.log('specified room', specifiedRoomId);
+			if (specifiedRoomId) {
+				client.joinById(specifiedRoomId)
+					.then(connectionSuccess)
+					.catch(createNewRoom);
+			} else {
+				createNewRoom();
+			}
+		};
+
+		const joinSavedRoom = () => {
+			const savedRoomId = localStorage.getItem(ROOM_ID_LOCALSTORAGE_ID);
+			const savedSessionId = localStorage.getItem(SESSION_ID_LOCALSTORAGE_KEY);
+
+			if (savedRoomId && savedSessionId) {
+				client.reconnect(savedRoomId, savedSessionId)
+					.then(connectionSuccess)
+					.catch(joinSpecifiedRoom);
+			} else {
+				joinSpecifiedRoom();
+			}
+		};
+
+		joinSavedRoom();
 	}, [room]);
 
 	React.useEffect(() => {
@@ -124,13 +140,15 @@ function App() {
 	return (
 		<SendMessageContext.Provider value={sendMessage}>
 			<SessionIdContext.Provider value={sessionId!}>
-				<YourCardsContext.Provider value={cards}>
-					<GameMessagesContext.Provider value={gameMessages}>
-						<GameStateContext.Provider value={gameState}>
-							<Game />
-						</GameStateContext.Provider>
-					</GameMessagesContext.Provider>
-				</YourCardsContext.Provider>
+				<RoomIdContext.Provider value={roomId!}>
+					<YourCardsContext.Provider value={cards}>
+						<GameMessagesContext.Provider value={gameMessages}>
+							<GameStateContext.Provider value={gameState}>
+								<Game />
+							</GameStateContext.Provider>
+						</GameMessagesContext.Provider>
+					</YourCardsContext.Provider>
+				</RoomIdContext.Provider>
 			</SessionIdContext.Provider>
 		</SendMessageContext.Provider>
 	);

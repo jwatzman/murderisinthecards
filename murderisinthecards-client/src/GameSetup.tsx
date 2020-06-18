@@ -7,6 +7,7 @@ import {
 
 import {
 	GameStateContext,
+	RoomIdContext,
 	SendMessageContext,
 	SessionIdContext,
 } from './Context'
@@ -20,6 +21,7 @@ function GameSetup() {
 			<SelectSuspect />
 			<ConnectedPlayers />
 			<BeginGame />
+			<GameLink />
 			<License />
 		</>
 	);
@@ -101,6 +103,23 @@ function BeginGame() {
 	};
 
 	return <button disabled={!readyToBegin} onClick={start}>Begin Game</button>;
+}
+
+function GameLink() {
+	const roomId = React.useContext(RoomIdContext);
+
+	const url = new URL(window.location.toString());
+	url.searchParams.set('r', roomId);
+
+	const urlStr = url.toString();
+
+	const disable = (e: React.SyntheticEvent) => {
+		e.preventDefault();
+	};
+
+	return (
+		<div>Game join link: <a href={urlStr} onClick={disable}>{urlStr}</a></div>
+	);
 }
 
 function License() {
