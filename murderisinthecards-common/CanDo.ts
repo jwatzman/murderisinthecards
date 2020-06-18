@@ -16,13 +16,12 @@ export function playerSetup(
 		return 'You must set a name!';
 	}
 
-	// TODO: remove this restriction?
-	const player = state.players[playerId];
-	if (player.name && player.suspect) {
-		return 'You\'ve already selected a name and suspect!';
-	}
+	for (const otherPlayerId of Object.keys(state.players)) {
+		if (playerId === otherPlayerId) {
+			continue;
+		}
 
-	for (const otherPlayer of Object.values(state.players)) {
+		const otherPlayer = state.players[otherPlayerId];
 		if (otherPlayer.suspect == suspect) {
 			return otherPlayer.name + ' already is ' + suspect;
 		}
