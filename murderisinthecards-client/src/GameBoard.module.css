@@ -32,7 +32,8 @@
 	composes: centerText;
 	background-color: yellow;
 	border: 1px solid black;
-	font-size: grid-size;
+	font-size: calc(grid-size / 2);
+	font-weight: bold;
 	grid-row-end: span 1;
 	grid-column-end: span 1;
 }

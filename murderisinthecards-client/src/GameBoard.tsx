@@ -188,13 +188,13 @@ function Suspects() {
 
 function doorDirectionGlyph(dir: DoorDirection): string {
 	switch (dir) {
-		case DoorDirection.POS_X:
-			return '\u{1f83b}';
-		case DoorDirection.NEG_X:
-			return '\u{1f839}';
-		case DoorDirection.POS_Y:
-			return '\u{1f83a}';
-		case DoorDirection.NEG_Y:
-			return '\u{1f838}';
+		case DoorDirection.POS_X: // "Down"
+			return '\u2193';
+		case DoorDirection.NEG_X: // "Up"
+			return '\u2191';
+		case DoorDirection.POS_Y: // "Right"
+			return '\u2192';
+		case DoorDirection.NEG_Y: // "Left"
+			return '\u2190';
 	}
 }
