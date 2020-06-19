@@ -18,9 +18,11 @@ import Styles from './GameSetup.module.css';
 function GameSetup() {
 	return (
 		<>
-			<SelectSuspect />
-			<ConnectedPlayers />
-			<BeginGame />
+			<div className={Styles.setup}>
+				<SelectSuspect />
+				<ConnectedPlayers />
+				<BeginGame />
+			</div>
 			<GameLink />
 			<License />
 		</>

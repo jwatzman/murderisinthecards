@@ -1,3 +1,15 @@
+.setup {
+	margin-bottom: 10px;
+}
+
+.setup input {
+	margin: 0 10px;
+}
+
+.setup form {
+	margin-bottom: 10px;
+}
+
 .license {
 	font-size: 10px;
 	margin-top: 10px;
