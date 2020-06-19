@@ -20,6 +20,8 @@ import {
 } from './Context'
 import SelectEnum from './SelectEnum';
 
+import Styles from './TurnActions.module.css';
+
 export default function TurnActions() {
 	const gameState = React.useContext(GameStateContext);
 	const sessionId = React.useContext(SessionIdContext);
@@ -57,7 +59,7 @@ export default function TurnActions() {
 		<div>
 			{turnIndicator}
 			{disproving}
-			<ul>
+			<ul className={Styles.actions}>
 				<RollDie />
 				<MoveThroughPassage />
 				<MakeSuggestion />
@@ -172,13 +174,17 @@ function MakeSuggestion() {
 					values={Object.values(Suspect)}
 					value={suspect}
 				/>
+				{' '}
 				with the
+				{' '}
 				<SelectEnum
 					onChange={setWeapon}
 					values={Object.values(Weapon)}
 					value={weapon}
 				/>
+				{' '}
 				in the {room}
+				{' '}
 				<input type="submit" value="Suggest" />
 			</form>
 		</li>
@@ -269,18 +275,23 @@ function MakeAccusation() {
 					values={Object.values(Suspect)}
 					value={suspect}
 				/>
+				{' '}
 				with the
+				{' '}
 				<SelectEnum
 					onChange={setWeapon}
 					values={Object.values(Weapon)}
 					value={weapon}
 				/>
+				{' '}
 				in the
+				{' '}
 				<SelectEnum
 					onChange={setRoom}
 					values={Object.values(Room)}
 					value={room}
 				/>
+				{' '}
 				<input type="submit" value="Accuse" />
 			</form>
 		</li>
