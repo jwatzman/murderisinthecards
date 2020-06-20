@@ -1,28 +1,89 @@
 import React from 'react';
 
-import Styles from './Notes.module.css';
+import {
+	Card,
+	Room,
+	Suspect,
+	Weapon,
+} from 'murderisinthecards-common/Consts';
 
-const LOCALSTORAGE_ID = 'notes';
+import { RoomIdContext } from './Context';
+
+const LOCALSTORAGE_PREFIX = 'notes';
+const COLS = 6;
 
 export default function Notes() {
-	const [notes, setNotes] = React.useState(
-		localStorage.getItem(LOCALSTORAGE_ID) || ''
+	return (
+		<table>
+			<tbody>
+				<tr><th /><NoteInputRow prefix="header" /></tr>
+				<NoteSection cards={Object.values(Suspect)} />
+				<tr><td><hr /></td></tr>
+				<NoteSection cards={Object.values(Weapon)} />
+				<tr><td><hr /></td></tr>
+				<NoteSection cards={Object.values(Room)} />
+			</tbody>
+		</table>
 	);
+}
 
-	const changeNotes = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-		const newNotes = e.currentTarget.value;
-		setNotes(newNotes);
-		localStorage.setItem(LOCALSTORAGE_ID, newNotes);
+function NoteSection({ cards }: { cards: Card[] }) {
+	const rows = [];
+	for (const card of cards) {
+		rows.push(
+			<tr key={card}>
+				<th>{card}</th>
+				<NoteInputRow prefix={card} />
+			</tr>
+		);
+	}
+
+	return <>{rows}</>;
+}
+
+function NoteInputRow({ prefix }: { prefix: string }) {
+	const row = [];
+	for (let i = 0; i < COLS; i++) {
+		const suffix = `${prefix}.${i}`;
+		row.push(<td key={suffix}><NoteInput suffix={suffix} /></td>);
+	}
+
+	return <>{row}</>;
+}
+
+function useRoomLocalStorageState(suffix: string) {
+	const roomId = React.useContext(RoomIdContext);
+	const key = `${LOCALSTORAGE_PREFIX}.${suffix}`;
+
+	const [value, setValue] = React.useState(() => {
+		try {
+			const saved = localStorage.getItem(key);
+			const o = JSON.parse(saved!);
+			if (o.roomId === roomId) {
+				return o.value;
+			}
+		} catch (_e) {
+			// Ignore JSON parse failures, object read failures, etc. Just return the
+			// default below.
+		}
+
+		return '';
+	});
+
+	React.useEffect(() => {
+		const o = {roomId, value};
+		localStorage.setItem(key, JSON.stringify(o));
+	}, [key, roomId, value]);
+
+	return [value, setValue];
+}
+
+function NoteInput({ suffix }: { suffix: string }) {
+	const [value, setValue] = useRoomLocalStorageState(suffix);
+
+	const handler = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setValue(e.currentTarget.value);
 	};
 
-	return (
-		<div>
-			Notes:
-			<textarea
-				className={Styles.notes}
-				value={notes}
-				onChange={changeNotes}
-			/>
-		</div>
-	);
+	return <input type="text" size={3} value={value} onChange={handler} />;
 }
