@@ -74,7 +74,6 @@ function App() {
 		const joinSpecifiedRoom = () => {
 			let specifiedRoomId =
 				(new URL(window.location.toString())).searchParams.get('r');
-			console.log('specified room', specifiedRoomId);
 			if (specifiedRoomId) {
 				client.joinById(specifiedRoomId)
 					.then(connectionSuccess)
