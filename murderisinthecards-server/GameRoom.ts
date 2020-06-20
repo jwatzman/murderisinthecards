@@ -305,7 +305,7 @@ export class GameRoom extends ColRoom<GameState> {
 		);
 
 		for (const player of this.state.getAllPlayers()) {
-			if (player.room !== room) {
+			if (player.suspect == suspect && player.room !== room) {
 				player.room = room;
 				player.teleported = true;
 			}
