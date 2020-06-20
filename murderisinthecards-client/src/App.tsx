@@ -155,6 +155,18 @@ function App() {
 
 function Game() {
 	const phase = React.useContext(GameStateContext).phase;
+
+	React.useEffect(() => {
+		if (phase === PlayPhase.GAME_OVER) {
+			// Try to be nice and dump localStorage when we know we don't need any
+			// more of its data. This isn't needed for correctness -- the rest of the
+			// client deals with stale data, which can happen e.g. after a disconnect
+			// -- doesn't prevent anything from setting data even after the game
+			// ended (Notes, in particular)... but is nice anyway.
+			localStorage.clear();
+		}
+	});
+
 	switch (phase) {
 		case PlayPhase.SETUP:
 			return <GameSetup />;
