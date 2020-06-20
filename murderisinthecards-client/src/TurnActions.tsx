@@ -210,8 +210,8 @@ function DisproveSuggestion() {
 
 	let haveDisprovingCard = false;
 	let disproveButtons = [];
-	for (const card of yourCards) {
-		if (gameState.suggestion.includes(card)) {
+	for (const card of gameState.suggestion) {
+		if (yourCards.includes(card)) {
 			haveDisprovingCard = true;
 			disproveButtons.push(
 				<li key={card}>
