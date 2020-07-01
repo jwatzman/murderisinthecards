@@ -10,7 +10,7 @@ import {
 import { RoomIdContext } from './Context';
 
 const LOCALSTORAGE_PREFIX = 'notes';
-const COLS = 6;
+const COLS = 7;
 
 export default function Notes() {
 	return (
