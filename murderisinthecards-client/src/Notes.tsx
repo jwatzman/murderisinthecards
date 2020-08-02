@@ -8,6 +8,9 @@ import {
 } from 'murderisinthecards-common/Consts';
 
 import { RoomIdContext } from './Context';
+import getSuspectColor from './SuspectColor';
+
+import Styles from './TurnOrder.module.css';
 
 const LOCALSTORAGE_PREFIX = 'notes';
 const COLS = 7;
@@ -17,7 +20,7 @@ export default function Notes() {
 		<table>
 			<tbody>
 				<tr><th /><NoteInputRow prefix="header" /></tr>
-				<NoteSection cards={Object.values(Suspect)} />
+				<SuspectSection cards={Object.values(Suspect)} />
 				<tr><td><hr /></td></tr>
 				<NoteSection cards={Object.values(Weapon)} />
 				<tr><td><hr /></td></tr>
@@ -33,6 +36,25 @@ function NoteSection({ cards }: { cards: Card[] }) {
 		rows.push(
 			<tr key={card}>
 				<th>{card}</th>
+				<NoteInputRow prefix={card} />
+			</tr>
+		);
+	}
+
+	return <>{rows}</>;
+}
+
+function SuspectSection({ cards }: { cards: Suspect[] }) {
+	// This is largely copy-pasted from NoteSection -- refactor?
+	// Also, the border styling is copied from TurnOrder -- refactor?
+	const rows = [];
+	for (const card of cards) {
+		const style = {
+			borderColor: getSuspectColor(card),
+		};
+		rows.push(
+			<tr key={card}>
+				<th className={Styles.turn} style={style}>{card}</th>
 				<NoteInputRow prefix={card} />
 			</tr>
 		);
