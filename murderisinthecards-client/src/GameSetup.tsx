@@ -54,6 +54,9 @@ function SelectSuspect() {
 	);
 	const canSetUp = err === null;
 
+	const disabled = (suspect: Suspect) =>
+		CanDo.playerSetup(sessionId, gameState, 'dummy', suspect) !== null;
+
 	return (
 		<form onSubmit={submit}>
 			<label>
@@ -61,6 +64,7 @@ function SelectSuspect() {
 				<input type="text" value={name} onChange={changeName} />
 			</label>
 			<SelectEnum
+				disabled={disabled}
 				onChange={setSuspect}
 				values={Object.values(Suspect)}
 				value={suspect}
