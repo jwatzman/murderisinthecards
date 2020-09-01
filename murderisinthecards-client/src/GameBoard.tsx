@@ -100,6 +100,7 @@ function Squares() {
 			const doorStyle = {
 				gridRowStart: x + 1,
 				gridColumnStart: y + 1,
+				...doorDirectionStyle(dir),
 			};
 			const doorKey = `d.x${x}y${y}`;
 			rooms.push(
@@ -196,5 +197,18 @@ function doorDirectionGlyph(dir: DoorDirection): string {
 			return '\u2192';
 		case DoorDirection.NEG_Y: // "Left"
 			return '\u2190';
+	}
+}
+
+function doorDirectionStyle(dir: DoorDirection): {[key:string]:string} {
+	switch (dir) {
+		case DoorDirection.POS_X: // "Down"
+			return {'align-items': 'end'};
+		case DoorDirection.NEG_X: // "Up"
+			return {'align-items': 'start'};
+		case DoorDirection.POS_Y: // "Right"
+			return {'justify-content': 'end'};
+		case DoorDirection.NEG_Y: // "Left"
+			return {'justify-content': 'start'};
 	}
 }
