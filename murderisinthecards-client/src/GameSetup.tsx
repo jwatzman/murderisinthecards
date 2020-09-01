@@ -17,7 +17,7 @@ import Styles from './GameSetup.module.css';
 
 function GameSetup() {
 	return (
-		<>
+		<div className={Styles.wrap}>
 			<div className={Styles.setup}>
 				<SelectSuspect />
 				<ConnectedPlayers />
@@ -25,7 +25,7 @@ function GameSetup() {
 			</div>
 			<GameLink />
 			<License />
-		</>
+		</div>
 	);
 }
 

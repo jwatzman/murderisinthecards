@@ -7,12 +7,13 @@ import Notes from './Notes';
 import TurnActions from './TurnActions';
 import TurnOrder from './TurnOrder';
 import YourCards from './YourCards';
+import YourTurnWrap from './YourTurnWrap';
 
 import Styles from './GamePlay.module.css';
 
 export default function GamePlay() {
 	return (
-		<>
+		<YourTurnWrap>
 			<div className={Styles.wrap}>
 				<GameBoard />
 				<div className={Styles.col}>
@@ -26,6 +27,6 @@ export default function GamePlay() {
 				</div>
 			</div>
 			<Notes />
-		</>
+		</YourTurnWrap>
 	);
 }

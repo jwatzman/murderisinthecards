@@ -21,6 +21,8 @@ import {
 import GameSetup from './GameSetup';
 import GamePlay from './GamePlay';
 
+import './Global.css';
+
 const ROOM_ID_LOCALSTORAGE_ID = 'roomId';
 const SESSION_ID_LOCALSTORAGE_KEY = 'sessionId';
 
