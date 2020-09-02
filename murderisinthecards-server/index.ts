@@ -1,5 +1,4 @@
 import { Server } from 'colyseus';
-import { monitor } from '@colyseus/monitor';
 import cors from 'cors';
 import express from 'express';
 import http from 'http';
@@ -20,7 +19,6 @@ const gameServer = new Server({
 
 gameServer.define('murder', GameRoom);
 app.use('/', express.static(path.join(__dirname, 'build')));
-app.use('/colyseus', monitor());
 
 gameServer.listen(port);
 console.log(`Listening on ws://localhost:${ port }`);

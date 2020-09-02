@@ -1158,14 +1158,6 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@colyseus/monitor@^0.12.2":
-  version "0.12.2"
-  resolved "https://registry.yarnpkg.com/@colyseus/monitor/-/monitor-0.12.2.tgz#509f890d5c4f8cbc6407a1e8997e591a89da2a56"
-  integrity sha512-48oZxz4uVZszhyWf2NqCNXw3mlIGhRgUYOwBu6/e6XGD82qS0VQRdfOg5neplJLPvZSSNyKnEz3G5mVzc7iYsQ==
-  dependencies:
-    express "^4.16.3"
-    node-os-utils "^1.2.0"
-
 "@colyseus/schema@^0.5.19", "@colyseus/schema@^0.5.5":
   version "0.5.41"
   resolved "https://registry.yarnpkg.com/@colyseus/schema/-/schema-0.5.41.tgz#0bb3d3653e2b9170fef8732835cc3db2f0d8e8a0"
@@ -4631,7 +4623,7 @@ expect@^24.9.0:
     jest-message-util "^24.9.0"
     jest-regex-util "^24.9.0"
 
-express@^4.16.3, express@^4.16.4, express@^4.17.1:
+express@^4.16.4, express@^4.17.1:
   version "4.17.1"
   resolved "https://registry.yarnpkg.com/express/-/express-4.17.1.tgz#4491fc38605cf51f8629d39c2b5d026f98a4c134"
   integrity sha512-mHJ9O79RqluphRrcw2X/GTh3k9tVv8YcoyY4Kkh4WDMUYKRZUq0h1o0w2rrrxBqM7VoeUVqgb27xlEMXTnYt4g==
@@ -7434,11 +7426,6 @@ node-notifier@^5.4.2:
     semver "^5.5.0"
     shellwords "^0.1.1"
     which "^1.3.0"
-
-node-os-utils@^1.2.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/node-os-utils/-/node-os-utils-1.3.0.tgz#67db4d7e2e78b86a3afc759f61456ae8eef82db8"
-  integrity sha512-1nA/jJ7JIT94BD/zCDFnU7GKbtSGJ7Cpbk/hCZcHLWTsERRtR8osnbnDZdT3Z8ZV7ugP38iYls6eGZfyA8M98A==
 
 node-releases@^1.1.52, node-releases@^1.1.58:
   version "1.1.60"

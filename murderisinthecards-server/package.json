@@ -12,7 +12,6 @@
     "eslint": "^7.1.0"
   },
   "dependencies": {
-    "@colyseus/monitor": "^0.12.2",
     "@types/cors": "^2.8.6",
     "@types/express": "^4.17.1",
     "colyseus": "^0.13.0",
