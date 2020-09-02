@@ -47,6 +47,7 @@ function getConnectionURL() {
 
 function App() {
 	const [cards, setCards] = React.useState<Card[]>([]);
+	const [died, setDied] = React.useState(false);
 	const [gameMessages, setGameMessages] = React.useState<GameMessage[]>([]);
 	const [gameState, setGameState] = React.useState<ConstGameState | null>(null);
 	const [room, setRoom] = React.useState<Colyseus.Room | null>(null);
@@ -106,9 +107,15 @@ function App() {
 			return;
 		}
 
+		(window as any).debugRoom = room;
+
 		room.onStateChange((newState) => {
 			(window as any).debugGameState = newState;
 			setGameState(Object.assign({}, newState)); // XXX should be deep copy
+		});
+
+		room.onLeave((_code) => {
+			setDied(true);
 		});
 
 		room.onMessage(ServerToClientMessage.GAME_MESSAGE, message => {
@@ -133,6 +140,10 @@ function App() {
 
 	if (!room || !gameState) {
 		return <div>Connecting...</div>;
+	}
+
+	if (died) {
+		return <Disconnected />;
 	}
 
 	const sendMessage = (type: ClientToServerMessage, message: any) =>
@@ -175,6 +186,17 @@ function Game() {
 		default:
 			return <GamePlay />;
 	}
+}
+
+function Disconnected() {
+	const onClick = () => window.location.reload();
+	return (
+		<div>
+			Disconnected.
+			{' '}
+			<button onClick={onClick}>Reload?</button>
+		</div>
+	);
 }
 
 export default App;
