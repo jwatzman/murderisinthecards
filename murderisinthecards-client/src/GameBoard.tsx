@@ -203,12 +203,12 @@ function doorDirectionGlyph(dir: DoorDirection): string {
 function doorDirectionStyle(dir: DoorDirection): {[key:string]:string} {
 	switch (dir) {
 		case DoorDirection.POS_X: // "Down"
-			return {'align-items': 'end'};
+			return {alignItems: 'end'};
 		case DoorDirection.NEG_X: // "Up"
-			return {'align-items': 'start'};
+			return {alignItems: 'start'};
 		case DoorDirection.POS_Y: // "Right"
-			return {'justify-content': 'end'};
+			return {justifyContent: 'end'};
 		case DoorDirection.NEG_Y: // "Left"
-			return {'justify-content': 'start'};
+			return {justifyContent: 'start'};
 	}
 }
