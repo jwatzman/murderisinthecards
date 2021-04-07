@@ -78,7 +78,7 @@ function ConnectedPlayers() {
 	const gameState = React.useContext(GameStateContext);
 	const players = gameState.players;
 
-	const playerList = Object.entries(players).map(([id, player]) => {
+	const playerList = Array.from(players).map(([id, player]) => {
 		if (!player.name || !player.suspect) {
 			return <li key={id}>New Player</li>;
 		}

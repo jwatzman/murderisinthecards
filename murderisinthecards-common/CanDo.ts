@@ -16,12 +16,11 @@ export function playerSetup(
 		return 'You must set a name!';
 	}
 
-	for (const otherPlayerId of Object.keys(state.players)) {
+	for (const [otherPlayerId, otherPlayer] of state.players.entries()) {
 		if (playerId === otherPlayerId) {
 			continue;
 		}
 
-		const otherPlayer = state.players[otherPlayerId];
 		if (otherPlayer.suspect == suspect) {
 			return otherPlayer.name + ' already is ' + suspect;
 		}
@@ -38,7 +37,7 @@ export function beginGame(
 		return 'The game has already begun!';
 	}
 
-	for (const otherPlayer of Object.values(state.players)) {
+	for (const otherPlayer of state.players.values()) {
 		if (!otherPlayer.name || !otherPlayer.suspect) {
 			return 'Not all players are ready!';
 		}
@@ -137,7 +136,7 @@ export function moveToCoord(
 		return 'Can\'t move under a room!';
 	}
 
-	for (const otherPlayer of Object.values(state.players)) {
+	for (const otherPlayer of state.players.values()) {
 		if (otherPlayer.eliminated) {
 			continue;
 		}
@@ -147,7 +146,7 @@ export function moveToCoord(
 		}
 	}
 
-	const player = state.players[playerId];
+	const player = state.players.get(playerId)!;
 	const currentRoom = player.room;
 	if (currentRoom) {
 		if (!isDoorOf(currentRoom, [x,y])) {
@@ -181,7 +180,7 @@ export function moveToRoom(
 		return 'You can\'t move any more!';
 	}
 
-	const player = state.players[playerId];
+	const player = state.players.get(playerId)!;
 	if (player.room) {
 		return 'Already in a room!';
 	}
@@ -210,7 +209,7 @@ export function moveThroughPassage(
 		return 'You can\'t do that now!';
 	}
 
-	const currentRoom = state.players[playerId].room;
+	const currentRoom = state.players.get(playerId)!.room;
 	if (!currentRoom) {
 		return 'You must be in a room!';
 	}
@@ -231,7 +230,7 @@ export function makeAnySuggestion(
 		return 'Not your turn!';
 	}
 
-	const player = state.players[playerId];
+	const player = state.players.get(playerId)!;
 	if (!player.room) {
 		return 'You must be in a room!';
 	}
@@ -258,7 +257,7 @@ export function makeSuggestion(
 	}
 
 	const [, , room] = suggestion;
-	if (state.players[playerId].room !== room) {
+	if (state.players.get(playerId)!.room !== room) {
 		return 'You must suggest the room you\'re in!';
 	}
 

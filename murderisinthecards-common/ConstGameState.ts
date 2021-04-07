@@ -16,7 +16,7 @@ export type ConstPlayerState = {
 };
 
 export type ConstGameState = {
-	readonly players: {readonly [id: string]: ConstPlayerState},
+	readonly players: Map<string, ConstPlayerState>,
 	readonly phase: PlayPhase,
 	readonly turnOrder: string[],
 	readonly currentPlayer: string,

@@ -72,28 +72,36 @@ export class GameState extends Schema {
 
 	createPlayer(id: string): void {
 		console.log('Creating player', id);
-		this.players[id] = new PlayerState();
+		this.players.set(id, new PlayerState());
 	}
 
 	removePlayer(id: string): void {
 		console.log('Removing player', id);
-		delete this.players[id];
+		this.players.delete(id);
 	}
 
 	getPlayer(id: string): PlayerState {
-		return this.players[id];
+		const player = this.players.get(id);
+		if (player === undefined) {
+			throw new RangeError('Unknown player ' + id);
+		}
+		return player;
 	}
 
 	getCurrentPlayer(): PlayerState {
 		return this.getPlayer(this.currentPlayer);
 	}
 
+	getCurrentPlayerAtBeginning(): PlayerState | undefined {
+		return this.players.get(this.currentPlayer);
+	}
+
 	getAllPlayerIds(): string[] {
-		return Object.keys(this.players);
+		return Array.from(this.players.keys());
 	}
 
 	getAllPlayers(): PlayerState[] {
-		return Object.values(this.players);
+		return Array.from(this.players.values());
 	}
 
 }

@@ -31,7 +31,7 @@ export default function TurnActions() {
 	}
 
 	const yourTurn = gameState.currentPlayer === sessionId;
-	const currentPlayerName = gameState.players[gameState.currentPlayer].name;
+	const currentPlayerName = gameState.players.get(gameState.currentPlayer)!.name;
 
 	let turnIndicator;
 	if (yourTurn) {
@@ -45,7 +45,7 @@ export default function TurnActions() {
 			gameState.currentPlayerDisprovingSuggestion &&
 			gameState.currentPlayerDisprovingSuggestion !== sessionId) {
 		const suggestionDisprover =
-			gameState.players[gameState.currentPlayerDisprovingSuggestion].name;
+			gameState.players.get(gameState.currentPlayerDisprovingSuggestion)!.name;
 		const suggestionMaker = yourTurn ? 'your' : `${currentPlayerName}'s`;
 		disproving =
 			<div>
@@ -97,7 +97,7 @@ function MoveThroughPassage() {
 	const sendMessage = React.useContext(SendMessageContext);
 	const sessionId = React.useContext(SessionIdContext);
 
-	const currentRoom = gameState.players[sessionId].room;
+	const currentRoom = gameState.players.get(sessionId)!.room;
 	if (!currentRoom) {
 		return null;
 	}
@@ -155,7 +155,7 @@ function MakeSuggestion() {
 		return <li><button onClick={expand}>Make suggestion</button></li>;
 	}
 
-	const room = gameState.players[sessionId].room;
+	const room = gameState.players.get(sessionId)!.room;
 	if (!room) {
 		throw new RangeError('Expected CanDo to ensure in a room');
 	}

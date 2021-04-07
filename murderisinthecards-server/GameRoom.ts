@@ -437,7 +437,7 @@ export class GameRoom extends ColRoom<GameState> {
 		this.state.dieRoll = 0;
 		this.state.leftRoom = '';
 
-		const prevPlayer = this.state.getCurrentPlayer();
+		const prevPlayer = this.state.getCurrentPlayerAtBeginning();
 		if (prevPlayer) {
 			prevPlayer.teleported = false;
 		}

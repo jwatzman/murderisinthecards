@@ -14,7 +14,7 @@
   "dependencies": {
     "@types/cors": "^2.8.6",
     "@types/express": "^4.17.1",
-    "colyseus": "^0.13.0",
+    "colyseus": "^0.14.13",
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "murderisinthecards-common": "1.0.0",

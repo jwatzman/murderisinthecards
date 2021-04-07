@@ -10,7 +10,7 @@ export default function TurnOrder() {
 	const names = [];
 
 	for (const playerId of gameState.turnOrder) {
-		const player = gameState.players[playerId];
+		const player = gameState.players.get(playerId)!;
 		const style = {
 			borderColor: getSupectColor(player.suspect),
 		};

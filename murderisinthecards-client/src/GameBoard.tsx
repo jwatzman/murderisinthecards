@@ -139,8 +139,7 @@ function Suspects() {
 
 	const suspects = [];
 	const numSuspectsInRoom: {[r: string]: number} = {};
-	for (const playerId in gameState.players) {
-		const playerState = gameState.players[playerId];
+	for (const [playerId, playerState] of gameState.players.entries()) {
 		if (playerState.eliminated) {
 			continue;
 		}
