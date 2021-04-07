@@ -9,11 +9,12 @@
     "@types/react-dom": "^16.9.8",
     "colyseus.js": "^0.14.8",
     "customize-cra": "^1.0.0",
+    "eslint-config-react-app": "^6.0.0",
     "murderisinthecards-common": "1.0.0",
     "react": "^16.13.1",
     "react-app-rewired": "^2.1.6",
     "react-dom": "^16.13.1",
-    "react-scripts": "^3.4.1",
+    "react-scripts": "^4.0.3",
     "typescript": "^3.9.3"
   },
   "scripts": {
