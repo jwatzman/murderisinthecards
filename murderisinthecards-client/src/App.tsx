@@ -55,6 +55,12 @@ function App() {
 	const [roomId, setRoomId] = React.useState<string | null>(null);
 	const [sessionId, setSessionId] = React.useState<string | null>(null);
 
+	const sendMessage = React.useCallback(
+		(type: ClientToServerMessage, message: any) =>
+			room && room.send(type, message),
+		[room],
+	);
+
 	const connectionSuccess = (room: Colyseus.Room) => {
 		setRoom(room);
 		setRoomId(room.id);
@@ -141,9 +147,6 @@ function App() {
 	if (died) {
 		return <Disconnected />;
 	}
-
-	const sendMessage = (type: ClientToServerMessage, message: any) =>
-		room.send(type, message);
 
 	return (
 		<SendMessageContext.Provider value={sendMessage}>
