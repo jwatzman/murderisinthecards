@@ -18,7 +18,10 @@ const gameServer = new Server({
 });
 
 gameServer.define('murder', GameRoom);
-app.use('/', express.static(path.join(__dirname, 'build')));
+
+if (process.env.SERVE_STATIC !== '0') {
+	app.use('/', express.static(path.join(__dirname, 'build')));
+}
 
 const port = Number(process.env.PORT || 2567);
 gameServer.listen(port);

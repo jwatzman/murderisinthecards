@@ -42,7 +42,7 @@ function getConnectionURL() {
 		port = ':2567';
 	}
 
-	return `${protocol}//${host}${port}`;
+	return `${protocol}//${host}${port}/game`;
 }
 
 function App() {
