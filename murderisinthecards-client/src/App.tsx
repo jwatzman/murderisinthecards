@@ -46,6 +46,7 @@ function getConnectionURL() {
 }
 
 function App() {
+	const connectionInitalized = React.useRef(false);
 	const [cards, setCards] = React.useState<Card[]>([]);
 	const [died, setDied] = React.useState(false);
 	const [gameMessages, setGameMessages] = React.useState<GameMessage[]>([]);
@@ -54,19 +55,49 @@ function App() {
 	const [roomId, setRoomId] = React.useState<string | null>(null);
 	const [sessionId, setSessionId] = React.useState<string | null>(null);
 
+	const connectionSuccess = (room: Colyseus.Room) => {
+		setRoom(room);
+		setRoomId(room.id);
+		setSessionId(room.sessionId);
+
+		localStorage.setItem(ROOM_ID_LOCALSTORAGE_ID, room.id);
+		localStorage.setItem(SESSION_ID_LOCALSTORAGE_KEY, room.sessionId);
+
+		(window as any).debugRoom = room;
+
+		room.onStateChange((newState) => {
+			(window as any).debugGameState = newState;
+			setGameState(Object.assign({}, newState)); // XXX should be deep copy
+		});
+
+		room.onLeave((_code) => {
+			setDied(true);
+		});
+
+		room.onMessage(ServerToClientMessage.GAME_MESSAGE, message => {
+			setGameMessages(oldMessages => {
+				const newMessage = {message, id: nextGameMessageId++};
+				const newMessages = oldMessages.concat(newMessage);
+				while (newMessages.length > 10) {
+					newMessages.shift();
+				}
+				return newMessages;
+			});
+		});
+
+		room.onMessage(ServerToClientMessage.YOUR_CARDS, cards => {
+			setCards(cards);
+		});
+
+		room.onError((_, message) => {
+			window.alert(message);
+		});
+	};
+
 	React.useEffect(() => {
-		if (room) {
+		if (connectionInitalized.current) {
 			return;
 		}
-
-		const connectionSuccess = (room: Colyseus.Room) => {
-			setRoom(room);
-			setRoomId(room.id);
-			setSessionId(room.sessionId);
-
-			localStorage.setItem(ROOM_ID_LOCALSTORAGE_ID, room.id);
-			localStorage.setItem(SESSION_ID_LOCALSTORAGE_KEY, room.sessionId);
-		};
 
 		// There *has* to be a better way to build this up.
 		const client = new Colyseus.Client(getConnectionURL());
@@ -100,43 +131,8 @@ function App() {
 		};
 
 		joinSavedRoom();
-	}, [room]);
-
-	React.useEffect(() => {
-		if (!room) {
-			return;
-		}
-
-		(window as any).debugRoom = room;
-
-		room.onStateChange((newState) => {
-			(window as any).debugGameState = newState;
-			setGameState(Object.assign({}, newState)); // XXX should be deep copy
-		});
-
-		room.onLeave((_code) => {
-			setDied(true);
-		});
-
-		room.onMessage(ServerToClientMessage.GAME_MESSAGE, message => {
-			setGameMessages(oldMessages => {
-				const newMessage = {message, id: nextGameMessageId++};
-				const newMessages = oldMessages.concat(newMessage);
-				while (newMessages.length > 10) {
-					newMessages.shift();
-				}
-				return newMessages;
-			});
-		});
-
-		room.onMessage(ServerToClientMessage.YOUR_CARDS, cards => {
-			setCards(cards);
-		});
-
-		room.onError((_, message) => {
-			window.alert(message);
-		});
-	}, [room]);
+		connectionInitalized.current = true;
+	}, []);
 
 	if (!room || !gameState) {
 		return <div>Connecting...</div>;
