@@ -1,4 +1,5 @@
 import React from 'react';
+import { css } from '@emotion/css';
 
 import * as CanDo from 'murderisinthecards-common/CanDo';
 import {
@@ -19,8 +20,6 @@ import {
 	YourCardsContext,
 } from './Context'
 import SelectEnum from './SelectEnum';
-
-import Styles from './TurnActions.module.css';
 
 export default function TurnActions() {
 	const gameState = React.useContext(GameStateContext);
@@ -59,7 +58,7 @@ export default function TurnActions() {
 		<div>
 			{turnIndicator}
 			{disproving}
-			<ul className={Styles.actions}>
+			<ul className={css({li: {margin: '10px 0'}})}>
 				<RollDie />
 				<MoveThroughPassage />
 				<MakeSuggestion />

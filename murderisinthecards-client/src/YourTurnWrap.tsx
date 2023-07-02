@@ -1,10 +1,9 @@
 import React from 'react';
+import { css } from '@emotion/css'
 
 import { ConstGameState } from 'murderisinthecards-common/ConstGameState';
 import { PlayPhase } from 'murderisinthecards-common/Consts';
 import { GameStateContext, SessionIdContext } from './Context';
-
-import Styles from './YourTurnWrap.module.css';
 
 type props = {children: React.ReactNode};
 export default function YourTurnWrap(props: props) {
@@ -12,7 +11,7 @@ export default function YourTurnWrap(props: props) {
 	const sessionId = React.useContext(SessionIdContext);
 
 	const className = waitingOnPlayer(gameState, sessionId) ?
-		Styles.turn : Styles.noturn;
+		css({border: '5px solid green', padding: '5px'}) : css({padding: '10px'});
 
 	return (
 		<div className={className}>

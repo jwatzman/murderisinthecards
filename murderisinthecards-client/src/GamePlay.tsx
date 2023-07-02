@@ -1,4 +1,5 @@
 import React from 'react';
+import { css } from '@emotion/css';
 
 import DieRoll from './DieRoll';
 import GameBoard from './GameBoard';
@@ -9,14 +10,19 @@ import TurnOrder from './TurnOrder';
 import YourCards from './YourCards';
 import YourTurnWrap from './YourTurnWrap';
 
-import Styles from './GamePlay.module.css';
 
 export default function GamePlay() {
 	return (
 		<YourTurnWrap>
-			<div className={Styles.wrap}>
+			<div className={css({display: 'flex', 'margin-bottom': '20px'})}>
 				<GameBoard />
-				<div className={Styles.col}>
+				<div className={css({
+					display: 'flex',
+					'flex-direction': 'column',
+					'justify-content': 'space-between',
+					'margin-left': '20px',
+					'min-width': '250px',
+				})}>
 					<div>
 						<TurnOrder />
 						<YourCards />

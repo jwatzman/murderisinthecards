@@ -1,4 +1,5 @@
 import React from 'react';
+import { css } from '@emotion/css';
 
 import {
 	Card,
@@ -9,8 +10,6 @@ import {
 
 import { RoomIdContext } from './Context';
 import getSuspectColor from './SuspectColor';
-
-import Styles from './TurnOrder.module.css';
 
 const LOCALSTORAGE_PREFIX = 'notes';
 const COLS = 7;
@@ -54,7 +53,7 @@ function SuspectSection({ cards }: { cards: Suspect[] }) {
 		};
 		rows.push(
 			<tr key={card}>
-				<th className={Styles.turn} style={style}>{card}</th>
+				<th className={css({'border': '2px solid'})} style={style}>{card}</th>
 				<NoteInputRow prefix={card} />
 			</tr>
 		);

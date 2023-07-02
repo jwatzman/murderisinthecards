@@ -1,4 +1,5 @@
 import React from 'react';
+import { css, cx } from '@emotion/css';
 
 import {
 	BoardConfig,
@@ -17,11 +18,22 @@ import {
 } from './Context';
 import getSuspectColor from './SuspectColor';
 
-import Styles from './GameBoard.module.css';
+const GRID_SIZE = '30px';
+const centerText = css({
+	cursor: 'default',
+	display: 'flex',
+	'align-items': 'center',
+	'justify-content': 'center',
+});
 
 export default function GameBoard() {
 	return (
-		<div className={Styles.board}>
+		<div className={css({
+			border: '3px solid black',
+			display: 'inline-grid',
+			'grid-template-rows': `repeat(${BoardConfig.extent[0] + 1}, ${GRID_SIZE})`,
+			'grid-template-columns': `repeat(${BoardConfig.extent[1] + 1}, ${GRID_SIZE})`,
+		})}>
 			<Squares />
 			<Suspects />
 		</div>
@@ -68,7 +80,12 @@ function Squares() {
 				<div
 					key={squareKey}
 					onClick={handleMoveToCoord([x,y])}
-					className={Styles.square}
+					className={css({
+						'background-color': 'lightyellow',
+						border: '1px solid black',
+						'grid-row-end': 'span 1',
+						'grid-column-end': 'span 1',
+					})}
 					style={squareStyle}
 				/>
 			);
@@ -90,7 +107,10 @@ function Squares() {
 			<div
 				key={roomName}
 				onClick={handleMoveToRoom(roomName)}
-				className={Styles.room}
+				className={cx(centerText, css({
+					'background-color': 'darkkhaki',
+					border: '1px solid darkred',
+				}))}
 				style={roomStyle}>
 				{roomName}
 			</div>
@@ -107,7 +127,14 @@ function Squares() {
 				<div
 					key={doorKey}
 					onClick={handleMoveToCoord([x,y])}
-					className={Styles.door}
+					className={cx(centerText, css({
+						'background-color': 'yellow',
+						border: '1px solid black',
+						'font-size': `calc(${GRID_SIZE} / 2)`,
+						'font-weight': 'bold',
+						'grid-row-end': 'span 1',
+						'grid-column-end': 'span 1',
+					}))}
 					style={doorStyle}>
 					{doorDirectionGlyph(dir)}
 				</div>
@@ -123,7 +150,10 @@ function Squares() {
 		gridColumnEnd: voidMaxY + 1 + 1,
 	};
 	const voidRoom =
-		<div key="void" className={Styles.void} style={voidStyle} />;
+		<div key="void" className={css({
+			'background-color': 'lightyellow',
+			border: '1px solid black',
+		})} style={voidStyle} />;
 
 	return (
 		<>
@@ -176,7 +206,14 @@ function Suspects() {
 		suspects.push(
 			<div
 				key={playerId}
-				className={Styles.suspect}
+				className={cx(centerText, css({
+					'grid-row-end': 'span 1',
+					'grid-column-end': 'span 1',
+					'font-size': `${GRID_SIZE}`,
+
+					'-webkit-text-stroke': '1px black',
+					'text-stroke': '1px black',
+				}))}
 				style={style}>
 				{'\u2666'}
 			</div>

@@ -1,5 +1,6 @@
 import * as Colyseus from 'colyseus.js';
 import React from 'react';
+import { injectGlobal } from '@emotion/css';
 
 import {
 	Card,
@@ -21,7 +22,11 @@ import {
 import GameSetup from './GameSetup';
 import GamePlay from './GamePlay';
 
-import './Global.css';
+injectGlobal({
+	body: {
+		margin: 0,
+	}
+});
 
 const ROOM_ID_LOCALSTORAGE_ID = 'roomId';
 const SESSION_ID_LOCALSTORAGE_KEY = 'sessionId';

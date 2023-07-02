@@ -4,6 +4,7 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
+    "@emotion/css": "^11.11.2",
     "@types/node": "^14.0.6",
     "@types/react": "^18.0.5",
     "@types/react-dom": "^18.0.1",
