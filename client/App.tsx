@@ -7,8 +7,8 @@ import {
 	ClientToServerMessage,
 	PlayPhase,
 	ServerToClientMessage,
-} from 'murderisinthecards-common/Consts';
-import { ConstGameState } from 'murderisinthecards-common/ConstGameState';
+} from 'common/Consts';
+import { ConstGameState } from 'common/ConstGameState';
 
 import {
 	GameMessage,

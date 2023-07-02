@@ -5,11 +5,11 @@ import {
 	BoardConfig,
 	Coord,
 	DoorDirection,
-} from 'murderisinthecards-common/BoardLayout';
-import * as CanDo from 'murderisinthecards-common/CanDo';
+} from 'common/BoardLayout';
+import * as CanDo from 'common/CanDo';
 import {
 	ClientToServerMessage, Room
-} from 'murderisinthecards-common/Consts';
+} from 'common/Consts';
 
 import {
 	GameStateContext,

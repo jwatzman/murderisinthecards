@@ -1,7 +1,7 @@
 import React from 'react';
 import { css } from '@emotion/css';
 
-import * as CanDo from 'murderisinthecards-common/CanDo';
+import * as CanDo from 'common/CanDo';
 import {
 	Card,
 	ClientToServerMessage,
@@ -10,8 +10,8 @@ import {
 	Solution,
 	Suspect,
 	Weapon,
-} from 'murderisinthecards-common/Consts';
-import { BoardConfig } from 'murderisinthecards-common/BoardLayout';
+} from 'common/Consts';
+import { BoardConfig } from 'common/BoardLayout';
 
 import {
 	GameStateContext,

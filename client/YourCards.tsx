@@ -5,7 +5,7 @@ import {
 	Room,
 	Suspect,
 	Weapon
-} from 'murderisinthecards-common/Consts';
+} from 'common/Consts';
 
 import { YourCardsContext } from './Context';
 

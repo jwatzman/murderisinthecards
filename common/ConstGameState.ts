@@ -3,7 +3,7 @@ import {
 	Suspect,
 	PlayPhase,
 	Solution,
-} from 'murderisinthecards-common/Consts';
+} from 'common/Consts';
 
 export type ConstPlayerState = {
 	readonly suspect: Suspect,

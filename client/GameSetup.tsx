@@ -1,10 +1,10 @@
 import React from 'react';
 import { css } from '@emotion/css';
 
-import * as CanDo from 'murderisinthecards-common/CanDo';
+import * as CanDo from 'common/CanDo';
 import {
 	ClientToServerMessage, Suspect
-} from 'murderisinthecards-common/Consts';
+} from 'common/Consts';
 
 import {
 	GameStateContext,

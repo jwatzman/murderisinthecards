@@ -1,8 +1,8 @@
 import React from 'react';
 import { css } from '@emotion/css'
 
-import { ConstGameState } from 'murderisinthecards-common/ConstGameState';
-import { PlayPhase } from 'murderisinthecards-common/Consts';
+import { ConstGameState } from 'common/ConstGameState';
+import { PlayPhase } from 'common/Consts';
 import { GameStateContext, SessionIdContext } from './Context';
 
 type props = {children: React.ReactNode};

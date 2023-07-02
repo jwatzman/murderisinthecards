@@ -1,4 +1,4 @@
-import { Suspect } from 'murderisinthecards-common/Consts';
+import { Suspect } from 'common/Consts';
 
 export default function getSuspectColor(s: Suspect): string {
 	switch (s) {

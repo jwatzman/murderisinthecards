@@ -6,7 +6,7 @@ import {
 	Room,
 	Suspect,
 	Weapon,
-} from 'murderisinthecards-common/Consts';
+} from 'common/Consts';
 
 import { RoomIdContext } from './Context';
 import getSuspectColor from './SuspectColor';

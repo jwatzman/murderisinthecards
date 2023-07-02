@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PlayPhase } from 'murderisinthecards-common/Consts';
+import { PlayPhase } from 'common/Consts';
 
 import { GameStateContext } from './Context';
 

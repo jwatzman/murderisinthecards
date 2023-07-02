@@ -1,7 +1,7 @@
 import { Client, Room as ColRoom } from 'colyseus';
 
-import { Coord } from 'murderisinthecards-common/BoardLayout';
-import * as CanDo from 'murderisinthecards-common/CanDo';
+import { Coord } from 'common/BoardLayout';
+import * as CanDo from 'common/CanDo';
 import {
 	Card,
 	ClientToServerMessage,
@@ -11,7 +11,7 @@ import {
 	Solution,
 	Suspect,
 	Weapon,
-} from 'murderisinthecards-common/Consts';
+} from 'common/Consts';
 
 import { GameState } from './GameState';
 import getInitialCoords from './InitialCoords';
@@ -114,7 +114,7 @@ export class GameRoom extends ColRoom<GameState> {
 		return (client: Client, arg: T) => {
 			try {
 				fn(client, arg);
-			} catch (e) {
+			} catch (e: any) {
 				console.error(e);
 				client.error(0, `Server error: ${e.message}`);
 			}
