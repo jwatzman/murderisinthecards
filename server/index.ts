@@ -3,7 +3,6 @@ import { WebSocketTransport } from '@colyseus/ws-transport';
 import cors from 'cors';
 import express from 'express';
 import http from 'http';
-import path from 'path';
 
 import { GameRoom } from './GameRoom';
 
@@ -18,10 +17,6 @@ const gameServer = new Server({
 });
 
 gameServer.define('murder', GameRoom);
-
-if (process.env.SERVE_STATIC !== '0') {
-	app.use('/', express.static(path.join(__dirname, 'build')));
-}
 
 const port = Number(process.env.PORT || 2567);
 gameServer.listen(port);
