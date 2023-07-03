@@ -1,0 +1,26 @@
+diff --git a/node_modules/@colyseus/core/build/discovery/index.js b/node_modules/@colyseus/core/build/discovery/index.js
+index 84a8130..c4e1f13 100644
+--- a/node_modules/@colyseus/core/build/discovery/index.js
++++ b/node_modules/@colyseus/core/build/discovery/index.js
+@@ -11,7 +11,7 @@ var ip__default = /*#__PURE__*/_interopDefaultLegacy(ip);
+ const NODES_SET = 'colyseus:nodes';
+ const DISCOVERY_CHANNEL = 'colyseus:nodes:discovery';
+ async function getNodeAddress(node) {
+-    const host = process.env.SELF_HOSTNAME || await ip__default['default'].v4();
++    const host = process.env.SELF_HOSTNAME || await ip__default['default'].internalIpV4();
+     const port = process.env.SELF_PORT || node.port;
+     return `${node.processId}/${host}:${port}`;
+ }
+diff --git a/node_modules/@colyseus/core/build/discovery/index.mjs b/node_modules/@colyseus/core/build/discovery/index.mjs
+index 0c18963..d53dbea 100644
+--- a/node_modules/@colyseus/core/build/discovery/index.mjs
++++ b/node_modules/@colyseus/core/build/discovery/index.mjs
+@@ -3,7 +3,7 @@ import ip from 'internal-ip';
+ const NODES_SET = 'colyseus:nodes';
+ const DISCOVERY_CHANNEL = 'colyseus:nodes:discovery';
+ async function getNodeAddress(node) {
+-    const host = process.env.SELF_HOSTNAME || await ip.v4();
++    const host = process.env.SELF_HOSTNAME || await ip.internalIpV4();
+     const port = process.env.SELF_PORT || node.port;
+     return `${node.processId}/${host}:${port}`;
+ }

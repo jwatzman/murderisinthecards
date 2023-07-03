@@ -47,7 +47,6 @@ const ctxs = await Promise.all([
 		entryPoints: ['server/index.ts'],
 		outfile: 'dist/server/server.js',
 		platform: 'node',
-		external: ['default-gateway'],
 	}),
 	esbuild.context({
 		...buildOptsBase,
