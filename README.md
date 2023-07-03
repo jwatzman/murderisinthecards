@@ -9,14 +9,18 @@ The game is deeply inspired by Clue/Cluedo --- anyone who has played that will f
 ```
 yarn install
 yarn build
-yarn run
 ```
 
-will set up a server on `$PORT` (default 2567).
+You'll then need to arrange for your webserver to serve the contents of `dist/static` as a webroot and to run `dist/server/server.js` which sets up a websocket server on port 2567. You'll then need to reverse-proxy requests for `/game` to the websocket server.
 
 ## Development
 
-`yarn install`, then in one window, `cd murderisinthecards-server && yarn run`, and in another window, `cd murderisinthecards-client && yarn run`. This starts a webpack development server on port 3000; the client served there will automatically connect to the game server on port 2567. (The game server on port 2567 will only serve the production client.)
+```
+yarn build
+yarn dev
+```
+
+Then load `http://localhost:3000` which has a development server running serving the client there, configured to connect to the development websocket server on port 2567. There are also watch rules in place to rebuild the client and server, and to restart the server after a rebuild. (You'll need to manually refresh the client for now.)
 
 ## Game Rules
 
