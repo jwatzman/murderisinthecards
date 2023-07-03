@@ -11,6 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 const gameServer = new Server({
+	greet: false,
 	transport: new WebSocketTransport({
 		server: http.createServer(app),
 	}),
