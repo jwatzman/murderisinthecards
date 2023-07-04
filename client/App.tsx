@@ -114,7 +114,7 @@ function App() {
 		const client = new Colyseus.Client(getConnectionURL());
 
 		const createNewRoom = () =>
-			client.create('murder').then(connectionSuccess);
+			void client.create('murder').then(connectionSuccess);
 
 		const joinSpecifiedRoom = () => {
 			const specifiedRoomId =

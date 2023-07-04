@@ -157,7 +157,7 @@ export class GameRoom extends ColRoom<GameState> {
 			return;
 		}
 
-		this.lock();
+		void this.lock(); // XXX probably should not float this.
 
 		const turnOrderArr = this.state.getAllPlayerIds();
 		shuffle(turnOrderArr);
@@ -190,7 +190,7 @@ export class GameRoom extends ColRoom<GameState> {
 		this.state.dieRoll = Math.floor(Math.random() * 6) + 1;
 		this.state.phase = PlayPhase.MOVEMENT;
 		this.broadcastGameMessage(
-			this.state.getPlayer(sessionId).name + ' rolls a ' + this.state.dieRoll
+			this.state.getPlayer(sessionId).name + ' rolls a ' + this.state.dieRoll.toString()
 		);
 	}
 
