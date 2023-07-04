@@ -16,10 +16,17 @@ module.exports = {
 	},
 	extends: [
 		'eslint:recommended',
+		'plugin:react/recommended',
 		'plugin:@typescript-eslint/recommended',
 		'plugin:@typescript-eslint/recommended-requiring-type-checking'
 	],
+	settings: {
+		react: {
+			version: "18.2",
+		}
+	},
 	rules: {
+		"react/no-unescaped-entities": "off",
 		"@typescript-eslint/no-explicit-any": "off",
 		"@typescript-eslint/no-non-null-assertion": "off",
 		"@typescript-eslint/no-unsafe-argument": "off",

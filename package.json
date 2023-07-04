@@ -21,6 +21,7 @@
     "cors": "^2.8.5",
     "esbuild": "^0.18.11",
     "eslint": "^8.44.0",
+    "eslint-plugin-react": "^7.32.2",
     "express": "^4.16.4",
     "nodemon": "^2.0.22",
     "patch-package": "^7.0.0",
