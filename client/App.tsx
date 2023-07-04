@@ -117,7 +117,7 @@ function App() {
 			client.create('murder').then(connectionSuccess);
 
 		const joinSpecifiedRoom = () => {
-			let specifiedRoomId =
+			const specifiedRoomId =
 				(new URL(window.location.toString())).searchParams.get('r');
 			if (specifiedRoomId) {
 				client.joinById(specifiedRoomId)
