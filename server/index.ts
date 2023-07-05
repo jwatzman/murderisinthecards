@@ -1,8 +1,9 @@
+import http from 'http';
+
 import { Server } from '@colyseus/core';
 import { WebSocketTransport } from '@colyseus/ws-transport';
 import cors from 'cors';
 import express from 'express';
-import http from 'http';
 
 import { GameRoom } from './GameRoom';
 

@@ -1,7 +1,8 @@
-import React from 'react';
 import { css, cx } from '@emotion/css';
+import React from 'react';
 
-import { BoardConfig, Coord, DoorDirection } from 'common/BoardLayout';
+import type { Coord } from 'common/BoardLayout';
+import { BoardConfig, DoorDirection } from 'common/BoardLayout';
 import * as CanDo from 'common/CanDo';
 import { ClientToServerMessage, Room } from 'common/Consts';
 

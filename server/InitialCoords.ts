@@ -1,4 +1,4 @@
-import { Coord } from 'common/BoardLayout';
+import type { Coord } from 'common/BoardLayout';
 import { Suspect } from 'common/Consts';
 
 export default function getInitialCoords(s: Suspect): Coord {

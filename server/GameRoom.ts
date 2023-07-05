@@ -1,21 +1,21 @@
-import { Client, Room as ColRoom } from '@colyseus/core';
+import type { Client } from '@colyseus/core';
+import { Room as ColRoom } from '@colyseus/core';
 
-import { Coord } from 'common/BoardLayout';
+import type { Coord } from 'common/BoardLayout';
 import * as CanDo from 'common/CanDo';
+import type { Card, Solution } from 'common/Consts';
 import {
-	Card,
 	ClientToServerMessage,
 	PlayPhase,
 	Room,
 	ServerToClientMessage,
-	Solution,
 	Suspect,
 	Weapon,
 } from 'common/Consts';
+import shuffle from 'server/Shuffle';
 
 import { GameState } from './GameState';
 import getInitialCoords from './InitialCoords';
-import shuffle from './Shuffle';
 
 export class GameRoom extends ColRoom<GameState> {
 	onCreate(): void {

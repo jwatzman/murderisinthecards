@@ -1,8 +1,9 @@
-import React from 'react';
 import { css } from '@emotion/css';
+import React from 'react';
 
-import { ConstGameState } from 'common/ConstGameState';
+import type { ConstGameState } from 'common/ConstGameState';
 import { PlayPhase } from 'common/Consts';
+
 import { GameStateContext, SessionIdContext } from './Context';
 
 type props = { children: React.ReactNode };

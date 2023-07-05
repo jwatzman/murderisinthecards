@@ -1,17 +1,13 @@
+import { injectGlobal } from '@emotion/css';
 import * as Colyseus from 'colyseus.js';
 import React from 'react';
-import { injectGlobal } from '@emotion/css';
 
-import {
-	Card,
-	ClientToServerMessage,
-	PlayPhase,
-	ServerToClientMessage,
-} from 'common/Consts';
-import { ConstGameState } from 'common/ConstGameState';
+import type { ConstGameState } from 'common/ConstGameState';
+import type { Card, ClientToServerMessage } from 'common/Consts';
+import { PlayPhase, ServerToClientMessage } from 'common/Consts';
 
+import type { GameMessage } from './Context';
 import {
-	GameMessage,
 	GameMessagesContext,
 	GameStateContext,
 	RoomIdContext,
@@ -19,8 +15,8 @@ import {
 	SessionIdContext,
 	YourCardsContext,
 } from './Context';
-import GameSetup from './GameSetup';
 import GamePlay from './GamePlay';
+import GameSetup from './GameSetup';
 
 injectGlobal({
 	body: {

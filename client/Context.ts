@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Card, ClientToServerMessage } from 'common/Consts';
-import { ConstGameState } from 'common/ConstGameState';
+import type { ConstGameState } from 'common/ConstGameState';
+import type { Card, ClientToServerMessage } from 'common/Consts';
 
 export type GameMessage = { id: number; message: string };
 export const GameMessagesContext = React.createContext<GameMessage[]>([]);

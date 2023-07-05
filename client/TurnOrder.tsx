@@ -1,5 +1,5 @@
-import React from 'react';
 import { css } from '@emotion/css';
+import React from 'react';
 
 import { GameStateContext } from './Context';
 import getSupectColor from './SuspectColor';

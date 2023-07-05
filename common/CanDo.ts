@@ -1,6 +1,8 @@
-import { Card, PlayPhase, Room, Solution } from './Consts';
-import { ConstGameState } from './ConstGameState';
-import { BoardConfig, BoardLayout, Coord } from './BoardLayout';
+import type { Coord } from './BoardLayout';
+import { BoardConfig, BoardLayout } from './BoardLayout';
+import type { ConstGameState } from './ConstGameState';
+import type { Card, Room, Solution } from './Consts';
+import { PlayPhase } from './Consts';
 
 export function playerSetup(
 	playerId: string,

@@ -1,17 +1,16 @@
-import React from 'react';
 import { css } from '@emotion/css';
+import React from 'react';
 
+import { BoardConfig } from 'common/BoardLayout';
 import * as CanDo from 'common/CanDo';
+import type { Card, Solution } from 'common/Consts';
 import {
-	Card,
 	ClientToServerMessage,
 	PlayPhase,
 	Room,
-	Solution,
 	Suspect,
 	Weapon,
 } from 'common/Consts';
-import { BoardConfig } from 'common/BoardLayout';
 
 import {
 	GameStateContext,

@@ -1,4 +1,4 @@
-import { Room, Suspect, PlayPhase, Solution } from 'common/Consts';
+import type { PlayPhase, Room, Solution, Suspect } from 'common/Consts';
 
 export type ConstPlayerState = {
 	readonly suspect: Suspect;

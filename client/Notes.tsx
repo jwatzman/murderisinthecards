@@ -1,7 +1,8 @@
-import React from 'react';
 import { css } from '@emotion/css';
+import React from 'react';
 
-import { Card, Room, Suspect, Weapon } from 'common/Consts';
+import type { Card } from 'common/Consts';
+import { Room, Suspect, Weapon } from 'common/Consts';
 
 import { RoomIdContext } from './Context';
 import getSuspectColor from './SuspectColor';
