@@ -9,7 +9,9 @@ export default function GameMessages() {
 		<div>
 			Log:
 			<ul>
-				{messages.map(m => <li key={m.id}>{m.message}</li>)}
+				{messages.map((m) => (
+					<li key={m.id}>{m.message}</li>
+				))}
 			</ul>
 		</div>
 	);

@@ -1,12 +1,7 @@
 import React from 'react';
 import { css } from '@emotion/css';
 
-import {
-	Card,
-	Room,
-	Suspect,
-	Weapon,
-} from 'common/Consts';
+import { Card, Room, Suspect, Weapon } from 'common/Consts';
 
 import { RoomIdContext } from './Context';
 import getSuspectColor from './SuspectColor';
@@ -18,11 +13,22 @@ export default function Notes() {
 	return (
 		<table>
 			<tbody>
-				<tr><th /><NoteInputRow prefix="header" /></tr>
+				<tr>
+					<th />
+					<NoteInputRow prefix="header" />
+				</tr>
 				<SuspectSection cards={Object.values(Suspect)} />
-				<tr><td><hr /></td></tr>
+				<tr>
+					<td>
+						<hr />
+					</td>
+				</tr>
 				<NoteSection cards={Object.values(Weapon)} />
-				<tr><td><hr /></td></tr>
+				<tr>
+					<td>
+						<hr />
+					</td>
+				</tr>
 				<NoteSection cards={Object.values(Room)} />
 			</tbody>
 		</table>
@@ -36,7 +42,7 @@ function NoteSection({ cards }: { cards: Card[] }) {
 			<tr key={card}>
 				<th>{card}</th>
 				<NoteInputRow prefix={card} />
-			</tr>
+			</tr>,
 		);
 	}
 
@@ -53,9 +59,11 @@ function SuspectSection({ cards }: { cards: Suspect[] }) {
 		};
 		rows.push(
 			<tr key={card}>
-				<th className={css({'border': '2px solid'})} style={style}>{card}</th>
+				<th className={css({ border: '2px solid' })} style={style}>
+					{card}
+				</th>
 				<NoteInputRow prefix={card} />
-			</tr>
+			</tr>,
 		);
 	}
 
@@ -66,7 +74,11 @@ function NoteInputRow({ prefix }: { prefix: string }) {
 	const row = [];
 	for (let i = 0; i < COLS; i++) {
 		const suffix = `${prefix}.${i}`;
-		row.push(<td key={suffix}><NoteInput suffix={suffix} /></td>);
+		row.push(
+			<td key={suffix}>
+				<NoteInput suffix={suffix} />
+			</td>,
+		);
 	}
 
 	return <>{row}</>;
@@ -92,7 +104,7 @@ function useRoomLocalStorageState(suffix: string) {
 	});
 
 	React.useEffect(() => {
-		const o = {roomId, value};
+		const o = { roomId, value };
 		localStorage.setItem(key, JSON.stringify(o));
 	}, [key, roomId, value]);
 

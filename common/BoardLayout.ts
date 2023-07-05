@@ -14,60 +14,109 @@ const NY = DoorDirection.NEG_Y;
 
 export type Coord = readonly [number, number];
 type BoardConfig = {
-	readonly extent: Coord,
-	readonly rooms: {[r in Room]: {
-		readonly coords: readonly [Coord, Coord],
-		readonly doors: readonly (readonly [Coord, DoorDirection])[],
-		readonly passage?: Room,
-	}},
-	readonly void: readonly [Coord, Coord],
+	readonly extent: Coord;
+	readonly rooms: {
+		[r in Room]: {
+			readonly coords: readonly [Coord, Coord];
+			readonly doors: readonly (readonly [Coord, DoorDirection])[];
+			readonly passage?: Room;
+		};
+	};
+	readonly void: readonly [Coord, Coord];
 };
 
 export const BoardConfig: BoardConfig = {
-	extent: [22,21],
+	extent: [22, 21],
 	rooms: {
 		[Room.DINING_ROOM]: {
-			coords: [[9,0],[14,6]],
-			doors: [[[11,7],NY],[[15,5],NX]],
+			coords: [
+				[9, 0],
+				[14, 6],
+			],
+			doors: [
+				[[11, 7], NY],
+				[[15, 5], NX],
+			],
 		},
 		[Room.FOYER]: {
-			coords: [[17,8],[22,13]],
-			doors: [[[16,10],PX],[[16,11],PX]],
+			coords: [
+				[17, 8],
+				[22, 13],
+			],
+			doors: [
+				[[16, 10], PX],
+				[[16, 11], PX],
+			],
 		},
 		[Room.GAME_ROOM]: {
-			coords: [[7,17],[11,21]],
-			doors: [[[8,16],PY],[[12,21],NX]],
+			coords: [
+				[7, 17],
+				[11, 21],
+			],
+			doors: [
+				[[8, 16], PY],
+				[[12, 21], NX],
+			],
 		},
 		[Room.GREENHOUSE]: {
-			coords: [[0,18],[4,21]],
-			doors: [[[4,17],PY]],
+			coords: [
+				[0, 18],
+				[4, 21],
+			],
+			doors: [[[4, 17], PY]],
 			passage: Room.LOUNGE,
 		},
 		[Room.KITCHEN]: {
-			coords: [[0,0],[5,4]],
-			doors: [[[6,3],NX]],
+			coords: [
+				[0, 0],
+				[5, 4],
+			],
+			doors: [[[6, 3], NX]],
 			passage: Room.STUDY,
 		},
 		[Room.LIBRARY]: {
-			coords: [[13,16],[17,21]],
-			doors: [[[12,19],PX],[[15,15],PY]],
+			coords: [
+				[13, 16],
+				[17, 21],
+			],
+			doors: [
+				[[12, 19], PX],
+				[[15, 15], PY],
+			],
 		},
 		[Room.LOUNGE]: {
-			coords: [[18,0],[22,5]],
-			doors: [[[17,5],PX]],
+			coords: [
+				[18, 0],
+				[22, 5],
+			],
+			doors: [[[17, 5], PX]],
 			passage: Room.GREENHOUSE,
 		},
 		[Room.STUDY]: {
-			coords: [[20,16],[22,21]],
-			doors: [[[19,16],PX]],
+			coords: [
+				[20, 16],
+				[22, 21],
+			],
+			doors: [[[19, 16], PX]],
 			passage: Room.KITCHEN,
 		},
 		[Room.THEATER]: {
-			coords: [[0,7],[6,14]],
-			doors: [[[4,6],PY],[[7,8],NX],[[7,13],NX],[[4,15],NY]],
+			coords: [
+				[0, 7],
+				[6, 14],
+			],
+			doors: [
+				[[4, 6], PY],
+				[[7, 8], NX],
+				[[7, 13], NX],
+				[[4, 15], NY],
+			],
 		},
 	},
-	void: [[9,9],[15,13]],
+	void: [
+		[9, 9],
+		[15, 13],
+	],
 } as const;
 
 type BoardSquare = Room | 'VOID' | null;
@@ -92,14 +141,14 @@ function computeBoardLayout(): BoardLayout {
 function computeBoardSquare(x: number, y: number): BoardSquare {
 	for (const roomName of Object.values(Room)) {
 		const roomConfig = BoardConfig.rooms[roomName];
-		const [[minX,minY],[maxX,maxY]] = roomConfig.coords;
+		const [[minX, minY], [maxX, maxY]] = roomConfig.coords;
 
 		if (x >= minX && y >= minY && x <= maxX && y <= maxY) {
 			return roomName;
 		}
-	} 
+	}
 
-	const [[voidMinX,voidMinY],[voidMaxX,voidMaxY]] = BoardConfig.void;
+	const [[voidMinX, voidMinY], [voidMaxX, voidMaxY]] = BoardConfig.void;
 	if (x >= voidMinX && y >= voidMinY && x <= voidMaxX && y <= voidMaxY) {
 		return 'VOID';
 	}

@@ -18,7 +18,6 @@ import getInitialCoords from './InitialCoords';
 import shuffle from './Shuffle';
 
 export class GameRoom extends ColRoom<GameState> {
-
 	onCreate(): void {
 		console.log('Room created');
 		this.setState(new GameState());
@@ -92,7 +91,7 @@ export class GameRoom extends ColRoom<GameState> {
 		}
 
 		try {
-			await this.allowReconnection(client, 60*3);
+			await this.allowReconnection(client, 60 * 3);
 			console.log('Reconnected', sessionId);
 
 			this.sendCardsToPlayer(client);
@@ -100,7 +99,7 @@ export class GameRoom extends ColRoom<GameState> {
 		} catch (_e) {
 			console.log('Did not reconnect', sessionId);
 			this.broadcastGameMessage(
-				`${name} did not reconnect; the game cannot continue`
+				`${name} did not reconnect; the game cannot continue`,
 			);
 			this.endGame();
 		}
@@ -123,7 +122,7 @@ export class GameRoom extends ColRoom<GameState> {
 
 	private handlePlayerSetup(
 		client: Client,
-		{name, suspect}: {name: string, suspect: Suspect}
+		{ name, suspect }: { name: string; suspect: Suspect },
 	) {
 		const sessionId = client.sessionId;
 		console.log('Player setup', sessionId, name, suspect);
@@ -140,7 +139,7 @@ export class GameRoom extends ColRoom<GameState> {
 		}
 
 		const player = this.state.getPlayer(sessionId);
-		const [x,y] = getInitialCoords(suspect);
+		const [x, y] = getInitialCoords(suspect);
 		player.name = name;
 		player.suspect = suspect;
 		player.x = x;
@@ -174,14 +173,9 @@ export class GameRoom extends ColRoom<GameState> {
 		this.advanceTurn();
 	}
 
-	private handleRollDie(
-		client: Client,
-	) {
+	private handleRollDie(client: Client) {
 		const sessionId = client.sessionId;
-		const err = CanDo.rollDie(
-			sessionId,
-			this.state.toConstGameState(),
-		);
+		const err = CanDo.rollDie(sessionId, this.state.toConstGameState());
 		if (err) {
 			client.error(0, err);
 			return;
@@ -190,17 +184,14 @@ export class GameRoom extends ColRoom<GameState> {
 		this.state.dieRoll = Math.floor(Math.random() * 6) + 1;
 		this.state.phase = PlayPhase.MOVEMENT;
 		this.broadcastGameMessage(
-			this.state.getPlayer(sessionId).name + ' rolls a ' + this.state.dieRoll.toString()
+			this.state.getPlayer(sessionId).name +
+				' rolls a ' +
+				this.state.dieRoll.toString(),
 		);
 	}
 
-	private handleEndTurn(
-		client: Client
-	) {
-		const err = CanDo.endTurn(
-			client.sessionId,
-			this.state.toConstGameState(),
-		);
+	private handleEndTurn(client: Client) {
+		const err = CanDo.endTurn(client.sessionId, this.state.toConstGameState());
 		if (err) {
 			client.error(0, err);
 			return;
@@ -209,10 +200,7 @@ export class GameRoom extends ColRoom<GameState> {
 		this.advanceTurn();
 	}
 
-	private handleMoveToCoord(
-		client: Client,
-		coord: Coord,
-	) {
+	private handleMoveToCoord(client: Client, coord: Coord) {
 		const sessionId = client.sessionId;
 
 		const err = CanDo.moveToCoord(
@@ -234,10 +222,7 @@ export class GameRoom extends ColRoom<GameState> {
 		this.state.dieRoll--;
 	}
 
-	private handleMoveToRoom(
-		client: Client,
-		room: Room,
-	) {
+	private handleMoveToRoom(client: Client, room: Room) {
 		const sessionId = client.sessionId;
 
 		const err = CanDo.moveToRoom(
@@ -255,10 +240,7 @@ export class GameRoom extends ColRoom<GameState> {
 		this.state.dieRoll = 0;
 	}
 
-	private handleMoveThroughPassage(
-		client: Client,
-		room: Room,
-	) {
+	private handleMoveThroughPassage(client: Client, room: Room) {
 		const sessionId = client.sessionId;
 
 		const err = CanDo.moveThroughPassage(
@@ -277,10 +259,7 @@ export class GameRoom extends ColRoom<GameState> {
 		this.state.dieRoll = 0;
 	}
 
-	private handleMakeSuggestion(
-		client: Client,
-		suggestion: Solution,
-	) {
+	private handleMakeSuggestion(client: Client, suggestion: Solution) {
 		const sessionId = client.sessionId;
 
 		const err = CanDo.makeSuggestion(
@@ -301,7 +280,7 @@ export class GameRoom extends ColRoom<GameState> {
 		const [suspect, weapon, room] = suggestion;
 		const name = this.state.getCurrentPlayer().name;
 		this.broadcastGameMessage(
-			`${name} suggests ${suspect} with the ${weapon} in the ${room}`
+			`${name} suggests ${suspect} with the ${weapon} in the ${room}`,
 		);
 
 		for (const player of this.state.getAllPlayers()) {
@@ -314,10 +293,7 @@ export class GameRoom extends ColRoom<GameState> {
 		this.advanceDisproving();
 	}
 
-	private handleDisproveSuggestion(
-		client: Client,
-		card: Card | null,
-	) {
+	private handleDisproveSuggestion(client: Client, card: Card | null) {
 		const sessionId = client.sessionId;
 		const player = this.state.getPlayer(sessionId);
 
@@ -340,7 +316,7 @@ export class GameRoom extends ColRoom<GameState> {
 				if (otherClient.sessionId === this.state.currentPlayer) {
 					otherClient.send(
 						ServerToClientMessage.GAME_MESSAGE,
-						`${player.name} shows you their ${card} card!`
+						`${player.name} shows you their ${card} card!`,
 					);
 					break;
 				}
@@ -349,16 +325,13 @@ export class GameRoom extends ColRoom<GameState> {
 			this.state.currentPlayerDisprovingSuggestion = '';
 		} else {
 			this.broadcastGameMessage(
-				`${player.name} cannot disprove the suggestion!`
+				`${player.name} cannot disprove the suggestion!`,
 			);
 			this.advanceDisproving();
 		}
 	}
 
-	private handleMakeAccusation(
-		client: Client,
-		accusation: Solution,
-	) {
+	private handleMakeAccusation(client: Client, accusation: Solution) {
 		const err = CanDo.makeAccusation(
 			client.sessionId,
 			this.state.toConstGameState(),
@@ -373,7 +346,7 @@ export class GameRoom extends ColRoom<GameState> {
 		const name = currentPlayer.name;
 
 		this.broadcastGameMessage(
-			`${name} accuses ${suspect} with the ${weapon} in the ${room}!`
+			`${name} accuses ${suspect} with the ${weapon} in the ${room}!`,
 		);
 
 		if (this.isCorrectAccusation(accusation)) {
@@ -381,7 +354,7 @@ export class GameRoom extends ColRoom<GameState> {
 			this.endGame();
 		} else {
 			this.broadcastGameMessage(
-				`${name} made an incorrect accusation and is eliminated!`
+				`${name} made an incorrect accusation and is eliminated!`,
 			);
 			currentPlayer.eliminated = true;
 			this.advanceTurn();
@@ -395,7 +368,7 @@ export class GameRoom extends ColRoom<GameState> {
 	private sendCardsToPlayer(client: Client) {
 		client.send(
 			ServerToClientMessage.YOUR_CARDS,
-			this.state.getPlayer(client.sessionId).cards
+			this.state.getPlayer(client.sessionId).cards,
 		);
 	}
 
@@ -423,8 +396,7 @@ export class GameRoom extends ColRoom<GameState> {
 
 	private getNextPlayer(player: string): string {
 		if (player) {
-			const playerIdx =
-				this.state.turnOrder.indexOf(player);
+			const playerIdx = this.state.turnOrder.indexOf(player);
 			const nextPlayerIdx = (playerIdx + 1) % this.state.turnOrder.length;
 			return this.state.turnOrder[nextPlayerIdx];
 		} else {
@@ -447,12 +419,13 @@ export class GameRoom extends ColRoom<GameState> {
 		do {
 			this.state.currentPlayer = this.getNextPlayer(this.state.currentPlayer);
 			playersTried++;
-		} while (this.state.getCurrentPlayer().eliminated && playersTried < numPlayers);
+		} while (
+			this.state.getCurrentPlayer().eliminated &&
+			playersTried < numPlayers
+		);
 
 		if (this.state.getCurrentPlayer().eliminated) {
-			this.broadcastGameMessage(
-				'All players have been eliminated. Game over.'
-			);
+			this.broadcastGameMessage('All players have been eliminated. Game over.');
 			this.endGame();
 			return;
 		}
@@ -466,13 +439,14 @@ export class GameRoom extends ColRoom<GameState> {
 			this.state.currentPlayerDisprovingSuggestion = this.state.currentPlayer;
 		}
 
-		const next =
-			this.getNextPlayer(this.state.currentPlayerDisprovingSuggestion);
+		const next = this.getNextPlayer(
+			this.state.currentPlayerDisprovingSuggestion,
+		);
 
 		if (next == this.state.currentPlayer) {
 			const name = this.state.getCurrentPlayer().name;
 			this.broadcastGameMessage(
-				`No one was able to disprove ${name}'s suggestion!`
+				`No one was able to disprove ${name}'s suggestion!`,
 			);
 			this.state.currentPlayerDisprovingSuggestion = '';
 		} else {
@@ -495,5 +469,4 @@ export class GameRoom extends ColRoom<GameState> {
 		this.state.currentPlayer = '';
 		this.state.phase = PlayPhase.GAME_OVER;
 	}
-
 }

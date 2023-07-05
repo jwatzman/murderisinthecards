@@ -21,4 +21,4 @@ gameServer.define('murder', GameRoom);
 
 const port = Number(process.env.PORT || 2567);
 void gameServer.listen(port);
-console.log(`Listening on ws://localhost:${ port }`);
+console.log(`Listening on ws://localhost:${port}`);

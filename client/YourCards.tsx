@@ -1,11 +1,6 @@
 import React from 'react';
 
-import {
-	Card,
-	Room,
-	Suspect,
-	Weapon
-} from 'common/Consts';
+import { Card, Room, Suspect, Weapon } from 'common/Consts';
 
 import { YourCardsContext } from './Context';
 

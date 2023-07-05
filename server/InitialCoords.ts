@@ -4,9 +4,9 @@ import { Suspect } from 'common/Consts';
 export default function getInitialCoords(s: Suspect): Coord {
 	switch (s) {
 		case Suspect.BLOOD:
-			return [22,6];
+			return [22, 6];
 		case Suspect.EMERALD:
-			return [0,15];
+			return [0, 15];
 		case Suspect.PEPPER:
 			return [18, 21];
 		case Suspect.SAND:

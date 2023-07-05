@@ -2,30 +2,34 @@ import React from 'react';
 import { css } from '@emotion/css';
 
 import * as CanDo from 'common/CanDo';
-import {
-	ClientToServerMessage, Suspect
-} from 'common/Consts';
+import { ClientToServerMessage, Suspect } from 'common/Consts';
 
 import {
 	GameStateContext,
 	RoomIdContext,
 	SendMessageContext,
 	SessionIdContext,
-} from './Context'
+} from './Context';
 import SelectEnum from './SelectEnum';
 
 function GameSetup() {
 	return (
-		<div className={css`margin: 10px;`}>
-			<div className={css({
-				'margin-bottom': '10px',
-				input: {
-					margin: '0 10px',
-				},
-				form: {
+		<div
+			className={css({
+				margin: '10px',
+			})}
+		>
+			<div
+				className={css({
 					'margin-bottom': '10px',
-				}
-			})}>
+					input: {
+						margin: '0 10px',
+					},
+					form: {
+						'margin-bottom': '10px',
+					},
+				})}
+			>
 				<SelectSuspect />
 				<ConnectedPlayers />
 				<BeginGame />
@@ -46,19 +50,14 @@ function SelectSuspect() {
 
 	const submit = (e: React.SyntheticEvent) => {
 		e.preventDefault();
-		sendMessage(ClientToServerMessage.PLAYER_SETUP, {name, suspect});
+		sendMessage(ClientToServerMessage.PLAYER_SETUP, { name, suspect });
 	};
 
 	const changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setName(e.currentTarget.value);
 	};
 
-	const err = CanDo.playerSetup(
-		sessionId,
-		gameState,
-		name,
-		suspect,
-	);
+	const err = CanDo.playerSetup(sessionId, gameState, name, suspect);
 	const canSetUp = err === null;
 
 	const disabled = (suspect: Suspect) =>
@@ -90,15 +89,17 @@ function ConnectedPlayers() {
 			return <li key={id}>New Player</li>;
 		}
 
-		return <li key={id}>{player.name} is... {player.suspect}!</li>;
+		return (
+			<li key={id}>
+				{player.name} is... {player.suspect}!
+			</li>
+		);
 	});
 
 	return (
 		<div>
 			Connected Players:
-			<ul>
-				{playerList}
-			</ul>
+			<ul>{playerList}</ul>
 		</div>
 	);
 }
@@ -115,7 +116,11 @@ function BeginGame() {
 		sendMessage(ClientToServerMessage.BEGIN_GAME, null);
 	};
 
-	return <button disabled={!readyToBegin} onClick={start}>Begin Game</button>;
+	return (
+		<button disabled={!readyToBegin} onClick={start}>
+			Begin Game
+		</button>
+	);
 }
 
 function GameLink() {
@@ -131,17 +136,20 @@ function GameLink() {
 	};
 
 	return (
-		<div>Game join link: <a href={urlStr} onClick={disable}>{urlStr}</a></div>
+		<div>
+			Game join link:{' '}
+			<a href={urlStr} onClick={disable}>
+				{urlStr}
+			</a>
+		</div>
 	);
 }
 
 function License() {
 	const homepage = 'https://github.com/jwatzman/murderisinthecards';
 	return (
-		<div className={css({'font-size': '10px', 'margin-top': '10px'})}>
-			Murder Is In The Cards. Homepage:
-			{' '}
-			<a href={homepage}>{homepage}</a>
+		<div className={css({ 'font-size': '10px', 'margin-top': '10px' })}>
+			Murder Is In The Cards. Homepage: <a href={homepage}>{homepage}</a>
 		</div>
 	);
 }

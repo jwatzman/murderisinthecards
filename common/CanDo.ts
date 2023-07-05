@@ -6,10 +6,10 @@ export function playerSetup(
 	playerId: string,
 	state: ConstGameState,
 	name: string,
-	suspect: string
+	suspect: string,
 ): string | null {
 	if (state.phase != PlayPhase.SETUP) {
-		return 'You can\'t select a name and suspect after the game has started!';
+		return "You can't select a name and suspect after the game has started!";
 	}
 
 	if (!name) {
@@ -69,9 +69,11 @@ export function makeAccusation(
 		return 'Not your turn!';
 	}
 
-	if (state.phase === PlayPhase.SUGGESTION_RESOLUTION &&
-			state.currentPlayerDisprovingSuggestion) {
-		return 'You can\'t do that now!';
+	if (
+		state.phase === PlayPhase.SUGGESTION_RESOLUTION &&
+		state.currentPlayerDisprovingSuggestion
+	) {
+		return "You can't do that now!";
 	}
 
 	return null;
@@ -89,19 +91,18 @@ export function endTurn(
 		return null;
 	}
 
-	if (state.phase === PlayPhase.SUGGESTION_RESOLUTION &&
-			!state.currentPlayerDisprovingSuggestion) {
+	if (
+		state.phase === PlayPhase.SUGGESTION_RESOLUTION &&
+		!state.currentPlayerDisprovingSuggestion
+	) {
 		return null;
 	}
 
-	return 'You can\'t do that now!';
+	return "You can't do that now!";
 }
 
-function isDoorOf(
-	room: Room,
-	[x,y]: Coord,
-): boolean {
-	for (const [[doorX,doorY],] of BoardConfig.rooms[room].doors) {
+function isDoorOf(room: Room, [x, y]: Coord): boolean {
+	for (const [[doorX, doorY]] of BoardConfig.rooms[room].doors) {
 		if (x == doorX && y == doorY) {
 			return true;
 		}
@@ -113,27 +114,27 @@ function isDoorOf(
 export function moveToCoord(
 	playerId: string,
 	state: ConstGameState,
-	[x,y]: Coord,
+	[x, y]: Coord,
 ): string | null {
 	if (playerId != state.currentPlayer) {
 		return 'Not your turn!';
 	}
 
 	if (state.phase != PlayPhase.MOVEMENT) {
-		return 'You can\'t do that now!';
+		return "You can't do that now!";
 	}
 
 	if (state.dieRoll == 0) {
-		return 'You can\'t move any more!';
+		return "You can't move any more!";
 	}
 
 	const [maxX, maxY] = BoardConfig.extent;
 	if (x < 0 || y < 0 || x > maxX || y > maxY) {
-		return 'Can\'t move off the edge of the board!';
+		return "Can't move off the edge of the board!";
 	}
 
 	if (BoardLayout[x][y]) {
-		return 'Can\'t move under a room!';
+		return "Can't move under a room!";
 	}
 
 	for (const otherPlayer of state.players.values()) {
@@ -142,21 +143,21 @@ export function moveToCoord(
 		}
 
 		if (!otherPlayer.room && otherPlayer.x == x && otherPlayer.y == y) {
-			return 'Can\'t move on top of another player!';
+			return "Can't move on top of another player!";
 		}
 	}
 
 	const player = state.players.get(playerId)!;
 	const currentRoom = player.room;
 	if (currentRoom) {
-		if (!isDoorOf(currentRoom, [x,y])) {
+		if (!isDoorOf(currentRoom, [x, y])) {
 			return 'Can only leave through the doors!';
 		}
 	} else {
 		const deltaX = player.x - x;
 		const deltaY = player.y - y;
 		if (Math.abs(deltaX) + Math.abs(deltaY) != 1) {
-			return 'Can\'t move that much!';
+			return "Can't move that much!";
 		}
 	}
 
@@ -173,11 +174,11 @@ export function moveToRoom(
 	}
 
 	if (state.phase != PlayPhase.MOVEMENT) {
-		return 'You can\'t do that now!';
+		return "You can't do that now!";
 	}
 
 	if (state.dieRoll == 0) {
-		return 'You can\'t move any more!';
+		return "You can't move any more!";
 	}
 
 	const player = state.players.get(playerId)!;
@@ -190,7 +191,7 @@ export function moveToRoom(
 	}
 
 	if (room === state.leftRoom) {
-		return 'Can\'t re-enter the same room on the same turn!';
+		return "Can't re-enter the same room on the same turn!";
 	}
 
 	return null;
@@ -206,7 +207,7 @@ export function moveThroughPassage(
 	}
 
 	if (state.phase != PlayPhase.BEGIN_TURN) {
-		return 'You can\'t do that now!';
+		return "You can't do that now!";
 	}
 
 	const currentRoom = state.players.get(playerId)!.room;
@@ -243,7 +244,7 @@ export function makeAnySuggestion(
 		return null;
 	}
 
-	return 'You can\'t do that now!';
+	return "You can't do that now!";
 }
 
 export function makeSuggestion(
@@ -258,7 +259,7 @@ export function makeSuggestion(
 
 	const [, , room] = suggestion;
 	if (state.players.get(playerId)!.room !== room) {
-		return 'You must suggest the room you\'re in!';
+		return "You must suggest the room you're in!";
 	}
 
 	return null;
@@ -269,7 +270,7 @@ export function disproveAnySuggestion(
 	state: ConstGameState,
 ): string | null {
 	if (state.phase != PlayPhase.SUGGESTION_RESOLUTION) {
-		return 'You can\'t do that now!';
+		return "You can't do that now!";
 	}
 
 	if (playerId != state.currentPlayerDisprovingSuggestion) {
@@ -292,11 +293,11 @@ export function disproveSuggestion(
 
 	if (card) {
 		if (!playerCards.includes(card)) {
-			return 'That isn\'t one of your cards!';
+			return "That isn't one of your cards!";
 		}
 
 		if (!state.suggestion.includes(card)) {
-			return 'That wasn\'t suggested!';
+			return "That wasn't suggested!";
 		}
 	} else {
 		for (const sugCard of state.suggestion) {

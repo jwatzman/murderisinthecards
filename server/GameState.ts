@@ -1,12 +1,6 @@
 import { Schema, type, ArraySchema, MapSchema } from '@colyseus/schema';
 
-import {
-	Card,
-	Room,
-	Suspect,
-	PlayPhase,
-	Solution,
-} from 'common/Consts';
+import { Card, Room, Suspect, PlayPhase, Solution } from 'common/Consts';
 import { ConstGameState } from 'common/ConstGameState';
 
 export class PlayerState extends Schema {
@@ -26,7 +20,7 @@ export class PlayerState extends Schema {
 	public y = 0;
 
 	@type('string')
-	public room: (Room | '') = '';
+	public room: Room | '' = '';
 
 	@type('boolean')
 	public teleported = false;
@@ -36,7 +30,6 @@ export class PlayerState extends Schema {
 }
 
 export class GameState extends Schema {
-
 	@type({ map: PlayerState })
 	private players = new MapSchema<PlayerState>();
 
@@ -59,7 +52,7 @@ export class GameState extends Schema {
 	public currentPlayerDisprovingSuggestion = '';
 
 	@type('string')
-	public leftRoom: (Room | '') = '';
+	public leftRoom: Room | '' = '';
 
 	// Not sync'd in main state:
 	public solution: Solution = null!;
@@ -67,7 +60,7 @@ export class GameState extends Schema {
 	toConstGameState(): ConstGameState {
 		// This is a dirty lie, but close enough to the truth to work, and
 		// incredibly useful.
-		return (this as unknown) as ConstGameState;
+		return this as unknown as ConstGameState;
 	}
 
 	createPlayer(id: string): void {
@@ -103,5 +96,4 @@ export class GameState extends Schema {
 	getAllPlayers(): PlayerState[] {
 		return Array.from(this.players.values());
 	}
-
 }

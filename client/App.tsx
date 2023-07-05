@@ -25,7 +25,7 @@ import GamePlay from './GamePlay';
 injectGlobal({
 	body: {
 		margin: 0,
-	}
+	},
 });
 
 const ROOM_ID_LOCALSTORAGE_ID = 'roomId';
@@ -85,9 +85,9 @@ function App() {
 			setDied(true);
 		});
 
-		room.onMessage(ServerToClientMessage.GAME_MESSAGE, message => {
-			setGameMessages(oldMessages => {
-				const newMessage = {message, id: nextGameMessageId++};
+		room.onMessage(ServerToClientMessage.GAME_MESSAGE, (message) => {
+			setGameMessages((oldMessages) => {
+				const newMessage = { message, id: nextGameMessageId++ };
 				const newMessages = oldMessages.concat(newMessage);
 				while (newMessages.length > 10) {
 					newMessages.shift();
@@ -96,7 +96,7 @@ function App() {
 			});
 		});
 
-		room.onMessage(ServerToClientMessage.YOUR_CARDS, cards => {
+		room.onMessage(ServerToClientMessage.YOUR_CARDS, (cards) => {
 			setCards(cards);
 		});
 
@@ -117,10 +117,12 @@ function App() {
 			void client.create('murder').then(connectionSuccess);
 
 		const joinSpecifiedRoom = () => {
-			const specifiedRoomId =
-				(new URL(window.location.toString())).searchParams.get('r');
+			const specifiedRoomId = new URL(
+				window.location.toString(),
+			).searchParams.get('r');
 			if (specifiedRoomId) {
-				client.joinById(specifiedRoomId)
+				client
+					.joinById(specifiedRoomId)
 					.then(connectionSuccess)
 					.catch(createNewRoom);
 			} else {
@@ -133,7 +135,8 @@ function App() {
 			const savedSessionId = localStorage.getItem(SESSION_ID_LOCALSTORAGE_KEY);
 
 			if (savedRoomId && savedSessionId) {
-				client.reconnect(savedRoomId, savedSessionId)
+				client
+					.reconnect(savedRoomId, savedSessionId)
 					.then(connectionSuccess)
 					.catch(joinSpecifiedRoom);
 			} else {
@@ -196,9 +199,7 @@ function Disconnected() {
 	const onClick = () => window.location.reload();
 	return (
 		<div>
-			Disconnected.
-			{' '}
-			<button onClick={onClick}>Reload?</button>
+			Disconnected. <button onClick={onClick}>Reload?</button>
 		</div>
 	);
 }

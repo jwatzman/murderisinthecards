@@ -1,15 +1,9 @@
 import React from 'react';
 import { css, cx } from '@emotion/css';
 
-import {
-	BoardConfig,
-	Coord,
-	DoorDirection,
-} from 'common/BoardLayout';
+import { BoardConfig, Coord, DoorDirection } from 'common/BoardLayout';
 import * as CanDo from 'common/CanDo';
-import {
-	ClientToServerMessage, Room
-} from 'common/Consts';
+import { ClientToServerMessage, Room } from 'common/Consts';
 
 import {
 	GameStateContext,
@@ -28,12 +22,18 @@ const centerText = css({
 
 export default function GameBoard() {
 	return (
-		<div className={css({
-			border: '3px solid black',
-			display: 'inline-grid',
-			'grid-template-rows': `repeat(${BoardConfig.extent[0] + 1}, ${GRID_SIZE})`,
-			'grid-template-columns': `repeat(${BoardConfig.extent[1] + 1}, ${GRID_SIZE})`,
-		})}>
+		<div
+			className={css({
+				border: '3px solid black',
+				display: 'inline-grid',
+				'grid-template-rows': `repeat(${
+					BoardConfig.extent[0] + 1
+				}, ${GRID_SIZE})`,
+				'grid-template-columns': `repeat(${
+					BoardConfig.extent[1] + 1
+				}, ${GRID_SIZE})`,
+			})}
+		>
 			<Squares />
 			<Suspects />
 		</div>
@@ -79,7 +79,7 @@ function Squares() {
 			squares.push(
 				<div
 					key={squareKey}
-					onClick={handleMoveToCoord([x,y])}
+					onClick={handleMoveToCoord([x, y])}
 					className={css({
 						'background-color': 'lightyellow',
 						border: '1px solid black',
@@ -87,7 +87,7 @@ function Squares() {
 						'grid-column-end': 'span 1',
 					})}
 					style={squareStyle}
-				/>
+				/>,
 			);
 		}
 	}
@@ -96,7 +96,7 @@ function Squares() {
 	for (const roomName of Object.values(Room)) {
 		const roomConfig = BoardConfig.rooms[roomName];
 
-		const [[minX,minY],[maxX,maxY]] = roomConfig.coords;
+		const [[minX, minY], [maxX, maxY]] = roomConfig.coords;
 		const roomStyle = {
 			gridRowStart: minX + 1,
 			gridRowEnd: maxX + 1 + 1,
@@ -107,16 +107,20 @@ function Squares() {
 			<div
 				key={roomName}
 				onClick={handleMoveToRoom(roomName)}
-				className={cx(centerText, css({
-					'background-color': 'darkkhaki',
-					border: '1px solid darkred',
-				}))}
-				style={roomStyle}>
+				className={cx(
+					centerText,
+					css({
+						'background-color': 'darkkhaki',
+						border: '1px solid darkred',
+					}),
+				)}
+				style={roomStyle}
+			>
 				{roomName}
-			</div>
+			</div>,
 		);
 
-		for (const [[x,y],dir] of roomConfig.doors) {
+		for (const [[x, y], dir] of roomConfig.doors) {
 			const doorStyle = {
 				gridRowStart: x + 1,
 				gridColumnStart: y + 1,
@@ -126,34 +130,43 @@ function Squares() {
 			rooms.push(
 				<div
 					key={doorKey}
-					onClick={handleMoveToCoord([x,y])}
-					className={cx(centerText, css({
-						'background-color': 'yellow',
-						border: '1px solid black',
-						'font-size': `calc(${GRID_SIZE} / 2)`,
-						'font-weight': 'bold',
-						'grid-row-end': 'span 1',
-						'grid-column-end': 'span 1',
-					}))}
-					style={doorStyle}>
+					onClick={handleMoveToCoord([x, y])}
+					className={cx(
+						centerText,
+						css({
+							'background-color': 'yellow',
+							border: '1px solid black',
+							'font-size': `calc(${GRID_SIZE} / 2)`,
+							'font-weight': 'bold',
+							'grid-row-end': 'span 1',
+							'grid-column-end': 'span 1',
+						}),
+					)}
+					style={doorStyle}
+				>
 					{doorDirectionGlyph(dir)}
-				</div>
+				</div>,
 			);
 		}
 	}
 
-	const [[voidMinX,voidMinY],[voidMaxX,voidMaxY]] = BoardConfig.void;
+	const [[voidMinX, voidMinY], [voidMaxX, voidMaxY]] = BoardConfig.void;
 	const voidStyle = {
 		gridRowStart: voidMinX + 1,
 		gridRowEnd: voidMaxX + 1 + 1,
 		gridColumnStart: voidMinY + 1,
 		gridColumnEnd: voidMaxY + 1 + 1,
 	};
-	const voidRoom =
-		<div key="void" className={css({
-			'background-color': 'lightyellow',
-			border: '1px solid black',
-		})} style={voidStyle} />;
+	const voidRoom = (
+		<div
+			key="void"
+			className={css({
+				'background-color': 'lightyellow',
+				border: '1px solid black',
+			})}
+			style={voidStyle}
+		/>
+	);
 
 	return (
 		<>
@@ -168,7 +181,7 @@ function Suspects() {
 	const gameState = React.useContext(GameStateContext);
 
 	const suspects = [];
-	const numSuspectsInRoom: {[r: string]: number} = {};
+	const numSuspectsInRoom: { [r: string]: number } = {};
 	for (const [playerId, playerState] of gameState.players.entries()) {
 		if (playerState.eliminated) {
 			continue;
@@ -179,7 +192,7 @@ function Suspects() {
 			const room = BoardConfig.rooms[playerState.room];
 			const nthInRoom = numSuspectsInRoom[playerState.room] || 0;
 
-			const [[minX,minY],[,maxY]] = room.coords;
+			const [[minX, minY], [, maxY]] = room.coords;
 
 			x = minX;
 			y = minY + nthInRoom;
@@ -188,7 +201,7 @@ function Suspects() {
 			// even all 6 suspects can still fit on two rows.
 			if (y > maxY) {
 				x++;
-				y -= (maxY - minY + 1);
+				y -= maxY - minY + 1;
 			}
 
 			numSuspectsInRoom[playerState.room] = nthInRoom + 1;
@@ -206,17 +219,21 @@ function Suspects() {
 		suspects.push(
 			<div
 				key={playerId}
-				className={cx(centerText, css({
-					'grid-row-end': 'span 1',
-					'grid-column-end': 'span 1',
-					'font-size': `${GRID_SIZE}`,
+				className={cx(
+					centerText,
+					css({
+						'grid-row-end': 'span 1',
+						'grid-column-end': 'span 1',
+						'font-size': `${GRID_SIZE}`,
 
-					'-webkit-text-stroke': '1px black',
-					'text-stroke': '1px black',
-				}))}
-				style={style}>
+						'-webkit-text-stroke': '1px black',
+						'text-stroke': '1px black',
+					}),
+				)}
+				style={style}
+			>
 				{'\u2666'}
-			</div>
+			</div>,
 		);
 	}
 
@@ -236,15 +253,15 @@ function doorDirectionGlyph(dir: DoorDirection): string {
 	}
 }
 
-function doorDirectionStyle(dir: DoorDirection): {[key:string]:string} {
+function doorDirectionStyle(dir: DoorDirection): { [key: string]: string } {
 	switch (dir) {
 		case DoorDirection.POS_X: // "Down"
-			return {alignItems: 'end'};
+			return { alignItems: 'end' };
 		case DoorDirection.NEG_X: // "Up"
-			return {alignItems: 'start'};
+			return { alignItems: 'start' };
 		case DoorDirection.POS_Y: // "Right"
-			return {justifyContent: 'end'};
+			return { justifyContent: 'end' };
 		case DoorDirection.NEG_Y: // "Left"
-			return {justifyContent: 'start'};
+			return { justifyContent: 'start' };
 	}
 }

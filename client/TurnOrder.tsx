@@ -25,18 +25,28 @@ export default function TurnOrder() {
 		};
 		names.push(
 			<li className={turnListItemClassName} key={playerId}>
-				<span className={css`border: 2px solid;`} style={suspectColorStyle}>
+				<span
+					className={css`
+						border: 2px solid;
+					`}
+					style={suspectColorStyle}
+				>
 					{player.name}
 				</span>
-			</li>
+			</li>,
 		);
 	}
 
 	return (
 		<div>
-			Turn order:
-			{' '}
-			<ol className={css`display: inline; list-style: none; padding: 0;`}>
+			Turn order:{' '}
+			<ol
+				className={css`
+					display: inline;
+					list-style: none;
+					padding: 0;
+				`}
+			>
 				{names}
 			</ol>
 		</div>

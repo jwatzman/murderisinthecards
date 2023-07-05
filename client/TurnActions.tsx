@@ -18,7 +18,7 @@ import {
 	SendMessageContext,
 	SessionIdContext,
 	YourCardsContext,
-} from './Context'
+} from './Context';
 import SelectEnum from './SelectEnum';
 
 export default function TurnActions() {
@@ -30,7 +30,9 @@ export default function TurnActions() {
 	}
 
 	const yourTurn = gameState.currentPlayer === sessionId;
-	const currentPlayerName = gameState.players.get(gameState.currentPlayer)!.name;
+	const currentPlayerName = gameState.players.get(
+		gameState.currentPlayer,
+	)!.name;
 
 	let turnIndicator;
 	if (yourTurn) {
@@ -40,25 +42,28 @@ export default function TurnActions() {
 	}
 
 	let disproving = null;
-	if (gameState.phase === PlayPhase.SUGGESTION_RESOLUTION &&
-			gameState.currentPlayerDisprovingSuggestion &&
-			gameState.currentPlayerDisprovingSuggestion !== sessionId) {
-		const suggestionDisprover =
-			gameState.players.get(gameState.currentPlayerDisprovingSuggestion)!.name;
+	if (
+		gameState.phase === PlayPhase.SUGGESTION_RESOLUTION &&
+		gameState.currentPlayerDisprovingSuggestion &&
+		gameState.currentPlayerDisprovingSuggestion !== sessionId
+	) {
+		const suggestionDisprover = gameState.players.get(
+			gameState.currentPlayerDisprovingSuggestion,
+		)!.name;
 		const suggestionMaker = yourTurn ? 'your' : `${currentPlayerName}'s`;
-		disproving =
+		disproving = (
 			<div>
-				Waiting on {suggestionDisprover}
-				{' '}
-				to disprove {suggestionMaker} suggestion
-			</div>;
+				Waiting on {suggestionDisprover} to disprove {suggestionMaker}{' '}
+				suggestion
+			</div>
+		);
 	}
 
 	return (
 		<div>
 			{turnIndicator}
 			{disproving}
-			<ul className={css({li: {margin: '10px 0'}})}>
+			<ul className={css({ li: { margin: '10px 0' } })}>
 				<RollDie />
 				<MoveThroughPassage />
 				<MakeSuggestion />
@@ -87,7 +92,9 @@ function RollDie() {
 	};
 
 	return (
-		<li><button onClick={roll}>Roll die</button></li>
+		<li>
+			<button onClick={roll}>Roll die</button>
+		</li>
 	);
 }
 
@@ -119,9 +126,7 @@ function MoveThroughPassage() {
 
 	return (
 		<li>
-			<button onClick={move}>
-				Move through secret passage to {passage}
-			</button>
+			<button onClick={move}>Move through secret passage to {passage}</button>
 		</li>
 	);
 }
@@ -151,7 +156,11 @@ function MakeSuggestion() {
 			e.preventDefault();
 			setExpanded(true);
 		};
-		return <li><button onClick={expand}>Make suggestion</button></li>;
+		return (
+			<li>
+				<button onClick={expand}>Make suggestion</button>
+			</li>
+		);
 	}
 
 	const room = gameState.players.get(sessionId)!.room;
@@ -163,7 +172,7 @@ function MakeSuggestion() {
 		e.preventDefault();
 		const suggestion: Solution = [suspect, weapon, room];
 		sendMessage(ClientToServerMessage.MAKE_SUGGESTION, suggestion);
-	}
+	};
 
 	return (
 		<li>
@@ -172,19 +181,14 @@ function MakeSuggestion() {
 					onChange={setSuspect}
 					values={Object.values(Suspect)}
 					value={suspect}
-				/>
-				{' '}
-				with the
-				{' '}
+				/>{' '}
+				with the{' '}
 				<SelectEnum
 					onChange={setWeapon}
 					values={Object.values(Weapon)}
 					value={weapon}
-				/>
-				{' '}
-				in the {room}
-				{' '}
-				<input type="submit" value="Suggest" />
+				/>{' '}
+				in the {room} <input type="submit" value="Suggest" />
 			</form>
 		</li>
 	);
@@ -215,7 +219,7 @@ function DisproveSuggestion() {
 			disproveButtons.push(
 				<li key={card}>
 					<button onClick={handler(card)}>Disprove with {card}</button>
-				</li>
+				</li>,
 			);
 		}
 	}
@@ -224,7 +228,7 @@ function DisproveSuggestion() {
 		disproveButtons.push(
 			<li key="cannot">
 				<button onClick={handler(null)}>I cannot dispove!</button>
-			</li>
+			</li>,
 		);
 	}
 
@@ -257,14 +261,18 @@ function MakeAccusation() {
 			e.preventDefault();
 			setExpanded(true);
 		};
-		return <li><button onClick={expand}>Make accusation</button></li>;
+		return (
+			<li>
+				<button onClick={expand}>Make accusation</button>
+			</li>
+		);
 	}
 
 	const submit = (e: React.SyntheticEvent) => {
 		e.preventDefault();
 		const accusation: Solution = [suspect, weapon, room];
 		sendMessage(ClientToServerMessage.MAKE_ACCUSATION, accusation);
-	}
+	};
 
 	return (
 		<li>
@@ -273,24 +281,19 @@ function MakeAccusation() {
 					onChange={setSuspect}
 					values={Object.values(Suspect)}
 					value={suspect}
-				/>
-				{' '}
-				with the
-				{' '}
+				/>{' '}
+				with the{' '}
 				<SelectEnum
 					onChange={setWeapon}
 					values={Object.values(Weapon)}
 					value={weapon}
-				/>
-				{' '}
-				in the
-				{' '}
+				/>{' '}
+				in the{' '}
 				<SelectEnum
 					onChange={setRoom}
 					values={Object.values(Room)}
 					value={room}
-				/>
-				{' '}
+				/>{' '}
 				<input type="submit" value="Accuse" />
 			</form>
 		</li>
@@ -314,6 +317,8 @@ function EndTurn() {
 	};
 
 	return (
-		<li><button onClick={end}>End turn</button></li>
+		<li>
+			<button onClick={end}>End turn</button>
+		</li>
 	);
 }
