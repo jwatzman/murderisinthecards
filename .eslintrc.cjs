@@ -7,6 +7,7 @@ module.exports = {
 	plugins: [
 		'@typescript-eslint',
 		'import',
+		'react-hooks',
 	],
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
@@ -32,6 +33,7 @@ module.exports = {
 		},
 	},
 	rules: {
+		"curly": "error",
 		"import/first": "error",
 		"import/no-duplicates": "error",
 		"import/order": ["error", {
@@ -43,6 +45,8 @@ module.exports = {
 			},
 		 } ],
 		"react/no-unescaped-entities": "off",
+		"react-hooks/exhaustive-deps": "error",
+		"react-hooks/rules-of-hooks": "error",
 		"sort-imports": ["error", { ignoreDeclarationSort: true }],
 		"@typescript-eslint/consistent-type-imports": "error",
 		"@typescript-eslint/no-explicit-any": "off",
