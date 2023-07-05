@@ -25,7 +25,10 @@ function waitingOnPlayer(
 		return false;
 	}
 
-	if (gameState.phase === PlayPhase.SUGGESTION_RESOLUTION) {
+	if (
+		gameState.phase === PlayPhase.SUGGESTION_RESOLUTION &&
+		gameState.currentPlayerDisprovingSuggestion
+	) {
 		return gameState.currentPlayerDisprovingSuggestion === sessionId;
 	}
 
