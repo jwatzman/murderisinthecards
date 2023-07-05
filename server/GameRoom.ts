@@ -1,4 +1,4 @@
-import { Client, Room as ColRoom } from 'colyseus';
+import { Client, Room as ColRoom } from '@colyseus/core';
 
 import { Coord } from 'common/BoardLayout';
 import * as CanDo from 'common/CanDo';
