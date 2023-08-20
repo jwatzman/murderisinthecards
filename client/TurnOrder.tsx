@@ -4,15 +4,15 @@ import React from 'react';
 import { GameStateContext } from './Context';
 import getSupectColor from './SuspectColor';
 
-const turnListItemClassName = css`
-	display: inline;
-	:after {
-		content: ', ';
-	}
-	:last-child:after {
-		content: '';
-	}
-`;
+const turnListItemClassName = css({
+	display: 'inline',
+	':after': {
+		content: ', ',
+	},
+	':last-child:after': {
+		content: '',
+	},
+});
 
 export default function TurnOrder() {
 	const gameState = React.useContext(GameStateContext);
@@ -26,9 +26,9 @@ export default function TurnOrder() {
 		names.push(
 			<li className={turnListItemClassName} key={playerId}>
 				<span
-					className={css`
-						border: 2px solid;
-					`}
+					className={css({
+						border: '2px solid',
+					})}
 					style={suspectColorStyle}
 				>
 					{player.name}
@@ -41,11 +41,11 @@ export default function TurnOrder() {
 		<div>
 			Turn order:{' '}
 			<ol
-				className={css`
-					display: inline;
-					list-style: none;
-					padding: 0;
-				`}
+				className={css({
+					display: 'inline',
+					'list-style': 'none',
+					padding: 0,
+				})}
 			>
 				{names}
 			</ol>
