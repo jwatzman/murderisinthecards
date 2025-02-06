@@ -13,15 +13,15 @@ import YourTurnWrap from './YourTurnWrap';
 export default function GamePlay() {
 	return (
 		<YourTurnWrap>
-			<div className={css({ display: 'flex', 'margin-bottom': '20px' })}>
+			<div className={css({ display: 'flex', marginBottom: '20px' })}>
 				<GameBoard />
 				<div
 					className={css({
 						display: 'flex',
-						'flex-direction': 'column',
-						'justify-content': 'space-between',
-						'margin-left': '20px',
-						'min-width': '250px',
+						flexDirection: 'column',
+						justifyContent: 'space-between',
+						marginLeft: '20px',
+						minWidth: '250px',
 					})}
 				>
 					<div>

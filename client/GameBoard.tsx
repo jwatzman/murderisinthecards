@@ -17,8 +17,8 @@ const GRID_SIZE = '30px';
 const centerText = css({
 	cursor: 'default',
 	display: 'flex',
-	'align-items': 'center',
-	'justify-content': 'center',
+	alignItems: 'center',
+	justifyContent: 'center',
 });
 
 export default function GameBoard() {
@@ -27,10 +27,8 @@ export default function GameBoard() {
 			className={css({
 				border: '3px solid black',
 				display: 'inline-grid',
-				'grid-template-rows': `repeat(${
-					BoardConfig.extent[0] + 1
-				}, ${GRID_SIZE})`,
-				'grid-template-columns': `repeat(${
+				gridTemplateRows: `repeat(${BoardConfig.extent[0] + 1}, ${GRID_SIZE})`,
+				gridTemplateColumns: `repeat(${
 					BoardConfig.extent[1] + 1
 				}, ${GRID_SIZE})`,
 			})}
@@ -82,10 +80,10 @@ function Squares() {
 					key={squareKey}
 					onClick={handleMoveToCoord([x, y])}
 					className={css({
-						'background-color': 'lightyellow',
+						backgroundColor: 'lightyellow',
 						border: '1px solid black',
-						'grid-row-end': 'span 1',
-						'grid-column-end': 'span 1',
+						gridRowEnd: 'span 1',
+						gridColumnEnd: 'span 1',
 					})}
 					style={squareStyle}
 				/>,
@@ -111,7 +109,7 @@ function Squares() {
 				className={cx(
 					centerText,
 					css({
-						'background-color': 'darkkhaki',
+						backgroundColor: 'darkkhaki',
 						border: '1px solid darkred',
 					}),
 				)}
@@ -135,12 +133,12 @@ function Squares() {
 					className={cx(
 						centerText,
 						css({
-							'background-color': 'yellow',
+							backgroundColor: 'yellow',
 							border: '1px solid black',
-							'font-size': `calc(${GRID_SIZE} / 2)`,
-							'font-weight': 'bold',
-							'grid-row-end': 'span 1',
-							'grid-column-end': 'span 1',
+							fontSize: `calc(${GRID_SIZE} / 2)`,
+							fontWeight: 'bold',
+							gridRowEnd: 'span 1',
+							gridColumnEnd: 'span 1',
 						}),
 					)}
 					style={doorStyle}
@@ -162,7 +160,7 @@ function Squares() {
 		<div
 			key="void"
 			className={css({
-				'background-color': 'lightyellow',
+				backgroundColor: 'lightyellow',
 				border: '1px solid black',
 			})}
 			style={voidStyle}
@@ -223,12 +221,12 @@ function Suspects() {
 				className={cx(
 					centerText,
 					css({
-						'grid-row-end': 'span 1',
-						'grid-column-end': 'span 1',
-						'font-size': `${GRID_SIZE}`,
+						gridRowEnd: 'span 1',
+						gridColumnEnd: 'span 1',
+						fontSize: `${GRID_SIZE}`,
 
-						'-webkit-text-stroke': '1px black',
-						'text-stroke': '1px black',
+						WebkitTextStroke: '1px black',
+						textStroke: '1px black',
 					}),
 				)}
 				style={style}

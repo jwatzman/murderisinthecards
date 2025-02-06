@@ -7,10 +7,10 @@ import getSupectColor from './SuspectColor';
 const turnListItemClassName = css({
 	display: 'inline',
 	':after': {
-		content: ', ',
+		content: '", "',
 	},
 	':last-child:after': {
-		content: '',
+		content: '""',
 	},
 });
 
@@ -43,7 +43,7 @@ export default function TurnOrder() {
 			<ol
 				className={css({
 					display: 'inline',
-					'list-style': 'none',
+					listStyle: 'none',
 					padding: 0,
 				})}
 			>

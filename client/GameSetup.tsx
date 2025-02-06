@@ -21,12 +21,12 @@ function GameSetup() {
 		>
 			<div
 				className={css({
-					'margin-bottom': '10px',
+					marginBottom: '10px',
 					input: {
 						margin: '0 10px',
 					},
 					form: {
-						'margin-bottom': '10px',
+						marginBottom: '10px',
 					},
 				})}
 			>
@@ -148,7 +148,7 @@ function GameLink() {
 function License() {
 	const homepage = 'https://github.com/jwatzman/murderisinthecards';
 	return (
-		<div className={css({ 'font-size': '10px', 'margin-top': '10px' })}>
+		<div className={css({ fontSize: '10px', marginTop: '10px' })}>
 			Murder Is In The Cards. Homepage: <a href={homepage}>{homepage}</a>
 		</div>
 	);
