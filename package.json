@@ -11,7 +11,6 @@
   "dependencies": {
     "@colyseus/core": "^0.14.8",
     "@colyseus/ws-transport": "^0.14.8",
-    "@emotion/css": "^11.11.2",
     "@types/cors": "^2.8.5",
     "@types/express": "^4.16.4",
     "@types/react": "^19.3.0",

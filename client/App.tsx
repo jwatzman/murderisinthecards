@@ -1,4 +1,3 @@
-import { injectGlobal } from '@emotion/css';
 import * as Colyseus from 'colyseus.js';
 import React from 'react';
 
@@ -18,11 +17,7 @@ import {
 import GamePlay from './GamePlay';
 import GameSetup from './GameSetup';
 
-injectGlobal({
-	body: {
-		margin: 0,
-	},
-});
+import './Global.css';
 
 const ROOM_ID_LOCALSTORAGE_ID = 'roomId';
 const SESSION_ID_LOCALSTORAGE_KEY = 'sessionId';

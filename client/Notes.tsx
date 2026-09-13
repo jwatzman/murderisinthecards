@@ -1,10 +1,10 @@
-import { css } from '@emotion/css';
 import React from 'react';
 
 import type { Card } from 'common/Consts';
 import { Room, Suspect, Weapon } from 'common/Consts';
 
 import { RoomIdContext } from './Context';
+import styles from './Notes.module.css';
 import getSuspectColor from './SuspectColor';
 
 const LOCALSTORAGE_PREFIX = 'notes';
@@ -60,7 +60,7 @@ function SuspectSection({ cards }: { cards: Suspect[] }) {
 		};
 		rows.push(
 			<tr key={card}>
-				<th className={css({ border: '2px solid' })} style={style}>
+				<th className={styles.noteSuspect} style={style}>
 					{card}
 				</th>
 				<NoteInputRow prefix={card} />

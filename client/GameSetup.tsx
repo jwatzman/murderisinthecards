@@ -1,4 +1,3 @@
-import { css } from '@emotion/css';
 import React from 'react';
 
 import * as CanDo from 'common/CanDo';
@@ -10,26 +9,13 @@ import {
 	SendMessageContext,
 	SessionIdContext,
 } from './Context';
+import styles from './GameSetup.module.css';
 import SelectEnum from './SelectEnum';
 
 function GameSetup() {
 	return (
-		<div
-			className={css({
-				margin: '10px',
-			})}
-		>
-			<div
-				className={css({
-					marginBottom: '10px',
-					input: {
-						margin: '0 10px',
-					},
-					form: {
-						marginBottom: '10px',
-					},
-				})}
-			>
+		<div className={styles.wrap}>
+			<div className={styles.setup}>
 				<SelectSuspect />
 				<ConnectedPlayers />
 				<BeginGame />
@@ -148,7 +134,7 @@ function GameLink() {
 function License() {
 	const homepage = 'https://github.com/jwatzman/murderisinthecards';
 	return (
-		<div className={css({ fontSize: '10px', marginTop: '10px' })}>
+		<div className={styles.license}>
 			Murder Is In The Cards. Homepage: <a href={homepage}>{homepage}</a>
 		</div>
 	);

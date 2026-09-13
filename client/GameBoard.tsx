@@ -1,4 +1,3 @@
-import { css, cx } from '@emotion/css';
 import React from 'react';
 
 import type { Coord } from 'common/BoardLayout';
@@ -11,28 +10,12 @@ import {
 	SendMessageContext,
 	SessionIdContext,
 } from './Context';
+import styles from './GameBoard.module.css';
 import getSuspectColor from './SuspectColor';
-
-const GRID_SIZE = '30px';
-const centerText = css({
-	cursor: 'default',
-	display: 'flex',
-	alignItems: 'center',
-	justifyContent: 'center',
-});
 
 export default function GameBoard() {
 	return (
-		<div
-			className={css({
-				border: '3px solid black',
-				display: 'inline-grid',
-				gridTemplateRows: `repeat(${BoardConfig.extent[0] + 1}, ${GRID_SIZE})`,
-				gridTemplateColumns: `repeat(${
-					BoardConfig.extent[1] + 1
-				}, ${GRID_SIZE})`,
-			})}
-		>
+		<div className={styles.board}>
 			<Squares />
 			<Suspects />
 		</div>
@@ -79,12 +62,7 @@ function Squares() {
 				<div
 					key={squareKey}
 					onClick={handleMoveToCoord([x, y])}
-					className={css({
-						backgroundColor: 'lightyellow',
-						border: '1px solid black',
-						gridRowEnd: 'span 1',
-						gridColumnEnd: 'span 1',
-					})}
+					className={styles.square}
 					style={squareStyle}
 				/>,
 			);
@@ -106,13 +84,7 @@ function Squares() {
 			<div
 				key={roomName}
 				onClick={handleMoveToRoom(roomName)}
-				className={cx(
-					centerText,
-					css({
-						backgroundColor: 'darkkhaki',
-						border: '1px solid darkred',
-					}),
-				)}
+				className={styles.room}
 				style={roomStyle}
 			>
 				{roomName}
@@ -130,17 +102,7 @@ function Squares() {
 				<div
 					key={doorKey}
 					onClick={handleMoveToCoord([x, y])}
-					className={cx(
-						centerText,
-						css({
-							backgroundColor: 'yellow',
-							border: '1px solid black',
-							fontSize: `calc(${GRID_SIZE} / 2)`,
-							fontWeight: 'bold',
-							gridRowEnd: 'span 1',
-							gridColumnEnd: 'span 1',
-						}),
-					)}
+					className={styles.door}
 					style={doorStyle}
 				>
 					{doorDirectionGlyph(dir)}
@@ -156,16 +118,7 @@ function Squares() {
 		gridColumnStart: voidMinY + 1,
 		gridColumnEnd: voidMaxY + 1 + 1,
 	};
-	const voidRoom = (
-		<div
-			key="void"
-			className={css({
-				backgroundColor: 'lightyellow',
-				border: '1px solid black',
-			})}
-			style={voidStyle}
-		/>
-	);
+	const voidRoom = <div key="void" className={styles.void} style={voidStyle} />;
 
 	return (
 		<>
@@ -216,21 +169,7 @@ function Suspects() {
 		};
 
 		suspects.push(
-			<div
-				key={playerId}
-				className={cx(
-					centerText,
-					css({
-						gridRowEnd: 'span 1',
-						gridColumnEnd: 'span 1',
-						fontSize: `${GRID_SIZE}`,
-
-						WebkitTextStroke: '1px black',
-						textStroke: '1px black',
-					}),
-				)}
-				style={style}
-			>
+			<div key={playerId} className={styles.suspect} style={style}>
 				{'\u2666'}
 			</div>,
 		);

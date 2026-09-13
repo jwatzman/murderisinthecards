@@ -1,4 +1,3 @@
-import { css } from '@emotion/css';
 import React from 'react';
 
 import { BoardConfig } from 'common/BoardLayout';
@@ -19,6 +18,7 @@ import {
 	YourCardsContext,
 } from './Context';
 import SelectEnum from './SelectEnum';
+import styles from './TurnActions.module.css';
 
 export default function TurnActions() {
 	const gameState = React.useContext(GameStateContext);
@@ -62,7 +62,7 @@ export default function TurnActions() {
 		<div>
 			{turnIndicator}
 			{disproving}
-			<ul className={css({ li: { margin: '10px 0' } })}>
+			<ul className={styles.actions}>
 				<RollDie />
 				<MoveThroughPassage />
 				<MakeSuggestion />

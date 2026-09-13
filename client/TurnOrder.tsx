@@ -1,18 +1,8 @@
-import { css } from '@emotion/css';
 import React from 'react';
 
 import { GameStateContext } from './Context';
 import getSupectColor from './SuspectColor';
-
-const turnListItemClassName = css({
-	display: 'inline',
-	':after': {
-		content: '", "',
-	},
-	':last-child:after': {
-		content: '""',
-	},
-});
+import styles from './TurnOrder.module.css';
 
 export default function TurnOrder() {
 	const gameState = React.useContext(GameStateContext);
@@ -24,13 +14,8 @@ export default function TurnOrder() {
 			borderColor: getSupectColor(player.suspect),
 		};
 		names.push(
-			<li className={turnListItemClassName} key={playerId}>
-				<span
-					className={css({
-						border: '2px solid',
-					})}
-					style={suspectColorStyle}
-				>
+			<li key={playerId}>
+				<span className={styles.turn} style={suspectColorStyle}>
 					{player.name}
 				</span>
 			</li>,
@@ -39,16 +24,7 @@ export default function TurnOrder() {
 
 	return (
 		<div>
-			Turn order:{' '}
-			<ol
-				className={css({
-					display: 'inline',
-					listStyle: 'none',
-					padding: 0,
-				})}
-			>
-				{names}
-			</ol>
+			Turn order: <ol className={styles.turnList}>{names}</ol>
 		</div>
 	);
 }

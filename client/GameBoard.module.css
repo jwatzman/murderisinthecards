@@ -1,0 +1,50 @@
+.board {
+	border: 3px solid black;
+	display: inline-grid;
+	grid-template-rows: repeat(23, var(--grid-size));
+	grid-template-columns: repeat(22, var(--grid-size));
+}
+
+.square {
+	background-color: lightyellow;
+	border: 1px solid black;
+	grid-row-end: span 1;
+	grid-column-end: span 1;
+}
+
+.room,
+.door,
+.suspect {
+	cursor: default;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.room {
+	background-color: darkkhaki;
+	border: 1px solid darkred;
+}
+
+.door {
+	background-color: yellow;
+	border: 1px solid black;
+	font-size: calc(var(--grid-size) / 2);
+	font-weight: bold;
+	grid-row-end: span 1;
+	grid-column-end: span 1;
+}
+
+.suspect {
+	grid-row-end: span 1;
+	grid-column-end: span 1;
+	font-size: var(--grid-size);
+
+	-webkit-text-stroke: 1px black;
+	text-stroke: 1px black;
+}
+
+.void {
+	background-color: lightyellow;
+	border: 1px solid black;
+}

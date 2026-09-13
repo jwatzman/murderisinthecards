@@ -1,10 +1,10 @@
-import { css } from '@emotion/css';
 import React from 'react';
 
 import type { ConstGameState } from 'common/ConstGameState';
 import { PlayPhase } from 'common/Consts';
 
 import { GameStateContext, SessionIdContext } from './Context';
+import styles from './YourTurnWrap.module.css';
 
 type props = { children: React.ReactNode };
 export default function YourTurnWrap(props: props) {
@@ -12,8 +12,8 @@ export default function YourTurnWrap(props: props) {
 	const sessionId = React.useContext(SessionIdContext);
 
 	const className = waitingOnPlayer(gameState, sessionId)
-		? css({ border: '5px solid green', padding: '5px' })
-		: css({ padding: '10px' });
+		? styles.turn
+		: styles.noturn;
 
 	return <div className={className}>{props.children}</div>;
 }
