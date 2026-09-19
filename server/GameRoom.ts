@@ -398,9 +398,9 @@ export class GameRoom extends ColRoom<GameState> {
 		if (player) {
 			const playerIdx = this.state.turnOrder.indexOf(player);
 			const nextPlayerIdx = (playerIdx + 1) % this.state.turnOrder.length;
-			return this.state.turnOrder[nextPlayerIdx];
+			return this.state.turnOrder[nextPlayerIdx]!;
 		} else {
-			return this.state.turnOrder[0];
+			return this.state.turnOrder[0]!;
 		}
 	}
 

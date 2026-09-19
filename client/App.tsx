@@ -19,8 +19,7 @@ import GameSetup from './GameSetup';
 
 import './Global.css';
 
-const ROOM_ID_LOCALSTORAGE_ID = 'roomId';
-const SESSION_ID_LOCALSTORAGE_KEY = 'sessionId';
+const RECONNECTION_TOKEN_LOCALSTORAGE_KEY = 'reconnectionToken';
 
 let nextGameMessageId = 0;
 
@@ -62,8 +61,12 @@ function App() {
 		setRoomId(room.id);
 		setSessionId(room.sessionId);
 
-		localStorage.setItem(ROOM_ID_LOCALSTORAGE_ID, room.id);
-		localStorage.setItem(SESSION_ID_LOCALSTORAGE_KEY, room.sessionId);
+		// Re-issued on every join, including reconnects, so this needs to be
+		// saved on every successful connection, not just the first.
+		localStorage.setItem(
+			RECONNECTION_TOKEN_LOCALSTORAGE_KEY,
+			room.reconnectionToken,
+		);
 
 		(window as any).debugRoom = room;
 
@@ -122,12 +125,13 @@ function App() {
 		};
 
 		const joinSavedRoom = () => {
-			const savedRoomId = localStorage.getItem(ROOM_ID_LOCALSTORAGE_ID);
-			const savedSessionId = localStorage.getItem(SESSION_ID_LOCALSTORAGE_KEY);
+			const savedToken = localStorage.getItem(
+				RECONNECTION_TOKEN_LOCALSTORAGE_KEY,
+			);
 
-			if (savedRoomId && savedSessionId) {
+			if (savedToken) {
 				client
-					.reconnect(savedRoomId, savedSessionId)
+					.reconnect(savedToken)
 					.then(connectionSuccess)
 					.catch(joinSpecifiedRoom);
 			} else {

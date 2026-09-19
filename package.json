@@ -3,19 +3,19 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "postinstall": "patch-package",
     "build": "node build/build.mjs --clean",
     "dev": "./build/dev.sh",
     "lint": "tsc && eslint ."
   },
   "dependencies": {
-    "@colyseus/core": "^0.14.8",
-    "@colyseus/ws-transport": "^0.14.8",
+    "@colyseus/core": "^0.15.57",
+    "@colyseus/schema": "^2.0.37",
+    "@colyseus/ws-transport": "^0.15.3",
     "@types/cors": "^2.8.5",
     "@types/express": "^4.16.4",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "colyseus.js": "^0.14.8",
+    "colyseus.js": "^0.15.28",
     "cors": "^2.8.5",
     "esbuild": "^0.28.2",
     "eslint": "^9.39.4",
@@ -27,15 +27,10 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "express": "^4.19.2",
     "nodemon": "^3.0.3",
-    "patch-package": "^7.0.0",
-    "postinstall-postinstall": "^2.1.0",
     "prettier": "^3.3.3",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.59.4"
-  },
-  "resolutions": {
-    "internal-ip": "8.0.0"
   }
 }
