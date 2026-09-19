@@ -17,10 +17,10 @@ import shuffle from 'server/Shuffle';
 import { GameState } from './GameState';
 import getInitialCoords from './InitialCoords';
 
-export class GameRoom extends ColRoom<GameState> {
+export class GameRoom extends ColRoom<{ state: GameState }> {
 	onCreate(): void {
 		console.log('Room created');
-		this.setState(new GameState());
+		this.state = new GameState();
 
 		this.onMessage(
 			ClientToServerMessage.PLAYER_SETUP,
@@ -74,7 +74,7 @@ export class GameRoom extends ColRoom<GameState> {
 		this.state.createPlayer(sessionId);
 	}
 
-	async onLeave(client: Client, _consented: boolean): Promise<void> {
+	async onLeave(client: Client): Promise<void> {
 		const sessionId = client.sessionId;
 		console.log('Disconnected', sessionId);
 

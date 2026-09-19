@@ -1,22 +1,18 @@
 import http from 'http';
 
-import { Server } from '@colyseus/core';
+import { Server, createRouter } from '@colyseus/core';
 import { WebSocketTransport } from '@colyseus/ws-transport';
-import cors from 'cors';
-import express from 'express';
 
 import { GameRoom } from './GameRoom';
-
-const app = express();
-app.use(cors());
-app.use(express.json());
 
 const gameServer = new Server({
 	greet: false,
 	transport: new WebSocketTransport({
-		server: http.createServer(app),
+		server: http.createServer(),
 	}),
 });
+
+gameServer.router = createRouter({}, { basePath: '/game' });
 
 gameServer.define('murder', GameRoom);
 

@@ -1,4 +1,4 @@
-import * as Colyseus from 'colyseus.js';
+import * as Colyseus from '@colyseus/sdk';
 import React from 'react';
 
 import type { ConstGameState } from 'common/ConstGameState';
