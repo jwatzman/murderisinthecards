@@ -1,14 +1,14 @@
 import type { Coord } from './BoardLayout';
 import { BoardConfig, BoardLayout } from './BoardLayout';
 import type { ConstGameState } from './ConstGameState';
-import type { Card, Room, Solution } from './Consts';
+import type { Card, Room, Solution, Suspect } from './Consts';
 import { PlayPhase } from './Consts';
 
 export function playerSetup(
 	playerId: string,
 	state: ConstGameState,
 	name: string,
-	suspect: string,
+	suspect: Suspect,
 ): string | null {
 	if (state.phase != PlayPhase.SETUP) {
 		return "You can't select a name and suspect after the game has started!";

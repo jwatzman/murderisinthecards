@@ -1,6 +1,7 @@
 import child_process from 'child_process';
-import esbuild from 'esbuild';
 import util from 'util';
+
+import esbuild from 'esbuild';
 
 const exec = util.promisify(child_process.exec);
 
@@ -26,7 +27,7 @@ for (const arg of process.argv.slice(2)) {
 }
 
 if (clean) {
-	await exec('rm -rf dist/')
+	await exec('rm -rf dist/');
 	await exec('mkdir dist');
 	await Promise.all([
 		exec('mkdir dist/server'),
@@ -57,10 +58,14 @@ const ctxs = await Promise.all([
 ]);
 
 if (watch) {
-	await Promise.all(ctxs.map(ctx => ctx.watch()));
-	await ctxs[1].serve({port: 3000, host: '127.0.0.1', servedir: './dist/static'});
+	await Promise.all(ctxs.map((ctx) => ctx.watch()));
+	await ctxs[1].serve({
+		port: 3000,
+		host: '127.0.0.1',
+		servedir: './dist/static',
+	});
 	console.log('Listening on http://localhost:3000');
 } else {
-	await Promise.all(ctxs.map(ctx => ctx.rebuild()));
-	await Promise.all(ctxs.map(ctx => ctx.dispose()));
+	await Promise.all(ctxs.map((ctx) => ctx.rebuild()));
+	await Promise.all(ctxs.map((ctx) => ctx.dispose()));
 }
