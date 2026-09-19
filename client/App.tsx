@@ -58,7 +58,7 @@ function App() {
 
 	const connectionSuccess = (room: Colyseus.Room) => {
 		setRoom(room);
-		setRoomId(room.id);
+		setRoomId(room.roomId);
 		setSessionId(room.sessionId);
 
 		// Re-issued on every join, including reconnects, so this needs to be
