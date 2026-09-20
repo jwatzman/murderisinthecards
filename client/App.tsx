@@ -23,6 +23,20 @@ const RECONNECTION_TOKEN_LOCALSTORAGE_KEY = 'reconnectionToken';
 
 let nextGameMessageId = 0;
 
+// Colyseus mutates a single state object in place, so there is never a new
+// reference to hand React, and the sync'd fields are accessors on the schema
+// prototype rather than own properties, so spreading one yields an empty
+// object. toJSON() gives us a fresh deep copy of just the sync'd fields each
+// time -- it renders ArraySchema as a plain array, but MapSchema as a plain
+// object, so the players need rebuilding into a real Map.
+function snapshotGameState(state: any): ConstGameState {
+	const { players, ...rest } = state.toJSON();
+	return {
+		...rest,
+		players: new Map(Object.entries(players)),
+	} as ConstGameState;
+}
+
 function getConnectionURL() {
 	const location = document.location;
 	const protocol = location.protocol.replace('http', 'ws');
@@ -72,7 +86,7 @@ function App() {
 
 		room.onStateChange((newState) => {
 			(window as any).debugGameState = newState;
-			setGameState(Object.assign({}, newState)); // XXX should be deep copy
+			setGameState(snapshotGameState(newState));
 		});
 
 		room.onLeave((_code) => {

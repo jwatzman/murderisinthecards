@@ -166,53 +166,46 @@
   resolved "https://registry.yarnpkg.com/@colyseus/clock/-/clock-2.0.3.tgz#c07ccc8f82b3cd80f72a6dace518706516052aa3"
   integrity sha512-kziqG0dcGsvSfcerHLZTY1V2PmGnZAdG5DM0T5BKQDAiYBXYoMqfzA1Wxfe3KSnyeZuP99isffkUQLEwpFYF7A==
 
-"@colyseus/core@^0.17.51":
-  version "0.17.51"
-  resolved "https://registry.yarnpkg.com/@colyseus/core/-/core-0.17.51.tgz#b6948b8378781b201a493b22295adf5d7b64a1ff"
-  integrity sha512-LL4Q8BCeHMBg4Hwm84w3s91A3K/ta/vaVb74dufFR3EFH8/uGQt930qrU+3BqpS5AveJ90PKQZ+WJoLLSz/Jjw==
+"@colyseus/core@^0.18.14":
+  version "0.18.14"
+  resolved "https://registry.yarnpkg.com/@colyseus/core/-/core-0.18.14.tgz#a4ad0510464ba86f5369c079cd9edf2eda813dfa"
+  integrity sha512-/j+0A+guCl+W9ZbinPKXJXuYMWdIn2s6kJmI8IrrDAAs6iL2GSHUhRFosRbEt9ywRYkQmyaF0oJ40t3UJ/sq0Q==
   dependencies:
     "@colyseus/better-call" "^1.3.1"
-    "@colyseus/greeting-banner" "^3.0.8"
-    "@colyseus/msgpackr" "^1.11.3"
-    "@colyseus/shared-types" "^0.17.6"
+    "@colyseus/greeting-banner" "^4.0.2"
+    "@colyseus/shared-types" "^0.18.2"
     "@colyseus/timer" "^2.0.0"
     "@standard-schema/spec" "^1.0.0"
     debug "^4.3.4"
+    msgpackr "^2.0.1"
     nanoid "^3.3.11"
 
-"@colyseus/greeting-banner@^3.0.8":
-  version "3.0.8"
-  resolved "https://registry.yarnpkg.com/@colyseus/greeting-banner/-/greeting-banner-3.0.8.tgz#976cc4e4c32af87033a3f5ba2a41e55ea6106a78"
-  integrity sha512-k5UcCfgtxkL0nyIJPZm7CkoiCpY8afUgeYcj7Z2tJFp0Z74m7YHgv3qVhFEQYvp+BvweRiHjhEhaDxYQFTC7hA==
+"@colyseus/greeting-banner@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@colyseus/greeting-banner/-/greeting-banner-4.0.2.tgz#eda58f68ad50f7c83e09c91517cf5e26e631f11d"
+  integrity sha512-xjGxqX3bZqhE7BvsGl500zU01NTx7YbckGwCzFpOFsPwfcHRi/UIvwWS6wNp7JJFy2jlTSJhlbUUoQVAeCfcxQ==
 
-"@colyseus/msgpackr@^1.11.2", "@colyseus/msgpackr@^1.11.3":
-  version "1.11.3"
-  resolved "https://registry.yarnpkg.com/@colyseus/msgpackr/-/msgpackr-1.11.3.tgz#9bdb995f2602ba1df0fefbdf5f7b0861566f1755"
-  integrity sha512-P86w/FrZWUaV7StxI7WuNg3wFlUrROSiBOrF378wyOgxS5+etcxUQMPe0OJZDEx+QUdu7QOPzsqE0Ziqwpjnug==
-  optionalDependencies:
-    msgpackr-extract "^3.0.2"
+"@colyseus/schema@^5.0.33", "@colyseus/schema@^5.0.8":
+  version "5.0.33"
+  resolved "https://registry.yarnpkg.com/@colyseus/schema/-/schema-5.0.33.tgz#85ee771f325be358b5bf486fa3f5e5c07994204a"
+  integrity sha512-d5vBH2uVnhjKqJyd/H6SGu4T9G9Ddk8ScQZRuaNZYwLbktU7J1gn1bVlosF6AWGBtSKIhTjoFMU0Yp3LDoy+sQ==
 
-"@colyseus/schema@^4.0.31", "@colyseus/schema@^4.0.7":
-  version "4.0.31"
-  resolved "https://registry.yarnpkg.com/@colyseus/schema/-/schema-4.0.31.tgz#91b3bfbf8026ad2d6ddfc47738a0d112acfd94d9"
-  integrity sha512-9m1ut1foBwRuTq1VFSinfcbnxKJarGih/V5PiXvqyZ/HBVl4ocq0kOK2nUjV7hfuPRx2SWU51l2cDXP41lom5w==
-
-"@colyseus/sdk@^0.17.43":
-  version "0.17.43"
-  resolved "https://registry.yarnpkg.com/@colyseus/sdk/-/sdk-0.17.43.tgz#40c317dd2b26acb0eb42588c1e33840b7a1f3838"
-  integrity sha512-aXefQuh7esEZbtd11TzKMqoLmUjKIfWVDr7ytPR7atV2QgnVyOHof3WIX7B8MDfr9ShyFFVEy2BseCGIfzzvBA==
+"@colyseus/sdk@^0.18.2":
+  version "0.18.2"
+  resolved "https://registry.yarnpkg.com/@colyseus/sdk/-/sdk-0.18.2.tgz#2e83ab00710fd17a504bc76fbdeb71a1dbda3f9d"
+  integrity sha512-rM3xk0bk48i7fxIdVqCunPTEwI8dzyCYh/PwhYFeV4tabUiulKbg3qY8gvI0zoPCnwslmphMigM10xcGzZvmdA==
   dependencies:
     "@colyseus/better-call" "^1.3.1"
-    "@colyseus/msgpackr" "^1.11.2"
-    "@colyseus/schema" "^4.0.7"
-    "@colyseus/shared-types" "^0.17.6"
+    "@colyseus/schema" "^5.0.8"
+    "@colyseus/shared-types" "^0.18.1"
+    msgpackr "^2.0.1"
     tslib "^2.1.0"
     ws "^8.13.0"
 
-"@colyseus/shared-types@^0.17.6":
-  version "0.17.6"
-  resolved "https://registry.yarnpkg.com/@colyseus/shared-types/-/shared-types-0.17.6.tgz#e131912c09e1fcc83943080efaeb335c140516ae"
-  integrity sha512-GeBB9uNrjG+BWa4/LAVyAHj65ll0WKLNjWDieKiphhmbfGXgQOcmvWVxKQc8KKu+n7f5Hmrwr6IEk9Dm2Y0Qgw==
+"@colyseus/shared-types@^0.18.1", "@colyseus/shared-types@^0.18.2":
+  version "0.18.2"
+  resolved "https://registry.yarnpkg.com/@colyseus/shared-types/-/shared-types-0.18.2.tgz#3525bda2fa83a0eb4122950e156386646c24c918"
+  integrity sha512-z+r+4p3NYW3fDW9BJiBsqcepi/ulUTQXe0rJiKIuLWX3/cdzCVdkyRmLSnkMhulPl+moaHG7QdseqQixha5C3A==
   dependencies:
     "@standard-schema/spec" "^1.0.0"
 
@@ -223,10 +216,10 @@
   dependencies:
     "@colyseus/clock" "^2.0.0"
 
-"@colyseus/ws-transport@^0.17.13":
-  version "0.17.13"
-  resolved "https://registry.yarnpkg.com/@colyseus/ws-transport/-/ws-transport-0.17.13.tgz#41455ef618d3ae30197e786784d2e4d4a709adad"
-  integrity sha512-5yjNoXKQLTGVAIu5u/x12DsF29cC7y1EIQL1uOS6vBhqymPioFQz++zgmer0W3M2h2iwZuM5rHdpujG/R4IUfg==
+"@colyseus/ws-transport@^0.18.2":
+  version "0.18.2"
+  resolved "https://registry.yarnpkg.com/@colyseus/ws-transport/-/ws-transport-0.18.2.tgz#990b29c2f79af054a68beb33ad91ff99a1e5109f"
+  integrity sha512-+qZRam8rmY1bJXQ/mAQPJzDb2JwCUHO9bduIBNvi08R1yH9TkFmzis0vcSatmfvkPWZZOgljNBvv+/3ENkxi+Q==
   dependencies:
     "@types/ws" "^8.5.14"
     ws "^8.19.0"
@@ -2436,7 +2429,7 @@ ms@2.1.3, ms@^2.1.1, ms@^2.1.3:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
-msgpackr-extract@^3.0.2:
+msgpackr-extract@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/msgpackr-extract/-/msgpackr-extract-3.0.4.tgz#d252698947f7a1a62478d22bfb789ba48dd4c1ac"
   integrity sha512-4kmO/MdyUIkLIvTPr8VHLil4AtoKIoniWPIEk5+CDy0xnWC84azhSFmuJ7PxZdsYtiP5kEeQsORAVIeMgxT+Hw==
@@ -2449,6 +2442,13 @@ msgpackr-extract@^3.0.2:
     "@msgpackr-extract/msgpackr-extract-linux-arm64" "3.0.4"
     "@msgpackr-extract/msgpackr-extract-linux-x64" "3.0.4"
     "@msgpackr-extract/msgpackr-extract-win32-x64" "3.0.4"
+
+msgpackr@^2.0.1:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/msgpackr/-/msgpackr-2.1.0.tgz#63618adb9f5ab185cccd0536609fad0731b9feb3"
+  integrity sha512-p/pBCVO63CsvvpkomUnNNag6+n38rULuDA6HHe70o2gtC8ODI52foF/4ko2qQcp6OiErJXTmrZeXmsGGHsIQNQ==
+  optionalDependencies:
+    msgpackr-extract "^3.0.4"
 
 nanoid@^3.3.11:
   version "3.3.19"
