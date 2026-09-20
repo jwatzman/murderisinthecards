@@ -1,17 +1,16 @@
 import React from 'react';
 
-import type { Coord } from 'common/BoardLayout';
-import { BoardConfig, DoorDirection } from 'common/BoardLayout';
-import * as CanDo from 'common/CanDo';
-import { ClientToServerMessage, Room } from 'common/Consts';
-
 import {
 	GameStateContext,
 	SendMessageContext,
 	SessionIdContext,
-} from './Context';
-import styles from './GameBoard.module.css';
-import getSuspectColor from './SuspectColor';
+} from '#client/Context';
+import styles from '#client/GameBoard.module.css';
+import getSuspectColor from '#client/SuspectColor';
+import type { Coord } from '#common/BoardLayout';
+import { BoardConfig, DoorDirection } from '#common/BoardLayout';
+import * as CanDo from '#common/CanDo';
+import { ClientToServerMessage, Room } from '#common/Consts';
 
 export default function GameBoard() {
 	return (

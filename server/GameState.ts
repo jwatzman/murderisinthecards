@@ -1,8 +1,8 @@
 import { ArraySchema, MapSchema, Schema, type } from '@colyseus/schema';
 
-import type { ConstGameState } from 'common/ConstGameState';
-import type { Card, Room, Solution, Suspect } from 'common/Consts';
-import { PlayPhase } from 'common/Consts';
+import type { ConstGameState } from '#common/ConstGameState';
+import type { Card, Room, Solution, Suspect } from '#common/Consts';
+import { PlayPhase } from '#common/Consts';
 
 export class PlayerState extends Schema {
 	@type('string')

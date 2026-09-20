@@ -1,8 +1,8 @@
-import type { Coord } from './BoardLayout';
-import { BoardConfig, BoardLayout } from './BoardLayout';
-import type { ConstGameState } from './ConstGameState';
-import type { Card, Room, Solution, Suspect } from './Consts';
-import { PlayPhase } from './Consts';
+import type { Coord } from '#common/BoardLayout';
+import { BoardConfig, BoardLayout } from '#common/BoardLayout';
+import type { ConstGameState } from '#common/ConstGameState';
+import type { Card, Room, Solution, Suspect } from '#common/Consts';
+import { PlayPhase } from '#common/Consts';
 
 export function playerSetup(
 	playerId: string,

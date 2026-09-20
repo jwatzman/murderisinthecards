@@ -1,11 +1,7 @@
 import * as Colyseus from '@colyseus/sdk';
 import React from 'react';
 
-import type { ConstGameState } from 'common/ConstGameState';
-import type { Card, ClientToServerMessage } from 'common/Consts';
-import { PlayPhase, ServerToClientMessage } from 'common/Consts';
-
-import type { GameMessage } from './Context';
+import type { GameMessage } from '#client/Context';
 import {
 	GameMessagesContext,
 	GameStateContext,
@@ -13,9 +9,12 @@ import {
 	SendMessageContext,
 	SessionIdContext,
 	YourCardsContext,
-} from './Context';
-import GamePlay from './GamePlay';
-import GameSetup from './GameSetup';
+} from '#client/Context';
+import GamePlay from '#client/GamePlay';
+import GameSetup from '#client/GameSetup';
+import type { ConstGameState } from '#common/ConstGameState';
+import type { Card, ClientToServerMessage } from '#common/Consts';
+import { PlayPhase, ServerToClientMessage } from '#common/Consts';
 
 import './Global.css';
 

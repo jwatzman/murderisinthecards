@@ -27,6 +27,7 @@ export default tseslint.config(
 		},
 		settings: {
 			'import/resolver': { typescript: true },
+			'import/internal-regex': '^#',
 			react: { version: '18.2' },
 		},
 		plugins: { 'react-hooks': reactHooks },

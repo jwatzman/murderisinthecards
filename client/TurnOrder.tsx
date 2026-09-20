@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { GameStateContext } from './Context';
-import getSupectColor from './SuspectColor';
-import styles from './TurnOrder.module.css';
+import { GameStateContext } from '#client/Context';
+import getSupectColor from '#client/SuspectColor';
+import styles from '#client/TurnOrder.module.css';
 
 export default function TurnOrder() {
 	const gameState = React.useContext(GameStateContext);

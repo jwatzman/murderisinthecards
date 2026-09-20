@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "target": "ES2020",
     "allowJs": true,
     "skipLibCheck": true,
@@ -11,7 +10,7 @@
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "module": "ES2020",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",

@@ -1,24 +1,23 @@
 import React from 'react';
 
-import { BoardConfig } from 'common/BoardLayout';
-import * as CanDo from 'common/CanDo';
-import type { Card, Solution } from 'common/Consts';
+import {
+	GameStateContext,
+	SendMessageContext,
+	SessionIdContext,
+	YourCardsContext,
+} from '#client/Context';
+import SelectEnum from '#client/SelectEnum';
+import styles from '#client/TurnActions.module.css';
+import { BoardConfig } from '#common/BoardLayout';
+import * as CanDo from '#common/CanDo';
+import type { Card, Solution } from '#common/Consts';
 import {
 	ClientToServerMessage,
 	PlayPhase,
 	Room,
 	Suspect,
 	Weapon,
-} from 'common/Consts';
-
-import {
-	GameStateContext,
-	SendMessageContext,
-	SessionIdContext,
-	YourCardsContext,
-} from './Context';
-import SelectEnum from './SelectEnum';
-import styles from './TurnActions.module.css';
+} from '#common/Consts';
 
 export default function TurnActions() {
 	const gameState = React.useContext(GameStateContext);

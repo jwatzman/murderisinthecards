@@ -1,11 +1,10 @@
 import React from 'react';
 
-import type { Card } from 'common/Consts';
-import { Room, Suspect, Weapon } from 'common/Consts';
-
-import { RoomIdContext } from './Context';
-import styles from './Notes.module.css';
-import getSuspectColor from './SuspectColor';
+import { RoomIdContext } from '#client/Context';
+import styles from '#client/Notes.module.css';
+import getSuspectColor from '#client/SuspectColor';
+import type { Card } from '#common/Consts';
+import { Room, Suspect, Weapon } from '#common/Consts';
 
 const LOCALSTORAGE_PREFIX = 'notes';
 const COLS = 7;

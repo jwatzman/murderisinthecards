@@ -1,8 +1,7 @@
 import React from 'react';
 
-import { PlayPhase } from 'common/Consts';
-
-import { GameStateContext } from './Context';
+import { GameStateContext } from '#client/Context';
+import { PlayPhase } from '#common/Consts';
 
 export default function DieRoll() {
 	const gameState = React.useContext(GameStateContext);

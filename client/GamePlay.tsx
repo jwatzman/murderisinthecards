@@ -1,14 +1,14 @@
 import React from 'react';
 
-import DieRoll from './DieRoll';
-import GameBoard from './GameBoard';
-import GameMessages from './GameMessages';
-import styles from './GamePlay.module.css';
-import Notes from './Notes';
-import TurnActions from './TurnActions';
-import TurnOrder from './TurnOrder';
-import YourCards from './YourCards';
-import YourTurnWrap from './YourTurnWrap';
+import DieRoll from '#client/DieRoll';
+import GameBoard from '#client/GameBoard';
+import GameMessages from '#client/GameMessages';
+import styles from '#client/GamePlay.module.css';
+import Notes from '#client/Notes';
+import TurnActions from '#client/TurnActions';
+import TurnOrder from '#client/TurnOrder';
+import YourCards from '#client/YourCards';
+import YourTurnWrap from '#client/YourTurnWrap';
 
 export default function GamePlay() {
 	return (

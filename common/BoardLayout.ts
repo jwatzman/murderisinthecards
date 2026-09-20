@@ -1,4 +1,4 @@
-import { Room } from './Consts';
+import { Room } from '#common/Consts';
 
 export enum DoorDirection {
 	POS_X = '+x',

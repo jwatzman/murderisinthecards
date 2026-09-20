@@ -1,10 +1,9 @@
 import React from 'react';
 
-import type { ConstGameState } from 'common/ConstGameState';
-import { PlayPhase } from 'common/Consts';
-
-import { GameStateContext, SessionIdContext } from './Context';
-import styles from './YourTurnWrap.module.css';
+import { GameStateContext, SessionIdContext } from '#client/Context';
+import styles from '#client/YourTurnWrap.module.css';
+import type { ConstGameState } from '#common/ConstGameState';
+import { PlayPhase } from '#common/Consts';
 
 type props = { children: React.ReactNode };
 export default function YourTurnWrap(props: props) {

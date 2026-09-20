@@ -1,16 +1,15 @@
 import React from 'react';
 
-import * as CanDo from 'common/CanDo';
-import { ClientToServerMessage, Suspect } from 'common/Consts';
-
 import {
 	GameStateContext,
 	RoomIdContext,
 	SendMessageContext,
 	SessionIdContext,
-} from './Context';
-import styles from './GameSetup.module.css';
-import SelectEnum from './SelectEnum';
+} from '#client/Context';
+import styles from '#client/GameSetup.module.css';
+import SelectEnum from '#client/SelectEnum';
+import * as CanDo from '#common/CanDo';
+import { ClientToServerMessage, Suspect } from '#common/Consts';
 
 function GameSetup() {
 	return (

@@ -1,9 +1,8 @@
 import React from 'react';
 
-import type { Card } from 'common/Consts';
-import { Room, Suspect, Weapon } from 'common/Consts';
-
-import { YourCardsContext } from './Context';
+import { YourCardsContext } from '#client/Context';
+import type { Card } from '#common/Consts';
+import { Room, Suspect, Weapon } from '#common/Consts';
 
 export default function YourCards() {
 	return (

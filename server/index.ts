@@ -3,7 +3,7 @@ import http from 'http';
 import { Server, createRouter } from '@colyseus/core';
 import { WebSocketTransport } from '@colyseus/ws-transport';
 
-import { GameRoom } from './GameRoom';
+import { GameRoom } from '#server/GameRoom';
 
 const gameServer = new Server({
 	greet: false,

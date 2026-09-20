@@ -2,6 +2,12 @@
   "name": "murderisinthecards",
   "version": "1.0.0",
   "private": true,
+  "imports": {
+    "#common/*": "./common/*.js",
+    "#client/*.module.css": "./client/*.module.css",
+    "#client/*": "./client/*.js",
+    "#server/*": "./server/*.js"
+  },
   "scripts": {
     "build": "node build/build.mjs --clean",
     "dev": "./build/dev.sh",
