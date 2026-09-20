@@ -5,7 +5,7 @@ import getSupectColor from '#client/SuspectColor';
 import styles from '#client/TurnOrder.module.css';
 
 export default function TurnOrder() {
-	const gameState = React.useContext(GameStateContext);
+	const gameState = React.use(GameStateContext);
 	const names = [];
 
 	for (const playerId of gameState.turnOrder) {

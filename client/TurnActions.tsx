@@ -20,8 +20,8 @@ import {
 } from '#common/Consts';
 
 export default function TurnActions() {
-	const gameState = React.useContext(GameStateContext);
-	const sessionId = React.useContext(SessionIdContext);
+	const gameState = React.use(GameStateContext);
+	const sessionId = React.use(SessionIdContext);
 
 	if (gameState.phase === PlayPhase.GAME_OVER) {
 		return null;
@@ -74,9 +74,9 @@ export default function TurnActions() {
 }
 
 function RollDie() {
-	const gameState = React.useContext(GameStateContext);
-	const sendMessage = React.useContext(SendMessageContext);
-	const sessionId = React.useContext(SessionIdContext);
+	const gameState = React.use(GameStateContext);
+	const sendMessage = React.use(SendMessageContext);
+	const sessionId = React.use(SessionIdContext);
 
 	const err = CanDo.rollDie(sessionId, gameState);
 	const canRoll = err === null;
@@ -97,9 +97,9 @@ function RollDie() {
 }
 
 function MoveThroughPassage() {
-	const gameState = React.useContext(GameStateContext);
-	const sendMessage = React.useContext(SendMessageContext);
-	const sessionId = React.useContext(SessionIdContext);
+	const gameState = React.use(GameStateContext);
+	const sendMessage = React.use(SendMessageContext);
+	const sessionId = React.use(SessionIdContext);
 
 	const currentRoom = gameState.players.get(sessionId)!.room;
 	if (!currentRoom) {
@@ -130,9 +130,9 @@ function MoveThroughPassage() {
 }
 
 function MakeSuggestion() {
-	const gameState = React.useContext(GameStateContext);
-	const sendMessage = React.useContext(SendMessageContext);
-	const sessionId = React.useContext(SessionIdContext);
+	const gameState = React.use(GameStateContext);
+	const sendMessage = React.use(SendMessageContext);
+	const sessionId = React.use(SessionIdContext);
 
 	const [expanded, setExpanded] = React.useState(false);
 
@@ -193,10 +193,10 @@ function MakeSuggestion() {
 }
 
 function DisproveSuggestion() {
-	const gameState = React.useContext(GameStateContext);
-	const sendMessage = React.useContext(SendMessageContext);
-	const sessionId = React.useContext(SessionIdContext);
-	const yourCards = React.useContext(YourCardsContext);
+	const gameState = React.use(GameStateContext);
+	const sendMessage = React.use(SendMessageContext);
+	const sessionId = React.use(SessionIdContext);
+	const yourCards = React.use(YourCardsContext);
 
 	const err = CanDo.disproveAnySuggestion(sessionId, gameState);
 	const canDisprove = err === null;
@@ -234,9 +234,9 @@ function DisproveSuggestion() {
 }
 
 function MakeAccusation() {
-	const gameState = React.useContext(GameStateContext);
-	const sendMessage = React.useContext(SendMessageContext);
-	const sessionId = React.useContext(SessionIdContext);
+	const gameState = React.use(GameStateContext);
+	const sendMessage = React.use(SendMessageContext);
+	const sessionId = React.use(SessionIdContext);
 
 	const [expanded, setExpanded] = React.useState(false);
 
@@ -299,9 +299,9 @@ function MakeAccusation() {
 }
 
 function EndTurn() {
-	const gameState = React.useContext(GameStateContext);
-	const sendMessage = React.useContext(SendMessageContext);
-	const sessionId = React.useContext(SessionIdContext);
+	const gameState = React.use(GameStateContext);
+	const sendMessage = React.use(SendMessageContext);
+	const sessionId = React.use(SessionIdContext);
 
 	const err = CanDo.endTurn(sessionId, gameState);
 	const canEnd = err === null;

@@ -22,9 +22,9 @@ export default function GameBoard() {
 }
 
 function Squares() {
-	const gameState = React.useContext(GameStateContext);
-	const sessionId = React.useContext(SessionIdContext);
-	const sendMessage = React.useContext(SendMessageContext);
+	const gameState = React.use(GameStateContext);
+	const sessionId = React.use(SessionIdContext);
+	const sendMessage = React.use(SendMessageContext);
 
 	const handleMoveToCoord = (coord: Coord) => (evt: React.SyntheticEvent) => {
 		evt.preventDefault();
@@ -129,7 +129,7 @@ function Squares() {
 }
 
 function Suspects() {
-	const gameState = React.useContext(GameStateContext);
+	const gameState = React.use(GameStateContext);
 
 	const suspects = [];
 	const numSuspectsInRoom: { [r: string]: number } = {};

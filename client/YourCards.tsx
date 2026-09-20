@@ -18,7 +18,7 @@ export default function YourCards() {
 }
 
 function CardsLine({ src }: { src: Card[] }) {
-	const cards = React.useContext(YourCardsContext);
+	const cards = React.use(YourCardsContext);
 
 	// This is a somewhat inefficient way to deal with this, but it's simple,
 	// preserves the types, and keeps the cards displayed in the UI in a

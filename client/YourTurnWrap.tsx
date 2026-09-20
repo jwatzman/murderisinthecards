@@ -7,8 +7,8 @@ import { PlayPhase } from '#common/Consts';
 
 type props = { children: React.ReactNode };
 export default function YourTurnWrap(props: props) {
-	const gameState = React.useContext(GameStateContext);
-	const sessionId = React.useContext(SessionIdContext);
+	const gameState = React.use(GameStateContext);
+	const sessionId = React.use(SessionIdContext);
 
 	const className = waitingOnPlayer(gameState, sessionId)
 		? styles.turn

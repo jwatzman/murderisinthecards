@@ -1,9 +1,8 @@
 import js from '@eslint/js';
+import react from '@eslint-react/eslint-plugin';
 import { defineConfig } from 'eslint/config';
 import importPlugin from 'eslint-plugin-import-x';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
-import react from 'eslint-plugin-react';
-import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -12,7 +11,7 @@ export default defineConfig(
 
 	js.configs.recommended,
 	tseslint.configs.recommendedTypeChecked,
-	react.configs.flat.recommended,
+	react.configs['recommended-type-checked'],
 	importPlugin.flatConfigs.recommended,
 	importPlugin.flatConfigs.typescript,
 
@@ -31,7 +30,6 @@ export default defineConfig(
 			'import-x/internal-regex': '^#',
 			react: { version: '18.2' },
 		},
-		plugins: { 'react-hooks': reactHooks },
 		rules: {
 			'import-x/first': 'error',
 			'import-x/no-named-as-default-member': 'off',
@@ -43,9 +41,6 @@ export default defineConfig(
 					alphabetize: { order: 'asc', orderImportKind: 'asc' },
 				},
 			],
-			'react/no-unescaped-entities': 'off',
-			'react-hooks/exhaustive-deps': 'error',
-			'react-hooks/rules-of-hooks': 'error',
 			'sort-imports': ['error', { ignoreDeclarationSort: true }],
 			'@typescript-eslint/consistent-type-imports': 'error',
 			'@typescript-eslint/no-explicit-any': 'off',

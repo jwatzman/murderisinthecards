@@ -26,9 +26,9 @@ function GameSetup() {
 }
 
 function SelectSuspect() {
-	const gameState = React.useContext(GameStateContext);
-	const sessionId = React.useContext(SessionIdContext);
-	const sendMessage = React.useContext(SendMessageContext);
+	const gameState = React.use(GameStateContext);
+	const sessionId = React.use(SessionIdContext);
+	const sendMessage = React.use(SendMessageContext);
 
 	const [name, setName] = React.useState('');
 	const [suspect, setSuspect] = React.useState(Suspect.BLOOD);
@@ -66,7 +66,7 @@ function SelectSuspect() {
 }
 
 function ConnectedPlayers() {
-	const gameState = React.useContext(GameStateContext);
+	const gameState = React.use(GameStateContext);
 	const players = gameState.players;
 
 	const playerList = Array.from(players).map(([id, player]) => {
@@ -90,9 +90,9 @@ function ConnectedPlayers() {
 }
 
 function BeginGame() {
-	const gameState = React.useContext(GameStateContext);
-	const sendMessage = React.useContext(SendMessageContext);
-	const sessionId = React.useContext(SessionIdContext);
+	const gameState = React.use(GameStateContext);
+	const sendMessage = React.use(SendMessageContext);
+	const sessionId = React.use(SessionIdContext);
 
 	const err = CanDo.beginGame(sessionId, gameState);
 	const readyToBegin = err === null;
@@ -109,7 +109,7 @@ function BeginGame() {
 }
 
 function GameLink() {
-	const roomId = React.useContext(RoomIdContext);
+	const roomId = React.use(RoomIdContext);
 
 	const url = new URL(window.location.toString());
 	url.searchParams.set('r', roomId);

@@ -3,7 +3,7 @@ import React from 'react';
 import { GameMessagesContext } from '#client/Context';
 
 export default function GameMessages() {
-	const messages = React.useContext(GameMessagesContext);
+	const messages = React.use(GameMessagesContext);
 
 	return (
 		<div>

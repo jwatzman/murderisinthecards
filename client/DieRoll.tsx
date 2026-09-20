@@ -4,7 +4,7 @@ import { GameStateContext } from '#client/Context';
 import { PlayPhase } from '#common/Consts';
 
 export default function DieRoll() {
-	const gameState = React.useContext(GameStateContext);
+	const gameState = React.use(GameStateContext);
 
 	if (gameState.phase !== PlayPhase.MOVEMENT) {
 		return null;

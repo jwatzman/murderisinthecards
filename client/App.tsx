@@ -54,7 +54,7 @@ function getConnectionURL() {
 }
 
 function App() {
-	const connectionInitalized = React.useRef(false);
+	const connectionInitalizedRef = React.useRef(false);
 	const [cards, setCards] = React.useState<Card[]>([]);
 	const [died, setDied] = React.useState(false);
 	const [gameMessages, setGameMessages] = React.useState<GameMessage[]>([]);
@@ -113,7 +113,7 @@ function App() {
 	};
 
 	React.useEffect(() => {
-		if (connectionInitalized.current) {
+		if (connectionInitalizedRef.current) {
 			return;
 		}
 
@@ -153,7 +153,7 @@ function App() {
 		};
 
 		joinSavedRoom();
-		connectionInitalized.current = true;
+		connectionInitalizedRef.current = true;
 	}, []);
 
 	if (!room || !gameState) {
@@ -165,24 +165,24 @@ function App() {
 	}
 
 	return (
-		<SendMessageContext.Provider value={sendMessage}>
-			<SessionIdContext.Provider value={sessionId!}>
-				<RoomIdContext.Provider value={roomId!}>
-					<YourCardsContext.Provider value={cards}>
-						<GameMessagesContext.Provider value={gameMessages}>
-							<GameStateContext.Provider value={gameState}>
+		<SendMessageContext value={sendMessage}>
+			<SessionIdContext value={sessionId!}>
+				<RoomIdContext value={roomId!}>
+					<YourCardsContext value={cards}>
+						<GameMessagesContext value={gameMessages}>
+							<GameStateContext value={gameState}>
 								<Game />
-							</GameStateContext.Provider>
-						</GameMessagesContext.Provider>
-					</YourCardsContext.Provider>
-				</RoomIdContext.Provider>
-			</SessionIdContext.Provider>
-		</SendMessageContext.Provider>
+							</GameStateContext>
+						</GameMessagesContext>
+					</YourCardsContext>
+				</RoomIdContext>
+			</SessionIdContext>
+		</SendMessageContext>
 	);
 }
 
 function Game() {
-	const phase = React.useContext(GameStateContext).phase;
+	const phase = React.use(GameStateContext).phase;
 
 	React.useEffect(() => {
 		if (phase === PlayPhase.GAME_OVER) {

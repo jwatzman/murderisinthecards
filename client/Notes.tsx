@@ -85,7 +85,7 @@ function NoteInputRow({ prefix }: { prefix: string }) {
 }
 
 function useRoomLocalStorageState(suffix: string) {
-	const roomId = React.useContext(RoomIdContext);
+	const roomId = React.use(RoomIdContext);
 	const key = `${LOCALSTORAGE_PREFIX}.${suffix}`;
 
 	const [value, setValue] = React.useState(() => {
