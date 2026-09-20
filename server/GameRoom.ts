@@ -91,10 +91,10 @@ export class GameRoom extends ColRoom<{ state: GameState }> {
 		}
 
 		try {
-			await this.allowReconnection(client, 60 * 3);
+			const reconnectedClient = await this.allowReconnection(client, 60 * 3);
 			console.log('Reconnected', sessionId);
 
-			this.sendCardsToPlayer(client);
+			this.sendCardsToPlayer(reconnectedClient);
 			this.broadcastGameMessage(`${name} reconnected`);
 		} catch (_e) {
 			console.log('Did not reconnect', sessionId);
