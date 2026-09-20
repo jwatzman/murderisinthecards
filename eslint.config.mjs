@@ -1,5 +1,5 @@
 import js from '@eslint/js';
-import importPlugin from 'eslint-plugin-import';
+import importPlugin from 'eslint-plugin-import-x';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
@@ -12,6 +12,7 @@ export default tseslint.config(
 	js.configs.recommended,
 	tseslint.configs.recommendedTypeChecked,
 	react.configs.flat.recommended,
+	importPlugin.flatConfigs.recommended,
 	importPlugin.flatConfigs.typescript,
 
 	{
@@ -26,16 +27,14 @@ export default tseslint.config(
 			},
 		},
 		settings: {
-			'import/resolver': { typescript: true },
-			'import/internal-regex': '^#',
+			'import-x/internal-regex': '^#',
 			react: { version: '18.2' },
 		},
 		plugins: { 'react-hooks': reactHooks },
 		rules: {
-			'import/first': 'error',
-			'import/no-duplicates': 'error',
-			'import/no-named-as-default-member': 'off',
-			'import/order': [
+			'import-x/first': 'error',
+			'import-x/no-named-as-default-member': 'off',
+			'import-x/order': [
 				'error',
 				{
 					'newlines-between': 'always',
