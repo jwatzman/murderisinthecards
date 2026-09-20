@@ -35,7 +35,7 @@ export class GameState extends Schema {
 	private players = new MapSchema<PlayerState>();
 
 	@type('uint8')
-	public phase = PlayPhase.SETUP;
+	public phase: PlayPhase = PlayPhase.SETUP;
 
 	@type(['string'])
 	public turnOrder = new ArraySchema<string>();

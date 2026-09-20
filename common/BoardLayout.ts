@@ -1,11 +1,12 @@
 import { Room } from '#common/Consts';
 
-export enum DoorDirection {
-	POS_X = '+x',
-	NEG_X = '-x',
-	POS_Y = '+y',
-	NEG_Y = '-y',
-}
+export const DoorDirection = {
+	POS_X: '+x',
+	NEG_X: '-x',
+	POS_Y: '+y',
+	NEG_Y: '-y',
+} as const;
+export type DoorDirection = (typeof DoorDirection)[keyof typeof DoorDirection];
 
 const PX = DoorDirection.POS_X;
 const NX = DoorDirection.NEG_X;

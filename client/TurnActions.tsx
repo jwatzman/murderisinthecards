@@ -136,8 +136,8 @@ function MakeSuggestion() {
 
 	const [expanded, setExpanded] = React.useState(false);
 
-	const [suspect, setSuspect] = React.useState(Suspect.BLOOD);
-	const [weapon, setWeapon] = React.useState(Weapon.AK47);
+	const [suspect, setSuspect] = React.useState<Suspect>(Suspect.BLOOD);
+	const [weapon, setWeapon] = React.useState<Weapon>(Weapon.AK47);
 
 	const err = CanDo.makeAnySuggestion(sessionId, gameState);
 	const canSuggest = err === null;
@@ -240,9 +240,9 @@ function MakeAccusation() {
 
 	const [expanded, setExpanded] = React.useState(false);
 
-	const [suspect, setSuspect] = React.useState(Suspect.BLOOD);
-	const [weapon, setWeapon] = React.useState(Weapon.AK47);
-	const [room, setRoom] = React.useState(Room.DINING_ROOM);
+	const [suspect, setSuspect] = React.useState<Suspect>(Suspect.BLOOD);
+	const [weapon, setWeapon] = React.useState<Weapon>(Weapon.AK47);
+	const [room, setRoom] = React.useState<Room>(Room.DINING_ROOM);
 
 	const err = CanDo.makeAccusation(sessionId, gameState);
 	const canAccuse = err === null;

@@ -31,7 +31,7 @@ function SelectSuspect() {
 	const sendMessage = React.use(SendMessageContext);
 
 	const [name, setName] = React.useState('');
-	const [suspect, setSuspect] = React.useState(Suspect.BLOOD);
+	const [suspect, setSuspect] = React.useState<Suspect>(Suspect.BLOOD);
 
 	const submit = (e: React.SyntheticEvent) => {
 		e.preventDefault();
