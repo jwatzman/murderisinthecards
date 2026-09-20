@@ -7,8 +7,8 @@ The game is deeply inspired by Clue/Cluedo --- anyone who has played that will f
 ## Installation
 
 ```
-yarn install
-yarn build
+npm install
+npm run build
 ```
 
 You'll then need to arrange for your webserver to serve the contents of `dist/static` as a webroot and to run `dist/server/server.js` which sets up a websocket server on port 2567. You'll then need to reverse-proxy requests for `/game` to the websocket server.
@@ -16,8 +16,7 @@ You'll then need to arrange for your webserver to serve the contents of `dist/st
 ## Development
 
 ```
-yarn build
-yarn dev
+npm run dev
 ```
 
 Then load `http://localhost:3000` which has a development server running serving the client there, configured to connect to the development websocket server on port 2567. There are also watch rules in place to rebuild the client and server, and to restart the server after a rebuild. (You'll need to manually refresh the client for now.)
