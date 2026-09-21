@@ -2,9 +2,9 @@ import React from 'react';
 
 import { RoomIdContext } from '#client/Context';
 import styles from '#client/Notes.module.css';
-import getSuspectColor from '#client/SuspectColor';
-import type { Card } from '#common/Consts';
-import { Room, Suspect, Weapon } from '#common/Consts';
+import { getSuspectColor } from '#client/SuspectColor';
+import type { Card, Suspect } from '#common/cards';
+import { allRooms, allSuspects, allWeapons } from '#common/cards';
 
 const LOCALSTORAGE_PREFIX = 'notes';
 const COLS = 7;
@@ -17,25 +17,25 @@ export default function Notes() {
 					<th />
 					<NoteInputRow prefix="header" />
 				</tr>
-				<SuspectSection cards={Object.values(Suspect)} />
+				<SuspectSection cards={allSuspects} />
 				<tr>
 					<td>
 						<hr />
 					</td>
 				</tr>
-				<NoteSection cards={Object.values(Weapon)} />
+				<NoteSection cards={allWeapons} />
 				<tr>
 					<td>
 						<hr />
 					</td>
 				</tr>
-				<NoteSection cards={Object.values(Room)} />
+				<NoteSection cards={allRooms} />
 			</tbody>
 		</table>
 	);
 }
 
-function NoteSection({ cards }: { cards: Card[] }) {
+function NoteSection({ cards }: { cards: readonly Card[] }) {
 	const rows = [];
 	for (const card of cards) {
 		rows.push(
@@ -49,7 +49,7 @@ function NoteSection({ cards }: { cards: Card[] }) {
 	return <>{rows}</>;
 }
 
-function SuspectSection({ cards }: { cards: Suspect[] }) {
+function SuspectSection({ cards }: { cards: readonly Suspect[] }) {
 	// This is largely copy-pasted from NoteSection -- refactor?
 	// Also, the border styling is copied from TurnOrder -- refactor?
 	const rows = [];

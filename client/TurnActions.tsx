@@ -2,32 +2,27 @@ import React from 'react';
 
 import {
 	GameStateContext,
+	PlayerIdContext,
 	SendMessageContext,
-	SessionIdContext,
 	YourCardsContext,
 } from '#client/Context';
 import SelectEnum from '#client/SelectEnum';
 import styles from '#client/TurnActions.module.css';
-import { BoardConfig } from '#common/BoardLayout';
-import * as CanDo from '#common/CanDo';
-import type { Card, Solution } from '#common/Consts';
-import {
-	ClientToServerMessage,
-	PlayPhase,
-	Room,
-	Suspect,
-	Weapon,
-} from '#common/Consts';
+import * as CanDo from '#common/canDo';
+import type { Card, Room, Suspect, Weapon } from '#common/cards';
+import { allRooms, allSuspects, allWeapons } from '#common/cards';
+import type { Solution } from '#common/gameState';
+import { boardConfig } from '#common/layout';
 
 export default function TurnActions() {
 	const gameState = React.use(GameStateContext);
-	const sessionId = React.use(SessionIdContext);
+	const playerId = React.use(PlayerIdContext);
 
-	if (gameState.phase === PlayPhase.GAME_OVER) {
+	if (gameState.phase === 'GAME_OVER') {
 		return null;
 	}
 
-	const yourTurn = gameState.currentPlayer === sessionId;
+	const yourTurn = gameState.currentPlayer === playerId;
 	const currentPlayerName = gameState.players.get(
 		gameState.currentPlayer,
 	)!.name;
@@ -41,9 +36,9 @@ export default function TurnActions() {
 
 	let disproving = null;
 	if (
-		gameState.phase === PlayPhase.SUGGESTION_RESOLUTION &&
+		gameState.phase === 'SUGGESTION_RESOLUTION' &&
 		gameState.currentPlayerDisprovingSuggestion &&
-		gameState.currentPlayerDisprovingSuggestion !== sessionId
+		gameState.currentPlayerDisprovingSuggestion !== playerId
 	) {
 		const suggestionDisprover = gameState.players.get(
 			gameState.currentPlayerDisprovingSuggestion,
@@ -76,9 +71,9 @@ export default function TurnActions() {
 function RollDie() {
 	const gameState = React.use(GameStateContext);
 	const sendMessage = React.use(SendMessageContext);
-	const sessionId = React.use(SessionIdContext);
+	const playerId = React.use(PlayerIdContext);
 
-	const err = CanDo.rollDie(sessionId, gameState);
+	const err = CanDo.rollDie(playerId, gameState);
 	const canRoll = err === null;
 	if (!canRoll) {
 		return null;
@@ -86,7 +81,7 @@ function RollDie() {
 
 	const roll = (e: React.SyntheticEvent) => {
 		e.preventDefault();
-		sendMessage(ClientToServerMessage.ROLL_DIE, null);
+		sendMessage({ type: 'roll_die' });
 	};
 
 	return (
@@ -99,19 +94,19 @@ function RollDie() {
 function MoveThroughPassage() {
 	const gameState = React.use(GameStateContext);
 	const sendMessage = React.use(SendMessageContext);
-	const sessionId = React.use(SessionIdContext);
+	const playerId = React.use(PlayerIdContext);
 
-	const currentRoom = gameState.players.get(sessionId)!.room;
+	const currentRoom = gameState.players.get(playerId)!.room;
 	if (!currentRoom) {
 		return null;
 	}
 
-	const passage = BoardConfig.rooms[currentRoom].passage;
+	const passage = boardConfig.rooms[currentRoom].passage;
 	if (!passage) {
 		return null;
 	}
 
-	const err = CanDo.moveThroughPassage(sessionId, gameState, passage);
+	const err = CanDo.moveThroughPassage(playerId, gameState, passage);
 	const canMove = err === null;
 	if (!canMove) {
 		return null;
@@ -119,7 +114,7 @@ function MoveThroughPassage() {
 
 	const move = (e: React.SyntheticEvent) => {
 		e.preventDefault();
-		sendMessage(ClientToServerMessage.MOVE_THROUGH_PASSAGE, passage);
+		sendMessage({ type: 'move_through_passage', room: passage });
 	};
 
 	return (
@@ -132,14 +127,14 @@ function MoveThroughPassage() {
 function MakeSuggestion() {
 	const gameState = React.use(GameStateContext);
 	const sendMessage = React.use(SendMessageContext);
-	const sessionId = React.use(SessionIdContext);
+	const playerId = React.use(PlayerIdContext);
 
 	const [expanded, setExpanded] = React.useState(false);
 
-	const [suspect, setSuspect] = React.useState<Suspect>(Suspect.BLOOD);
-	const [weapon, setWeapon] = React.useState<Weapon>(Weapon.AK47);
+	const [suspect, setSuspect] = React.useState<Suspect>(allSuspects[0]);
+	const [weapon, setWeapon] = React.useState<Weapon>(allWeapons[0]);
 
-	const err = CanDo.makeAnySuggestion(sessionId, gameState);
+	const err = CanDo.makeAnySuggestion(playerId, gameState);
 	const canSuggest = err === null;
 	if (!canSuggest) {
 		if (expanded) {
@@ -161,7 +156,7 @@ function MakeSuggestion() {
 		);
 	}
 
-	const room = gameState.players.get(sessionId)!.room;
+	const room = gameState.players.get(playerId)!.room;
 	if (!room) {
 		throw new RangeError('Expected CanDo to ensure in a room');
 	}
@@ -169,7 +164,7 @@ function MakeSuggestion() {
 	const submit = (e: React.SyntheticEvent) => {
 		e.preventDefault();
 		const suggestion: Solution = [suspect, weapon, room];
-		sendMessage(ClientToServerMessage.MAKE_SUGGESTION, suggestion);
+		sendMessage({ type: 'make_suggestion', suggestion });
 	};
 
 	return (
@@ -177,15 +172,11 @@ function MakeSuggestion() {
 			<form onSubmit={submit}>
 				<SelectEnum
 					onChange={setSuspect}
-					values={Object.values(Suspect)}
+					values={allSuspects}
 					value={suspect}
 				/>{' '}
 				with the{' '}
-				<SelectEnum
-					onChange={setWeapon}
-					values={Object.values(Weapon)}
-					value={weapon}
-				/>{' '}
+				<SelectEnum onChange={setWeapon} values={allWeapons} value={weapon} />{' '}
 				in the {room} <input type="submit" value="Suggest" />
 			</form>
 		</li>
@@ -195,23 +186,23 @@ function MakeSuggestion() {
 function DisproveSuggestion() {
 	const gameState = React.use(GameStateContext);
 	const sendMessage = React.use(SendMessageContext);
-	const sessionId = React.use(SessionIdContext);
+	const playerId = React.use(PlayerIdContext);
 	const yourCards = React.use(YourCardsContext);
 
-	const err = CanDo.disproveAnySuggestion(sessionId, gameState);
+	const err = CanDo.disproveAnySuggestion(playerId, gameState);
 	const canDisprove = err === null;
 	if (!canDisprove) {
 		return null;
 	}
 
-	const handler = (c: Card | null) => (e: React.SyntheticEvent) => {
+	const handler = (card: Card | null) => (e: React.SyntheticEvent) => {
 		e.preventDefault();
-		sendMessage(ClientToServerMessage.DISPROVE_SUGGESTION, c);
+		sendMessage({ type: 'disprove_suggestion', card });
 	};
 
 	let haveDisprovingCard = false;
 	const disproveButtons = [];
-	for (const card of gameState.suggestion) {
+	for (const card of gameState.suggestion!) {
 		if (yourCards.includes(card)) {
 			haveDisprovingCard = true;
 			disproveButtons.push(
@@ -236,15 +227,15 @@ function DisproveSuggestion() {
 function MakeAccusation() {
 	const gameState = React.use(GameStateContext);
 	const sendMessage = React.use(SendMessageContext);
-	const sessionId = React.use(SessionIdContext);
+	const playerId = React.use(PlayerIdContext);
 
 	const [expanded, setExpanded] = React.useState(false);
 
-	const [suspect, setSuspect] = React.useState<Suspect>(Suspect.BLOOD);
-	const [weapon, setWeapon] = React.useState<Weapon>(Weapon.AK47);
-	const [room, setRoom] = React.useState<Room>(Room.DINING_ROOM);
+	const [suspect, setSuspect] = React.useState<Suspect>(allSuspects[0]);
+	const [weapon, setWeapon] = React.useState<Weapon>(allWeapons[0]);
+	const [room, setRoom] = React.useState<Room>(allRooms[0]);
 
-	const err = CanDo.makeAccusation(sessionId, gameState);
+	const err = CanDo.makeAccusation(playerId, gameState);
 	const canAccuse = err === null;
 	if (!canAccuse) {
 		if (expanded) {
@@ -269,7 +260,7 @@ function MakeAccusation() {
 	const submit = (e: React.SyntheticEvent) => {
 		e.preventDefault();
 		const accusation: Solution = [suspect, weapon, room];
-		sendMessage(ClientToServerMessage.MAKE_ACCUSATION, accusation);
+		sendMessage({ type: 'make_accusation', accusation });
 	};
 
 	return (
@@ -277,21 +268,12 @@ function MakeAccusation() {
 			<form onSubmit={submit}>
 				<SelectEnum
 					onChange={setSuspect}
-					values={Object.values(Suspect)}
+					values={allSuspects}
 					value={suspect}
 				/>{' '}
 				with the{' '}
-				<SelectEnum
-					onChange={setWeapon}
-					values={Object.values(Weapon)}
-					value={weapon}
-				/>{' '}
-				in the{' '}
-				<SelectEnum
-					onChange={setRoom}
-					values={Object.values(Room)}
-					value={room}
-				/>{' '}
+				<SelectEnum onChange={setWeapon} values={allWeapons} value={weapon} />{' '}
+				in the <SelectEnum onChange={setRoom} values={allRooms} value={room} />{' '}
 				<input type="submit" value="Accuse" />
 			</form>
 		</li>
@@ -301,9 +283,9 @@ function MakeAccusation() {
 function EndTurn() {
 	const gameState = React.use(GameStateContext);
 	const sendMessage = React.use(SendMessageContext);
-	const sessionId = React.use(SessionIdContext);
+	const playerId = React.use(PlayerIdContext);
 
-	const err = CanDo.endTurn(sessionId, gameState);
+	const err = CanDo.endTurn(playerId, gameState);
 	const canEnd = err === null;
 	if (!canEnd) {
 		return null;
@@ -311,7 +293,7 @@ function EndTurn() {
 
 	const end = (e: React.SyntheticEvent) => {
 		e.preventDefault();
-		sendMessage(ClientToServerMessage.END_TURN, null);
+		sendMessage({ type: 'end_turn' });
 	};
 
 	return (

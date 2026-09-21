@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { GameStateContext } from '#client/Context';
-import getSupectColor from '#client/SuspectColor';
+import { getSuspectColor } from '#client/SuspectColor';
 import styles from '#client/TurnOrder.module.css';
 
 export default function TurnOrder() {
@@ -11,7 +11,7 @@ export default function TurnOrder() {
 	for (const playerId of gameState.turnOrder) {
 		const player = gameState.players.get(playerId)!;
 		const suspectColorStyle = {
-			borderColor: getSupectColor(player.suspect),
+			borderColor: getSuspectColor(player.suspect!),
 		};
 		names.push(
 			<li key={playerId}>

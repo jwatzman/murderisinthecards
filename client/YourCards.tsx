@@ -1,23 +1,23 @@
 import React from 'react';
 
 import { YourCardsContext } from '#client/Context';
-import type { Card } from '#common/Consts';
-import { Room, Suspect, Weapon } from '#common/Consts';
+import type { Card } from '#common/cards';
+import { allRooms, allSuspects, allWeapons } from '#common/cards';
 
 export default function YourCards() {
 	return (
 		<div>
 			Your cards:
 			<ul>
-				<CardsLine src={Object.values(Suspect)} />
-				<CardsLine src={Object.values(Weapon)} />
-				<CardsLine src={Object.values(Room)} />
+				<CardsLine src={allSuspects} />
+				<CardsLine src={allWeapons} />
+				<CardsLine src={allRooms} />
 			</ul>
 		</div>
 	);
 }
 
-function CardsLine({ src }: { src: Card[] }) {
+function CardsLine({ src }: { src: readonly Card[] }) {
 	const cards = React.use(YourCardsContext);
 
 	// This is a somewhat inefficient way to deal with this, but it's simple,

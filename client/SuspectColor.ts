@@ -1,18 +1,18 @@
-import { Suspect } from '#common/Consts';
+import type { Suspect } from '#common/cards';
 
-export default function getSuspectColor(s: Suspect): string {
+export function getSuspectColor(s: Suspect): string {
 	switch (s) {
-		case Suspect.BLOOD:
+		case 'Col. Blood':
 			return 'red';
-		case Suspect.EMERALD:
+		case 'Ms. Emerald':
 			return 'green';
-		case Suspect.PEPPER:
+		case 'Dr. Pepper':
 			return 'black';
-		case Suspect.SAND:
+		case 'Rev. Sand':
 			return 'yellow';
-		case Suspect.SILVER:
+		case 'Mr. Silver':
 			return 'white';
-		case Suspect.VIOLET:
+		case 'Ms. Violet':
 			return 'blue';
 	}
 }

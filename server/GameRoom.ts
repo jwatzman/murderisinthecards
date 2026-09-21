@@ -1,471 +1,407 @@
-import type { Client } from '@colyseus/core';
-import { Room as ColRoom } from '@colyseus/core';
+import type { WebSocket } from 'ws';
 
-import type { Coord } from '#common/BoardLayout';
-import * as CanDo from '#common/CanDo';
-import type { Card, Solution } from '#common/Consts';
-import {
+import * as CanDo from '#common/canDo';
+import type { Card, Room } from '#common/cards';
+import { allRooms, allSuspects, allWeapons } from '#common/cards';
+import type { GameState, Solution } from '#common/gameState';
+import type { Coord } from '#common/layout';
+import type {
 	ClientToServerMessage,
-	PlayPhase,
-	Room,
 	ServerToClientMessage,
-	Suspect,
-	Weapon,
-} from '#common/Consts';
-import { GameState } from '#server/GameState';
-import getInitialCoords from '#server/InitialCoords';
-import shuffle from '#server/Shuffle';
+} from '#common/message';
 
-export class GameRoom extends ColRoom<{ state: GameState }> {
-	onCreate(): void {
-		console.log('Room created');
-		this.state = new GameState();
+import { Player } from './Player';
+import { getInitialCoords } from './initialCoords';
+import { newId } from './newId';
+import { shuffle } from './shuffle';
 
-		this.onMessage(
-			ClientToServerMessage.PLAYER_SETUP,
-			this.wrapHandler(this.handlePlayerSetup.bind(this)),
-		);
-		this.onMessage(
-			ClientToServerMessage.BEGIN_GAME,
-			this.wrapHandler(this.handleBeginGame.bind(this)),
-		);
-		this.onMessage(
-			ClientToServerMessage.ROLL_DIE,
-			this.wrapHandler(this.handleRollDie.bind(this)),
-		);
-		this.onMessage(
-			ClientToServerMessage.END_TURN,
-			this.wrapHandler(this.handleEndTurn.bind(this)),
-		);
-		this.onMessage(
-			ClientToServerMessage.MOVE_TO_COORD,
-			this.wrapHandler(this.handleMoveToCoord.bind(this)),
-		);
-		this.onMessage(
-			ClientToServerMessage.MOVE_TO_ROOM,
-			this.wrapHandler(this.handleMoveToRoom.bind(this)),
-		);
-		this.onMessage(
-			ClientToServerMessage.MOVE_THROUGH_PASSAGE,
-			this.wrapHandler(this.handleMoveThroughPassage.bind(this)),
-		);
-		this.onMessage(
-			ClientToServerMessage.MAKE_SUGGESTION,
-			this.wrapHandler(this.handleMakeSuggestion.bind(this)),
-		);
-		this.onMessage(
-			ClientToServerMessage.DISPROVE_SUGGESTION,
-			this.wrapHandler(this.handleDisproveSuggestion.bind(this)),
-		);
-		this.onMessage(
-			ClientToServerMessage.MAKE_ACCUSATION,
-			this.wrapHandler(this.handleMakeAccusation.bind(this)),
-		);
-	}
+export class GameRoom {
+	readonly #id: string;
+	readonly #cleanupCallback: () => void;
+	#players: Map<string, Player>;
+	#state: Omit<GameState, 'players'>;
 
-	onJoin(client: Client): void {
-		if (this.state.phase !== PlayPhase.SETUP) {
-			throw new Error('Conncting at wrong phase?!');
-		}
+	solution: Solution | null;
 
-		const sessionId = client.sessionId;
-		console.log('Join', sessionId);
-		this.state.createPlayer(sessionId);
-	}
+	constructor(id: string, cleanupCallback: () => void) {
+		this.#id = id;
+		this.#cleanupCallback = cleanupCallback;
 
-	async onLeave(client: Client): Promise<void> {
-		const sessionId = client.sessionId;
-		console.log('Disconnected', sessionId);
-
-		if (this.state.phase == PlayPhase.SETUP) {
-			this.state.removePlayer(sessionId);
-			return;
-		}
-
-		const name = this.state.getPlayer(sessionId).name;
-		this.broadcastGameMessage(`${name} disconnected`);
-
-		if (this.state.phase == PlayPhase.GAME_OVER) {
-			return;
-		}
-
-		try {
-			const reconnectedClient = await this.allowReconnection(client, 60 * 3);
-			console.log('Reconnected', sessionId);
-
-			this.sendCardsToPlayer(reconnectedClient);
-			this.broadcastGameMessage(`${name} reconnected`);
-		} catch (_e) {
-			console.log('Did not reconnect', sessionId);
-			this.broadcastGameMessage(
-				`${name} did not reconnect; the game cannot continue`,
-			);
-			this.endGame();
-		}
-	}
-
-	onDispose(): void {
-		console.log('Room disposed');
-	}
-
-	private wrapHandler<T>(fn: (client: Client, arg: T) => void) {
-		return (client: Client, arg: T) => {
-			try {
-				fn(client, arg);
-			} catch (e: any) {
-				console.error(e);
-				client.error(0, `Server error: ${e.message}`);
-			}
+		this.#players = new Map();
+		this.#state = {
+			phase: 'SETUP',
+			turnOrder: [],
+			currentPlayer: '',
+			dieRoll: 0,
+			suggestion: null,
+			currentPlayerDisprovingSuggestion: '',
+			leftRoom: null,
 		};
+
+		this.solution = null;
 	}
 
-	private handlePlayerSetup(
-		client: Client,
-		{ name, suspect }: { name: string; suspect: Suspect },
+	processMessage(player: Player, message: ClientToServerMessage) {
+		try {
+			switch (message.type) {
+				case 'player_setup':
+					this.#handlePlayerSetup(player, message);
+					break;
+				case 'begin_game':
+					this.#handleBeginGame(player);
+					break;
+				case 'roll_die':
+					this.#handleRollDie(player);
+					break;
+				case 'move_to_coord':
+					this.#handleMoveToCoord(player, message.coord);
+					break;
+				case 'move_to_room':
+					this.#handleMoveToRoom(player, message.room);
+					break;
+				case 'move_through_passage':
+					this.#handleMoveThroughPassage(player, message.room);
+					break;
+				case 'make_suggestion':
+					this.#handleMakeSuggestion(player, message.suggestion);
+					break;
+				case 'disprove_suggestion':
+					this.#handleDisproveSuggestion(player, message.card);
+					break;
+				case 'make_accusation':
+					this.#handleMakeAccusation(player, message.accusation);
+					break;
+				case 'end_turn':
+					this.#handleEndTurn(player);
+					break;
+				default: {
+					const _: never = message;
+					break;
+				}
+			}
+		} catch (e) {
+			console.error(e);
+			player.sendErrorMessage(
+				`Server error: ${e instanceof Error ? e.message : '(unknown)'}`,
+			);
+		}
+
+		this.#flushState();
+	}
+
+	playerConnected(ws: WebSocket) {
+		if (this.#state.phase !== 'SETUP') {
+			console.log('Attempting to join game in invalid phase', this.#id);
+			ws.terminate();
+			return;
+		}
+
+		const playerId = newId();
+		const player = new Player(ws, this, playerId);
+		this.#players.set(playerId, player);
+
+		player.sendMessage({ type: 'room_info', room: this.#id, player: playerId });
+		this.#flushState();
+		console.log('Player connected', this.#id, playerId);
+	}
+
+	playerDisconnected(player: Player) {
+		console.log('Player disconnected', this.#id, player.id);
+		if (this.#state.phase === 'SETUP') {
+			this.#players.delete(player.id);
+		} else {
+			this.#sendGameMessageToAllPlayers(`${player.state.name} disconnected`);
+
+			// TODO: allow reconnection.
+			this.#endGame();
+		}
+
+		this.#flushState();
+
+		if ([...this.#players.values()].every((p) => !p.isConnected())) {
+			this.#cleanupCallback();
+		}
+	}
+
+	#sendMessageToAllPlayers(message: ServerToClientMessage) {
+		for (const player of this.#players.values()) {
+			player.sendMessage(message);
+		}
+	}
+
+	#sendGameMessageToAllPlayers(message: string) {
+		this.#sendMessageToAllPlayers({ type: 'game_message', message });
+	}
+
+	#getState(): GameState {
+		const players = new Map(
+			Array.from(this.#players, ([id, player]) => [id, player.state]),
+		);
+		return { players, ...this.#state };
+	}
+
+	#flushState() {
+		this.#sendMessageToAllPlayers({
+			type: 'game_state',
+			state: this.#getState(),
+		});
+	}
+
+	#handlePlayerSetup(
+		player: Player,
+		{ name, suspect }: Extract<ClientToServerMessage, { type: 'player_setup' }>,
 	) {
-		const sessionId = client.sessionId;
-		console.log('Player setup', sessionId, name, suspect);
-
-		const err = CanDo.playerSetup(
-			sessionId,
-			this.state.toConstGameState(),
-			name,
-			suspect,
-		);
+		const err = CanDo.playerSetup(player.id, this.#getState(), name, suspect);
 		if (err) {
-			client.error(0, err);
+			player.sendErrorMessage(err);
 			return;
 		}
 
-		const player = this.state.getPlayer(sessionId);
 		const [x, y] = getInitialCoords(suspect);
-		player.name = name;
-		player.suspect = suspect;
-		player.x = x;
-		player.y = y;
+		player.state.name = name;
+		player.state.suspect = suspect;
+		player.state.x = x;
+		player.state.y = y;
 	}
 
-	private handleBeginGame(client: Client): void {
-		const err = CanDo.beginGame(
-			client.sessionId,
-			this.state.toConstGameState(),
+	#handleBeginGame(player: Player) {
+		const err = CanDo.beginGame(player.id, this.#getState());
+		if (err) {
+			player.sendErrorMessage(err);
+			return;
+		}
+
+		this.#state.turnOrder = [...this.#players.keys()];
+		shuffle(this.#state.turnOrder);
+
+		const suspects = [...allSuspects];
+		shuffle(suspects);
+		const weapons = [...allWeapons];
+		shuffle(weapons);
+		const rooms = [...allRooms];
+		shuffle(rooms);
+
+		this.solution = [suspects.pop()!, weapons.pop()!, rooms.pop()!];
+
+		const cards = [...suspects, ...weapons, ...rooms];
+		shuffle(cards);
+		cards.forEach((card, idx) =>
+			this.#players
+				.get(this.#state.turnOrder[idx % this.#state.turnOrder.length])!
+				.cards.push(card),
 		);
-		if (err) {
-			client.error(0, err);
-			return;
-		}
+		this.#players.forEach((p) => p.sendCards());
 
-		void this.lock(); // XXX probably should not float this.
-
-		const turnOrderArr = this.state.getAllPlayerIds();
-		shuffle(turnOrderArr);
-		for (const player of turnOrderArr) {
-			this.state.turnOrder.push(player);
-		}
-
-		this.shuffleCards();
-		for (const client of this.clients) {
-			this.sendCardsToPlayer(client);
-		}
-
-		this.broadcastGameMessage('The game begins!');
-		this.advanceTurn();
+		this.#sendGameMessageToAllPlayers('The game begins!');
+		this.#advanceTurn();
 	}
 
-	private handleRollDie(client: Client) {
-		const sessionId = client.sessionId;
-		const err = CanDo.rollDie(sessionId, this.state.toConstGameState());
+	#handleRollDie(player: Player) {
+		const err = CanDo.rollDie(player.id, this.#getState());
 		if (err) {
-			client.error(0, err);
+			player.sendErrorMessage(err);
 			return;
 		}
 
-		this.state.dieRoll = Math.floor(Math.random() * 6) + 1;
-		this.state.phase = PlayPhase.MOVEMENT;
-		this.broadcastGameMessage(
-			this.state.getPlayer(sessionId).name +
-				' rolls a ' +
-				this.state.dieRoll.toString(),
+		this.#state.dieRoll = Math.floor(Math.random() * 6) + 1;
+		this.#state.phase = 'MOVEMENT';
+		this.#sendGameMessageToAllPlayers(
+			`${player.state.name} rolls a ${this.#state.dieRoll}`,
 		);
 	}
 
-	private handleEndTurn(client: Client) {
-		const err = CanDo.endTurn(client.sessionId, this.state.toConstGameState());
+	#handleMoveToCoord(player: Player, coord: Coord) {
+		const err = CanDo.moveToCoord(player.id, this.#getState(), coord);
 		if (err) {
-			client.error(0, err);
+			player.sendErrorMessage(err);
 			return;
 		}
 
-		this.advanceTurn();
+		[player.state.x, player.state.y] = coord;
+		if (player.state.room) {
+			this.#state.leftRoom = player.state.room;
+		}
+		player.state.room = null;
+		this.#state.dieRoll--;
 	}
 
-	private handleMoveToCoord(client: Client, coord: Coord) {
-		const sessionId = client.sessionId;
-
-		const err = CanDo.moveToCoord(
-			sessionId,
-			this.state.toConstGameState(),
-			coord,
-		);
+	#handleMoveToRoom(player: Player, room: Room) {
+		const err = CanDo.moveToRoom(player.id, this.#getState(), room);
 		if (err) {
-			client.error(0, err);
+			player.sendErrorMessage(err);
 			return;
 		}
 
-		const player = this.state.getPlayer(sessionId);
-		[player.x, player.y] = coord;
-		if (player.room) {
-			this.state.leftRoom = player.room;
-		}
-		player.room = '';
-		this.state.dieRoll--;
+		player.state.room = room;
+		this.#state.dieRoll = 0;
 	}
 
-	private handleMoveToRoom(client: Client, room: Room) {
-		const sessionId = client.sessionId;
-
-		const err = CanDo.moveToRoom(
-			sessionId,
-			this.state.toConstGameState(),
-			room,
-		);
+	#handleMoveThroughPassage(player: Player, room: Room) {
+		const err = CanDo.moveThroughPassage(player.id, this.#getState(), room);
 		if (err) {
-			client.error(0, err);
+			player.sendErrorMessage(err);
 			return;
 		}
 
-		const player = this.state.getPlayer(sessionId);
-		player.room = room;
-		this.state.dieRoll = 0;
+		player.state.room = room;
+		this.#state.phase = 'MOVEMENT';
+		this.#state.dieRoll = 0;
 	}
 
-	private handleMoveThroughPassage(client: Client, room: Room) {
-		const sessionId = client.sessionId;
-
-		const err = CanDo.moveThroughPassage(
-			sessionId,
-			this.state.toConstGameState(),
-			room,
-		);
+	#handleMakeSuggestion(player: Player, suggestion: Solution) {
+		const err = CanDo.makeSuggestion(player.id, this.#getState(), suggestion);
 		if (err) {
-			client.error(0, err);
+			player.sendErrorMessage(err);
 			return;
 		}
 
-		const player = this.state.getPlayer(sessionId);
-		this.state.phase = PlayPhase.MOVEMENT;
-		player.room = room;
-		this.state.dieRoll = 0;
-	}
-
-	private handleMakeSuggestion(client: Client, suggestion: Solution) {
-		const sessionId = client.sessionId;
-
-		const err = CanDo.makeSuggestion(
-			sessionId,
-			this.state.toConstGameState(),
-			suggestion,
-		);
-		if (err) {
-			client.error(0, err);
-			return;
-		}
-
-		this.state.phase = PlayPhase.SUGGESTION_RESOLUTION;
-		for (let i = 0; i < suggestion.length; i++) {
-			this.state.suggestion[i] = suggestion[i];
-		}
+		this.#state.phase = 'SUGGESTION_RESOLUTION';
+		this.#state.suggestion = suggestion;
 
 		const [suspect, weapon, room] = suggestion;
-		const name = this.state.getCurrentPlayer().name;
-		this.broadcastGameMessage(
-			`${name} suggests ${suspect} with the ${weapon} in the ${room}`,
+		this.#sendGameMessageToAllPlayers(
+			`${player.state.name} suggests ${suspect} with the ${weapon} in the ${room}`,
 		);
 
-		for (const player of this.state.getAllPlayers()) {
-			if (player.suspect == suspect && player.room !== room) {
-				player.room = room;
-				player.teleported = true;
+		for (const otherPlayer of this.#players.values()) {
+			if (
+				otherPlayer.state.suspect === suspect &&
+				otherPlayer.state.room !== room
+			) {
+				otherPlayer.state.room = room;
+				otherPlayer.state.teleported = true;
 			}
 		}
 
-		this.advanceDisproving();
+		this.#advanceDisproving();
 	}
 
-	private handleDisproveSuggestion(client: Client, card: Card | null) {
-		const sessionId = client.sessionId;
-		const player = this.state.getPlayer(sessionId);
-
+	#handleDisproveSuggestion(player: Player, card: Card | null) {
 		const err = CanDo.disproveSuggestion(
-			sessionId,
-			this.state.toConstGameState(),
+			player.id,
+			this.#getState(),
 			player.cards,
 			card,
 		);
 		if (err) {
-			client.error(0, err);
+			player.sendErrorMessage(err);
 			return;
 		}
 
 		if (card) {
-			this.broadcastGameMessage(`${player.name} disproves the suggestion!`);
-
-			// Ugh, I wish there were a better way to do this.
-			for (const otherClient of this.clients) {
-				if (otherClient.sessionId === this.state.currentPlayer) {
-					otherClient.send(
-						ServerToClientMessage.GAME_MESSAGE,
-						`${player.name} shows you their ${card} card!`,
-					);
-					break;
-				}
-			}
-
-			this.state.currentPlayerDisprovingSuggestion = '';
-		} else {
-			this.broadcastGameMessage(
-				`${player.name} cannot disprove the suggestion!`,
+			this.#sendGameMessageToAllPlayers(
+				`${player.state.name} disproves the suggestion!`,
 			);
-			this.advanceDisproving();
+
+			this.#players.get(this.#state.currentPlayer)!.sendMessage({
+				type: 'game_message',
+				message: `${player.state.name} shows you their ${card} card!`,
+			});
+
+			this.#state.currentPlayerDisprovingSuggestion = '';
+		} else {
+			this.#sendGameMessageToAllPlayers(
+				`${player.state.name} cannot disprove the suggestion!`,
+			);
+			this.#advanceDisproving();
 		}
 	}
 
-	private handleMakeAccusation(client: Client, accusation: Solution) {
-		const err = CanDo.makeAccusation(
-			client.sessionId,
-			this.state.toConstGameState(),
-		);
+	#handleMakeAccusation(player: Player, accusation: Solution) {
+		const err = CanDo.makeAccusation(player.id, this.#getState());
 		if (err) {
-			client.error(0, err);
+			player.sendErrorMessage(err);
 			return;
 		}
 
 		const [suspect, weapon, room] = accusation;
-		const currentPlayer = this.state.getCurrentPlayer();
-		const name = currentPlayer.name;
-
-		this.broadcastGameMessage(
-			`${name} accuses ${suspect} with the ${weapon} in the ${room}!`,
+		this.#sendGameMessageToAllPlayers(
+			`${player.state.name} accuses ${suspect} with the ${weapon} in the ${room}!`,
 		);
 
-		if (this.isCorrectAccusation(accusation)) {
-			this.broadcastGameMessage(`${name} wins!`);
-			this.endGame();
+		const [solnSuspect, solnWeapn, solnRoom] = this.solution!;
+		if (suspect === solnSuspect && weapon === solnWeapn && room === solnRoom) {
+			this.#sendGameMessageToAllPlayers(`${player.state.name} wins!`);
+			this.#endGame();
 		} else {
-			this.broadcastGameMessage(
-				`${name} made an incorrect accusation and is eliminated!`,
+			this.#sendGameMessageToAllPlayers(
+				`${player.state.name} made an incorrect accusation and is eliminated!`,
 			);
-			currentPlayer.eliminated = true;
-			this.advanceTurn();
+			player.state.eliminated = true;
+			this.#advanceTurn();
 		}
 	}
 
-	private broadcastGameMessage(message: string) {
-		this.broadcast(ServerToClientMessage.GAME_MESSAGE, message);
-	}
-
-	private sendCardsToPlayer(client: Client) {
-		client.send(
-			ServerToClientMessage.YOUR_CARDS,
-			this.state.getPlayer(client.sessionId).cards,
-		);
-	}
-
-	private shuffleCards() {
-		const suspects = Object.values(Suspect);
-		shuffle(suspects);
-
-		const weapons = Object.values(Weapon);
-		shuffle(weapons);
-
-		const rooms = Object.values(Room);
-		shuffle(rooms);
-
-		this.state.solution = [suspects.pop()!, weapons.pop()!, rooms.pop()!];
-
-		const cards = [...suspects, ...weapons, ...rooms];
-		shuffle(cards);
-
-		let player = '';
-		while (cards.length > 0) {
-			player = this.getNextPlayer(player);
-			this.state.getPlayer(player).cards.push(cards.pop()!);
-		}
-	}
-
-	private getNextPlayer(player: string): string {
-		if (player) {
-			const playerIdx = this.state.turnOrder.indexOf(player);
-			const nextPlayerIdx = (playerIdx + 1) % this.state.turnOrder.length;
-			return this.state.turnOrder[nextPlayerIdx];
-		} else {
-			return this.state.turnOrder[0];
-		}
-	}
-
-	private advanceTurn() {
-		this.state.phase = PlayPhase.BEGIN_TURN;
-		this.state.dieRoll = 0;
-		this.state.leftRoom = '';
-
-		const prevPlayer = this.state.getCurrentPlayerAtBeginning();
-		if (prevPlayer) {
-			prevPlayer.teleported = false;
-		}
-
-		let playersTried = 0;
-		const numPlayers = this.state.getAllPlayerIds().length;
-		do {
-			this.state.currentPlayer = this.getNextPlayer(this.state.currentPlayer);
-			playersTried++;
-		} while (
-			this.state.getCurrentPlayer().eliminated &&
-			playersTried < numPlayers
-		);
-
-		if (this.state.getCurrentPlayer().eliminated) {
-			this.broadcastGameMessage('All players have been eliminated. Game over.');
-			this.endGame();
+	#handleEndTurn(player: Player) {
+		const err = CanDo.endTurn(player.id, this.#getState());
+		if (err) {
+			player.sendErrorMessage(err);
 			return;
 		}
 
-		const name = this.state.getCurrentPlayer().name;
-		this.broadcastGameMessage(`${name}'s turn`);
+		this.#advanceTurn();
 	}
 
-	private advanceDisproving() {
-		if (!this.state.currentPlayerDisprovingSuggestion) {
-			this.state.currentPlayerDisprovingSuggestion = this.state.currentPlayer;
+	#advanceTurn() {
+		this.#state.phase = 'BEGIN_TURN';
+		this.#state.dieRoll = 0;
+		this.#state.leftRoom = null;
+
+		if (this.#state.currentPlayer) {
+			this.#players.get(this.#state.currentPlayer)!.state.teleported = false;
 		}
 
-		const next = this.getNextPlayer(
-			this.state.currentPlayerDisprovingSuggestion,
+		let playersTried = 0;
+		do {
+			this.#state.currentPlayer = getNext(
+				this.#state.turnOrder,
+				this.#state.currentPlayer,
+			);
+			playersTried++;
+		} while (
+			this.#players.get(this.#state.currentPlayer)!.state.eliminated &&
+			playersTried < this.#players.size
 		);
 
-		if (next == this.state.currentPlayer) {
-			const name = this.state.getCurrentPlayer().name;
-			this.broadcastGameMessage(
-				`No one was able to disprove ${name}'s suggestion!`,
+		const currentPlayer = this.#players.get(this.#state.currentPlayer)!;
+		if (currentPlayer.state.eliminated) {
+			this.#sendGameMessageToAllPlayers(
+				'All players have been eliminated. Game over.',
 			);
-			this.state.currentPlayerDisprovingSuggestion = '';
+			this.#endGame();
+			return;
+		}
+
+		this.#sendGameMessageToAllPlayers(`${currentPlayer.state.name}'s turn`);
+	}
+
+	#advanceDisproving() {
+		if (!this.#state.currentPlayerDisprovingSuggestion) {
+			this.#state.currentPlayerDisprovingSuggestion = this.#state.currentPlayer;
+		}
+
+		const next = getNext(
+			this.#state.turnOrder,
+			this.#state.currentPlayerDisprovingSuggestion,
+		);
+		if (next === this.#state.currentPlayer) {
+			this.#sendGameMessageToAllPlayers(
+				`No one was able to disprove ${this.#players.get(this.#state.currentPlayer)!.state.name}'s suggestion!`,
+			);
+			this.#state.currentPlayerDisprovingSuggestion = '';
 		} else {
-			this.state.currentPlayerDisprovingSuggestion = next;
+			this.#state.currentPlayerDisprovingSuggestion = next;
 		}
 	}
 
-	private isCorrectAccusation(accusation: Solution) {
-		for (let i = 0; i < this.state.solution.length; i++) {
-			if (this.state.solution[i] !== accusation[i]) {
-				return false;
-			}
-		}
-
-		return true;
+	#endGame() {
+		console.log('Game over', this.#id);
+		this.#state.currentPlayer = '';
+		this.#state.phase = 'GAME_OVER';
 	}
+}
 
-	private endGame() {
-		console.log('Game over');
-		this.state.currentPlayer = '';
-		this.state.phase = PlayPhase.GAME_OVER;
-	}
+function getNext<T>(arr: T[], x: T): T {
+	const idx = arr.indexOf(x);
+	return arr[(idx + 1) % arr.length];
 }

@@ -2,15 +2,16 @@ import React from 'react';
 
 import {
 	GameStateContext,
+	PlayerIdContext,
 	SendMessageContext,
-	SessionIdContext,
 } from '#client/Context';
 import styles from '#client/GameBoard.module.css';
-import getSuspectColor from '#client/SuspectColor';
-import type { Coord } from '#common/BoardLayout';
-import { BoardConfig, DoorDirection } from '#common/BoardLayout';
-import * as CanDo from '#common/CanDo';
-import { ClientToServerMessage, Room } from '#common/Consts';
+import { getSuspectColor } from '#client/SuspectColor';
+import * as CanDo from '#common/canDo';
+import type { Room } from '#common/cards';
+import { allRooms } from '#common/cards';
+import type { DoorDirection } from '#common/layout';
+import { boardConfig } from '#common/layout';
 
 export default function GameBoard() {
 	return (
@@ -23,33 +24,34 @@ export default function GameBoard() {
 
 function Squares() {
 	const gameState = React.use(GameStateContext);
-	const sessionId = React.use(SessionIdContext);
+	const playerId = React.use(PlayerIdContext);
 	const sendMessage = React.use(SendMessageContext);
 
-	const handleMoveToCoord = (coord: Coord) => (evt: React.SyntheticEvent) => {
-		evt.preventDefault();
+	const handleMoveToCoord =
+		(coord: [number, number]) => (evt: React.SyntheticEvent) => {
+			evt.preventDefault();
 
-		const err = CanDo.moveToCoord(sessionId, gameState, coord);
-		if (err != null) {
-			return;
-		}
+			const err = CanDo.moveToCoord(playerId, gameState, coord);
+			if (err != null) {
+				return;
+			}
 
-		sendMessage(ClientToServerMessage.MOVE_TO_COORD, coord);
-	};
+			sendMessage({ type: 'move_to_coord', coord });
+		};
 
 	const handleMoveToRoom = (room: Room) => (evt: React.SyntheticEvent) => {
 		evt.preventDefault();
 
-		const err = CanDo.moveToRoom(sessionId, gameState, room);
+		const err = CanDo.moveToRoom(playerId, gameState, room);
 		if (err != null) {
 			return;
 		}
 
-		sendMessage(ClientToServerMessage.MOVE_TO_ROOM, room);
+		sendMessage({ type: 'move_to_room', room });
 	};
 
 	const squares = [];
-	const [maxX, maxY] = BoardConfig.extent;
+	const [maxX, maxY] = boardConfig.extent;
 	for (let x = 0; x <= maxX; x++) {
 		for (let y = 0; y <= maxY; y++) {
 			const squareStyle = {
@@ -69,8 +71,8 @@ function Squares() {
 	}
 
 	const rooms = [];
-	for (const roomName of Object.values(Room)) {
-		const roomConfig = BoardConfig.rooms[roomName];
+	for (const roomName of allRooms) {
+		const roomConfig = boardConfig.rooms[roomName];
 
 		const [[minX, minY], [maxX, maxY]] = roomConfig.coords;
 		const roomStyle = {
@@ -110,7 +112,7 @@ function Squares() {
 		}
 	}
 
-	const [[voidMinX, voidMinY], [voidMaxX, voidMaxY]] = BoardConfig.void;
+	const [[voidMinX, voidMinY], [voidMaxX, voidMaxY]] = boardConfig.void;
 	const voidStyle = {
 		gridRowStart: voidMinX + 1,
 		gridRowEnd: voidMaxX + 1 + 1,
@@ -140,7 +142,7 @@ function Suspects() {
 
 		let x, y;
 		if (playerState.room) {
-			const room = BoardConfig.rooms[playerState.room];
+			const room = boardConfig.rooms[playerState.room];
 			const nthInRoom = numSuspectsInRoom[playerState.room] || 0;
 
 			const [[minX, minY], [, maxY]] = room.coords;
@@ -162,7 +164,7 @@ function Suspects() {
 		}
 
 		const style = {
-			color: getSuspectColor(playerState.suspect),
+			color: getSuspectColor(playerState.suspect!),
 			gridRowStart: x + 1,
 			gridColumnStart: y + 1,
 		};
@@ -179,26 +181,26 @@ function Suspects() {
 
 function doorDirectionGlyph(dir: DoorDirection): string {
 	switch (dir) {
-		case DoorDirection.POS_X: // "Down"
+		case '+x': // "Down"
 			return '\u2193';
-		case DoorDirection.NEG_X: // "Up"
+		case '-x': // "Up"
 			return '\u2191';
-		case DoorDirection.POS_Y: // "Right"
+		case '+y': // "Right"
 			return '\u2192';
-		case DoorDirection.NEG_Y: // "Left"
+		case '-y': // "Left"
 			return '\u2190';
 	}
 }
 
 function doorDirectionStyle(dir: DoorDirection): { [key: string]: string } {
 	switch (dir) {
-		case DoorDirection.POS_X: // "Down"
+		case '+x': // "Down"
 			return { alignItems: 'end' };
-		case DoorDirection.NEG_X: // "Up"
+		case '-x': // "Up"
 			return { alignItems: 'start' };
-		case DoorDirection.POS_Y: // "Right"
+		case '+y': // "Right"
 			return { justifyContent: 'end' };
-		case DoorDirection.NEG_Y: // "Left"
+		case '-y': // "Left"
 			return { justifyContent: 'start' };
 	}
 }

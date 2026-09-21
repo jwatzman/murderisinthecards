@@ -2,14 +2,15 @@ import React from 'react';
 
 import {
 	GameStateContext,
+	PlayerIdContext,
 	RoomIdContext,
 	SendMessageContext,
-	SessionIdContext,
 } from '#client/Context';
 import styles from '#client/GameSetup.module.css';
 import SelectEnum from '#client/SelectEnum';
-import * as CanDo from '#common/CanDo';
-import { ClientToServerMessage, Suspect } from '#common/Consts';
+import * as CanDo from '#common/canDo';
+import type { Suspect } from '#common/cards';
+import { allSuspects } from '#common/cards';
 
 function GameSetup() {
 	return (
@@ -27,26 +28,26 @@ function GameSetup() {
 
 function SelectSuspect() {
 	const gameState = React.use(GameStateContext);
-	const sessionId = React.use(SessionIdContext);
+	const playerId = React.use(PlayerIdContext);
 	const sendMessage = React.use(SendMessageContext);
 
 	const [name, setName] = React.useState('');
-	const [suspect, setSuspect] = React.useState<Suspect>(Suspect.BLOOD);
+	const [suspect, setSuspect] = React.useState<Suspect>(allSuspects[0]);
 
 	const submit = (e: React.SyntheticEvent) => {
 		e.preventDefault();
-		sendMessage(ClientToServerMessage.PLAYER_SETUP, { name, suspect });
+		sendMessage({ type: 'player_setup', name, suspect });
 	};
 
 	const changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setName(e.currentTarget.value);
 	};
 
-	const err = CanDo.playerSetup(sessionId, gameState, name, suspect);
+	const err = CanDo.playerSetup(playerId, gameState, name, suspect);
 	const canSetUp = err === null;
 
 	const disabled = (suspect: Suspect) =>
-		CanDo.playerSetup(sessionId, gameState, 'dummy', suspect) !== null;
+		CanDo.playerSetup(playerId, gameState, 'dummy', suspect) !== null;
 
 	return (
 		<form onSubmit={submit}>
@@ -57,7 +58,7 @@ function SelectSuspect() {
 			<SelectEnum
 				disabled={disabled}
 				onChange={setSuspect}
-				values={Object.values(Suspect)}
+				values={allSuspects}
 				value={suspect}
 			/>
 			<input disabled={!canSetUp} type="submit" value="Submit" />
@@ -92,13 +93,13 @@ function ConnectedPlayers() {
 function BeginGame() {
 	const gameState = React.use(GameStateContext);
 	const sendMessage = React.use(SendMessageContext);
-	const sessionId = React.use(SessionIdContext);
+	const playerId = React.use(PlayerIdContext);
 
-	const err = CanDo.beginGame(sessionId, gameState);
+	const err = CanDo.beginGame(playerId, gameState);
 	const readyToBegin = err === null;
 
 	const start = () => {
-		sendMessage(ClientToServerMessage.BEGIN_GAME, null);
+		sendMessage({ type: 'begin_game' });
 	};
 
 	return (

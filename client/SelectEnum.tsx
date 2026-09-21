@@ -3,7 +3,7 @@ import React from 'react';
 type Props<T> = {
 	disabled?: (val: T) => boolean;
 	onChange: (val: T) => void;
-	values: T[];
+	values: readonly T[];
 	value: T;
 };
 
