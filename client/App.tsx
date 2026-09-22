@@ -64,7 +64,6 @@ function App() {
 
 		wsRef.current = new WebSocket(getConnectionURL());
 
-		// TODO: encode room ID into the URL.
 		// TODO: deal with reconnection.
 
 		// eslint-disable-next-line @eslint-react/web-api-no-leaked-event-listener
@@ -133,6 +132,26 @@ function App() {
 
 		ws.send(JSON.stringify(z.encode(clientToServerMessageSchema, m)));
 	}, []);
+
+	React.useEffect(() => {
+		if (!roomId || !playerId || !gameState?.phase) {
+			return;
+		}
+
+		const newSearch = new URLSearchParams();
+		if (gameState.phase !== 'GAME_OVER') {
+			newSearch.set('r', roomId);
+
+			if (gameState.phase !== 'SETUP') {
+				newSearch.set('p', playerId);
+			}
+		}
+
+		const newUrl = new URL(document.location.href);
+		newUrl.search = newSearch.toString();
+
+		history.replaceState(null, '', newUrl);
+	}, [gameState?.phase, playerId, roomId]);
 
 	if (!roomId || !playerId || !gameState) {
 		return <div>Connecting...</div>;
