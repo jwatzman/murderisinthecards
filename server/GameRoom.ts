@@ -9,11 +9,10 @@ import type {
 	ClientToServerMessage,
 	ServerToClientMessage,
 } from '#common/message';
-
-import { Player } from './Player';
-import { getInitialCoords } from './initialCoords';
-import { newId } from './newId';
-import { shuffle } from './shuffle';
+import { Player } from '#server/Player';
+import { getInitialCoords } from '#server/initialCoords';
+import { newId } from '#server/newId';
+import { shuffle } from '#server/shuffle';
 
 export class GameRoom {
 	readonly #id: string;

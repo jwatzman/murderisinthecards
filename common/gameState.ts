@@ -1,7 +1,7 @@
 import * as z from 'zod/mini';
 
-import { allRooms, allSuspects, allWeapons } from './cards';
-import { allPlayPhases } from './playPhase';
+import { allRooms, allSuspects, allWeapons } from '#common/cards';
+import { allPlayPhases } from '#common/playPhase';
 
 export const solutionSchema = z.tuple([
 	z.enum(allSuspects),

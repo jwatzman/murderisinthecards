@@ -23,7 +23,7 @@ import {
 	serverToClientMessageSchema,
 } from '#common/message';
 
-import './Global.css';
+import '#client/Global.css';
 
 let nextGameMessageId = 0;
 

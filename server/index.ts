@@ -1,7 +1,7 @@
 import { WebSocketServer } from 'ws';
 
-import { GameRoom } from './GameRoom';
-import { newId } from './newId';
+import { GameRoom } from '#server/GameRoom';
+import { newId } from '#server/newId';
 
 const allRooms: Map<string, GameRoom> = new Map();
 

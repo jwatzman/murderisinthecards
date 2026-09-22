@@ -1,5 +1,5 @@
-import type { Room } from './cards';
-import { allRooms } from './cards';
+import type { Room } from '#common/cards';
+import { allRooms } from '#common/cards';
 
 export type DoorDirection = '+x' | '-x' | '+y' | '-y';
 

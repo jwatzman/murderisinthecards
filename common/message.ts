@@ -1,7 +1,7 @@
 import * as z from 'zod/mini';
 
-import { allRooms, allSuspects, allWeapons } from './cards';
-import { gameStateSchema, solutionSchema } from './gameState';
+import { allRooms, allSuspects, allWeapons } from '#common/cards';
+import { gameStateSchema, solutionSchema } from '#common/gameState';
 
 const cardSchema = z.enum([...allSuspects, ...allWeapons, ...allRooms]);
 

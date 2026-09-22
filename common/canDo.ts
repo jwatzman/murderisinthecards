@@ -1,7 +1,7 @@
-import type { Card, Room, Suspect } from './cards';
-import type { GameState, Solution } from './gameState';
-import type { Coord } from './layout';
-import { boardConfig, boardLayout } from './layout';
+import type { Card, Room, Suspect } from '#common/cards';
+import type { GameState, Solution } from '#common/gameState';
+import type { Coord } from '#common/layout';
+import { boardConfig, boardLayout } from '#common/layout';
 
 export function playerSetup(
 	playerId: string,

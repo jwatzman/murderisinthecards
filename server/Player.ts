@@ -11,8 +11,7 @@ import {
 	clientToServerMessageSchema,
 	serverToClientMessageSchema,
 } from '#common/message';
-
-import type { GameRoom } from './GameRoom';
+import type { GameRoom } from '#server/GameRoom';
 
 function webSocketDataToString(data: RawData): string {
 	if (Buffer.isBuffer(data)) {

@@ -2,6 +2,7 @@ import js from '@eslint/js';
 import react from '@eslint-react/eslint-plugin';
 import { defineConfig } from 'eslint/config';
 import importPlugin from 'eslint-plugin-import-x';
+import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
@@ -26,6 +27,7 @@ export default defineConfig(
 		},
 		plugins: {
 			'import-x': importPlugin,
+			'no-relative-import-paths': noRelativeImportPaths,
 		},
 		settings: {
 			'import-x/internal-regex': '^#',
@@ -44,6 +46,7 @@ export default defineConfig(
 					alphabetize: { order: 'asc', orderImportKind: 'asc' },
 				},
 			],
+			'no-relative-import-paths/no-relative-import-paths': 'error',
 			'sort-imports': ['error', { ignoreDeclarationSort: true }],
 			'@typescript-eslint/consistent-type-imports': 'error',
 			'@typescript-eslint/no-explicit-any': 'off',
