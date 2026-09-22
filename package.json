@@ -4,7 +4,7 @@
   "private": true,
   "imports": {
     "#common/*": "./common/*.js",
-    "#client/*.module.css": "./client/*.module.css",
+    "#client/*.css": "./client/*.css",
     "#client/*": "./client/*.js",
     "#server/*": "./server/*.js"
   },
