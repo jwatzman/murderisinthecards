@@ -13,6 +13,8 @@ import {
 } from '#common/message';
 import type { GameRoom } from '#server/GameRoom';
 
+const PING_INTERVAL_MS = 2000;
+
 function webSocketDataToString(data: RawData): string {
 	if (Buffer.isBuffer(data)) {
 		return data.toString();
@@ -25,7 +27,7 @@ function webSocketDataToString(data: RawData): string {
 
 export class Player {
 	#ws: WebSocket | null;
-	#game: GameRoom;
+	readonly #game: GameRoom;
 
 	readonly id: string;
 	state: PlayerState;
@@ -48,8 +50,6 @@ export class Player {
 
 		this.cards = [];
 
-		// TODO: set up ping/pong.
-
 		this.#ws.on('message', (data) => {
 			let parsed: ClientToServerMessage;
 			try {
@@ -64,12 +64,29 @@ export class Player {
 			this.#game.processMessage(this, parsed);
 		});
 
+		let isAlive = true;
+		this.#ws.on('pong', () => (isAlive = true));
+		const interval = setInterval(() => {
+			if (!isAlive) {
+				this.#ws?.terminate();
+				return;
+			}
+
+			isAlive = false;
+			this.#ws?.ping();
+		}, PING_INTERVAL_MS);
+
 		this.#ws.on('error', (_err) => {
-			this.#onClose();
+			this.#ws?.terminate();
 		});
 
 		this.#ws.on('close', () => {
-			this.#onClose();
+			clearInterval(interval);
+
+			// TODO: allow reconnection.
+			this.#ws?.terminate();
+			this.#ws = null;
+			this.#game.playerDisconnected(this);
 		});
 	}
 
@@ -78,7 +95,7 @@ export class Player {
 			JSON.stringify(z.encode(serverToClientMessageSchema, message)),
 			(err) => {
 				if (err) {
-					this.#onClose();
+					this.#ws?.terminate();
 				}
 			},
 		);
@@ -94,16 +111,5 @@ export class Player {
 
 	isConnected() {
 		return this.#ws !== null;
-	}
-
-	#onClose() {
-		if (!this.#ws) {
-			return;
-		}
-
-		// TODO: allow reconnection.
-		this.#ws.terminate();
-		this.#ws = null;
-		this.#game.playerDisconnected(this);
 	}
 }

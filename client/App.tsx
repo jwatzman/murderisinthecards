@@ -64,7 +64,6 @@ function App() {
 
 		wsRef.current = new WebSocket(getConnectionURL());
 
-		// TODO: set up ping/pong.
 		// TODO: encode room ID into the URL.
 		// TODO: deal with reconnection.
 
