@@ -91,9 +91,15 @@ function useRoomLocalStorageState(suffix: string) {
 	const [value, setValue] = React.useState(() => {
 		try {
 			const saved = localStorage.getItem(key);
-			const o = JSON.parse(saved!);
-			if (o.roomId === roomId) {
-				return o.value;
+			const o = JSON.parse(saved!) as unknown;
+			if (
+				o &&
+				typeof o === 'object' &&
+				'roomId' in o &&
+				'value' in o &&
+				o.roomId === roomId
+			) {
+				return String(o.value);
 			}
 		} catch (_e) {
 			// Ignore JSON parse failures, object read failures, etc. Just return the
@@ -108,7 +114,7 @@ function useRoomLocalStorageState(suffix: string) {
 		localStorage.setItem(key, JSON.stringify(o));
 	}, [key, roomId, value]);
 
-	return [value, setValue];
+	return [value, setValue] as const;
 }
 
 function NoteInput({ suffix }: { suffix: string }) {

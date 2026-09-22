@@ -32,7 +32,7 @@ function Squares() {
 			evt.preventDefault();
 
 			const err = CanDo.moveToCoord(playerId, gameState, coord);
-			if (err != null) {
+			if (err !== null) {
 				return;
 			}
 
@@ -43,7 +43,7 @@ function Squares() {
 		evt.preventDefault();
 
 		const err = CanDo.moveToRoom(playerId, gameState, room);
-		if (err != null) {
+		if (err !== null) {
 			return;
 		}
 

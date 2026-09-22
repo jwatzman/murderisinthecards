@@ -12,8 +12,6 @@ export default defineConfig(
 	js.configs.recommended,
 	tseslint.configs.recommendedTypeChecked,
 	react.configs['recommended-type-checked'],
-	importPlugin.flatConfigs.recommended,
-	importPlugin.flatConfigs.typescript,
 
 	{
 		languageOptions: {
@@ -26,13 +24,18 @@ export default defineConfig(
 				tsconfigRootDir: import.meta.dirname,
 			},
 		},
+		plugins: {
+			'import-x': importPlugin,
+		},
 		settings: {
 			'import-x/internal-regex': '^#',
 			react: { version: '18.2' },
 		},
 		rules: {
+			eqeqeq: 'error',
+			'import-x/consistent-type-specifier-style': ['error', 'prefer-top-level'],
 			'import-x/first': 'error',
-			'import-x/no-named-as-default-member': 'off',
+			'import-x/no-duplicates': 'error',
 			'import-x/order': [
 				'error',
 				{
@@ -45,11 +48,6 @@ export default defineConfig(
 			'@typescript-eslint/consistent-type-imports': 'error',
 			'@typescript-eslint/no-explicit-any': 'off',
 			'@typescript-eslint/no-non-null-assertion': 'off',
-			'@typescript-eslint/no-unsafe-argument': 'off',
-			'@typescript-eslint/no-unsafe-assignment': 'off',
-			'@typescript-eslint/no-unsafe-call': 'off',
-			'@typescript-eslint/no-unsafe-member-access': 'off',
-			'@typescript-eslint/no-unsafe-return': 'off',
 			'@typescript-eslint/no-unused-vars': [
 				'error',
 				{
@@ -59,10 +57,8 @@ export default defineConfig(
 					destructuredArrayIgnorePattern: '^_',
 				},
 			],
-			'@typescript-eslint/restrict-template-expressions': [
-				'error',
-				{ allowAny: true, allowNumber: true },
-			],
+			'@typescript-eslint/return-await': ['error', 'always'],
+			'@typescript-eslint/require-await': 'off',
 		},
 	},
 

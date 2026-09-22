@@ -72,7 +72,9 @@ function App() {
 		wsRef.current.addEventListener('message', (m) => {
 			let parsed: ServerToClientMessage;
 			try {
-				parsed = serverToClientMessageSchema.parse(JSON.parse(m.data));
+				parsed = serverToClientMessageSchema.parse(
+					JSON.parse(m.data as string),
+				);
 			} catch (e) {
 				console.error('Invalid message', e, m.data);
 				return;

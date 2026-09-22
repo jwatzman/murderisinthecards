@@ -9,7 +9,7 @@ export function playerSetup(
 	name: string,
 	suspect: Suspect,
 ): string | null {
-	if (state.phase != 'SETUP') {
+	if (state.phase !== 'SETUP') {
 		return "You can't select a name and suspect after the game has started!";
 	}
 
@@ -22,7 +22,7 @@ export function playerSetup(
 			continue;
 		}
 
-		if (otherPlayer.suspect == suspect) {
+		if (otherPlayer.suspect === suspect) {
 			return otherPlayer.name + ' already is ' + suspect;
 		}
 	}
@@ -31,7 +31,7 @@ export function playerSetup(
 }
 
 export function beginGame(playerId: string, state: GameState): string | null {
-	if (state.phase != 'SETUP') {
+	if (state.phase !== 'SETUP') {
 		return 'The game has already begun!';
 	}
 
@@ -45,11 +45,11 @@ export function beginGame(playerId: string, state: GameState): string | null {
 }
 
 export function rollDie(playerId: string, state: GameState): string | null {
-	if (playerId != state.currentPlayer) {
+	if (playerId !== state.currentPlayer) {
 		return 'Not your turn!';
 	}
 
-	if (state.phase != 'BEGIN_TURN') {
+	if (state.phase !== 'BEGIN_TURN') {
 		return 'You can only roll at the beginning of your turn!';
 	}
 
@@ -60,7 +60,7 @@ export function makeAccusation(
 	playerId: string,
 	state: GameState,
 ): string | null {
-	if (playerId != state.currentPlayer) {
+	if (playerId !== state.currentPlayer) {
 		return 'Not your turn!';
 	}
 
@@ -75,7 +75,7 @@ export function makeAccusation(
 }
 
 export function endTurn(playerId: string, state: GameState): string | null {
-	if (playerId != state.currentPlayer) {
+	if (playerId !== state.currentPlayer) {
 		return 'Not your turn!';
 	}
 
@@ -95,7 +95,7 @@ export function endTurn(playerId: string, state: GameState): string | null {
 
 function isDoorOf(room: Room, [x, y]: Coord): boolean {
 	for (const [[doorX, doorY]] of boardConfig.rooms[room].doors) {
-		if (x == doorX && y == doorY) {
+		if (x === doorX && y === doorY) {
 			return true;
 		}
 	}
@@ -108,15 +108,15 @@ export function moveToCoord(
 	state: GameState,
 	[x, y]: Coord,
 ): string | null {
-	if (playerId != state.currentPlayer) {
+	if (playerId !== state.currentPlayer) {
 		return 'Not your turn!';
 	}
 
-	if (state.phase != 'MOVEMENT') {
+	if (state.phase !== 'MOVEMENT') {
 		return "You can't do that now!";
 	}
 
-	if (state.dieRoll == 0) {
+	if (state.dieRoll === 0) {
 		return "You can't move any more!";
 	}
 
@@ -134,7 +134,7 @@ export function moveToCoord(
 			continue;
 		}
 
-		if (!otherPlayer.room && otherPlayer.x == x && otherPlayer.y == y) {
+		if (!otherPlayer.room && otherPlayer.x === x && otherPlayer.y === y) {
 			return "Can't move on top of another player!";
 		}
 	}
@@ -148,7 +148,7 @@ export function moveToCoord(
 	} else {
 		const deltaX = player.x - x;
 		const deltaY = player.y - y;
-		if (Math.abs(deltaX) + Math.abs(deltaY) != 1) {
+		if (Math.abs(deltaX) + Math.abs(deltaY) !== 1) {
 			return "Can't move that much!";
 		}
 	}
@@ -161,15 +161,15 @@ export function moveToRoom(
 	state: GameState,
 	room: Room,
 ): string | null {
-	if (playerId != state.currentPlayer) {
+	if (playerId !== state.currentPlayer) {
 		return 'Not your turn!';
 	}
 
-	if (state.phase != 'MOVEMENT') {
+	if (state.phase !== 'MOVEMENT') {
 		return "You can't do that now!";
 	}
 
-	if (state.dieRoll == 0) {
+	if (state.dieRoll === 0) {
 		return "You can't move any more!";
 	}
 
@@ -194,11 +194,11 @@ export function moveThroughPassage(
 	state: GameState,
 	destination: Room,
 ): string | null {
-	if (playerId != state.currentPlayer) {
+	if (playerId !== state.currentPlayer) {
 		return 'Not your turn!';
 	}
 
-	if (state.phase != 'BEGIN_TURN') {
+	if (state.phase !== 'BEGIN_TURN') {
 		return "You can't do that now!";
 	}
 
@@ -219,7 +219,7 @@ export function makeAnySuggestion(
 	playerId: string,
 	state: GameState,
 ): string | null {
-	if (playerId != state.currentPlayer) {
+	if (playerId !== state.currentPlayer) {
 		return 'Not your turn!';
 	}
 
@@ -228,11 +228,11 @@ export function makeAnySuggestion(
 		return 'You must be in a room!';
 	}
 
-	if (state.phase == 'BEGIN_TURN' && player.teleported) {
+	if (state.phase === 'BEGIN_TURN' && player.teleported) {
 		return null;
 	}
 
-	if (state.phase == 'MOVEMENT' && state.dieRoll == 0) {
+	if (state.phase === 'MOVEMENT' && state.dieRoll === 0) {
 		return null;
 	}
 
@@ -261,11 +261,11 @@ export function disproveAnySuggestion(
 	playerId: string,
 	state: GameState,
 ): string | null {
-	if (state.phase != 'SUGGESTION_RESOLUTION') {
+	if (state.phase !== 'SUGGESTION_RESOLUTION') {
 		return "You can't do that now!";
 	}
 
-	if (playerId != state.currentPlayerDisprovingSuggestion) {
+	if (playerId !== state.currentPlayerDisprovingSuggestion) {
 		return 'Not your turn!';
 	}
 
