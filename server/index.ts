@@ -1,7 +1,6 @@
 import { WebSocketServer } from 'ws';
 
 import { GameRoom } from '#server/GameRoom';
-import { newId } from '#server/newId';
 
 const allRooms: Map<string, GameRoom> = new Map();
 
@@ -34,17 +33,17 @@ socketServer.on('connection', (ws, req) => {
 	}
 
 	const roomId = url.searchParams.get('r');
+	const reconnectToken = url.searchParams.get('t');
 	const existingRoom = roomId ? allRooms.get(roomId) : undefined;
 	if (existingRoom) {
-		existingRoom.playerConnected(ws);
+		existingRoom.playerConnected(ws, reconnectToken ?? undefined);
 	} else {
-		const roomId = newId();
-		const room = new GameRoom(roomId, () => {
-			allRooms.delete(roomId);
-			console.log('Room cleaned up', roomId);
+		const room = new GameRoom(() => {
+			allRooms.delete(room.id);
+			console.log('Room cleaned up', room.id);
 		});
-		allRooms.set(roomId, room);
-		console.log('Room created', roomId);
+		allRooms.set(room.id, room);
+		console.log('Room created', room.id);
 
 		room.playerConnected(ws);
 	}

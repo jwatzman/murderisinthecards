@@ -43,6 +43,7 @@ export const serverToClientMessageSchema = z.discriminatedUnion('type', [
 		type: z.literal('room_info'),
 		room: z.string(),
 		player: z.string(),
+		reconnectToken: z.string(),
 	}),
 	z.strictObject({ type: z.literal('game_state'), state: gameStateSchema }),
 	z.strictObject({ type: z.literal('game_message'), message: z.string() }),

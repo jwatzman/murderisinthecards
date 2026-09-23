@@ -35,16 +35,8 @@ function getConnectionURL(): URL {
 	}
 
 	url.pathname = '/game/play';
+	// Keep url.search -- pass through from main page URL!
 
-	const locationSearchParams = new URLSearchParams(document.location.search);
-	const roomId = locationSearchParams.get('r');
-
-	const searchParams = new URLSearchParams();
-	if (roomId) {
-		searchParams.set('r', roomId);
-	}
-
-	url.search = searchParams.toString();
 	return url;
 }
 
@@ -54,8 +46,10 @@ function App() {
 	const [died, setDied] = React.useState(false);
 	const [gameMessages, setGameMessages] = React.useState<GameMessage[]>([]);
 	const [gameState, setGameState] = React.useState<GameState | null>(null);
-	const [roomId, setRoomId] = React.useState<string | null>(null);
-	const [playerId, setPlayerId] = React.useState<string | null>(null);
+	const [roomInfo, setRoomInfo] = React.useState<Extract<
+		ServerToClientMessage,
+		{ type: 'room_info' }
+	> | null>(null);
 
 	React.useEffect(() => {
 		if (wsRef.current) {
@@ -63,8 +57,6 @@ function App() {
 		}
 
 		wsRef.current = new WebSocket(getConnectionURL());
-
-		// TODO: deal with reconnection.
 
 		// eslint-disable-next-line @eslint-react/web-api-no-leaked-event-listener
 		wsRef.current.addEventListener('message', (m) => {
@@ -80,8 +72,7 @@ function App() {
 
 			switch (parsed.type) {
 				case 'room_info':
-					setRoomId(parsed.room);
-					setPlayerId(parsed.player);
+					setRoomInfo(parsed);
 					break;
 				case 'game_state':
 					setGameState(parsed.state);
@@ -134,16 +125,16 @@ function App() {
 	}, []);
 
 	React.useEffect(() => {
-		if (!roomId || !playerId || !gameState?.phase) {
+		if (!roomInfo || !gameState?.phase) {
 			return;
 		}
 
 		const newSearch = new URLSearchParams();
 		if (gameState.phase !== 'GAME_OVER') {
-			newSearch.set('r', roomId);
+			newSearch.set('r', roomInfo.room);
 
 			if (gameState.phase !== 'SETUP') {
-				newSearch.set('p', playerId);
+				newSearch.set('t', roomInfo.reconnectToken);
 			}
 		}
 
@@ -151,20 +142,20 @@ function App() {
 		newUrl.search = newSearch.toString();
 
 		history.replaceState(null, '', newUrl);
-	}, [gameState?.phase, playerId, roomId]);
-
-	if (!roomId || !playerId || !gameState) {
-		return <div>Connecting...</div>;
-	}
+	}, [gameState?.phase, roomInfo]);
 
 	if (died) {
 		return <Disconnected />;
 	}
 
+	if (!roomInfo || !gameState) {
+		return <div>Connecting...</div>;
+	}
+
 	return (
 		<SendMessageContext value={sendMessage}>
-			<PlayerIdContext value={playerId}>
-				<RoomIdContext value={roomId}>
+			<PlayerIdContext value={roomInfo.player}>
+				<RoomIdContext value={roomInfo.room}>
 					<YourCardsContext value={cards}>
 						<GameMessagesContext value={gameMessages}>
 							<GameStateContext value={gameState}>

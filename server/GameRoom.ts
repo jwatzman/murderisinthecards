@@ -15,15 +15,14 @@ import { newId } from '#server/newId';
 import { shuffle } from '#server/shuffle';
 
 export class GameRoom {
-	readonly #id: string;
 	readonly #cleanupCallback: () => void;
 	#players: Map<string, Player>;
 	#state: Omit<GameState, 'players'>;
 
+	readonly id: string;
 	solution: Solution | null;
 
-	constructor(id: string, cleanupCallback: () => void) {
-		this.#id = id;
+	constructor(cleanupCallback: () => void) {
 		this.#cleanupCallback = cleanupCallback;
 
 		this.#players = new Map();
@@ -37,6 +36,7 @@ export class GameRoom {
 			leftRoom: null,
 		};
 
+		this.id = newId();
 		this.solution = null;
 	}
 
@@ -88,34 +88,40 @@ export class GameRoom {
 		this.#flushState();
 	}
 
-	playerConnected(ws: WebSocket) {
-		if (this.#state.phase !== 'SETUP') {
-			console.log('Attempting to join game in invalid phase', this.#id);
-			ws.terminate();
+	playerConnected(ws: WebSocket, reconnectToken?: string) {
+		if (this.#state.phase === 'SETUP') {
+			const player = new Player(ws, this);
+			this.#players.set(player.id, player);
+
+			player.sendRoomInfo();
+			this.#flushState();
+			console.log('Player connected', this.id, player.id);
 			return;
+		} else {
+			for (const player of this.#players.values()) {
+				if (player.reconnectToken === reconnectToken) {
+					player.setWebSocket(ws);
+					player.sendRoomInfo();
+					player.sendCards();
+					this.#flushState();
+					this.#sendGameMessageToAllPlayers(`${player.state.name} reconnected`);
+					console.log('Player reconnected', this.id, player.id);
+					return;
+				}
+			}
 		}
 
-		const playerId = newId();
-		const player = new Player(ws, this, playerId);
-		this.#players.set(playerId, player);
-
-		player.sendMessage({ type: 'room_info', room: this.#id, player: playerId });
-		this.#flushState();
-		console.log('Player connected', this.#id, playerId);
+		ws.terminate();
 	}
 
 	playerDisconnected(player: Player) {
-		console.log('Player disconnected', this.#id, player.id);
+		console.log('Player disconnected', this.id, player.id);
 		if (this.#state.phase === 'SETUP') {
 			this.#players.delete(player.id);
+			this.#flushState();
 		} else {
 			this.#sendGameMessageToAllPlayers(`${player.state.name} disconnected`);
-
-			// TODO: allow reconnection.
-			this.#endGame();
 		}
-
-		this.#flushState();
 
 		if ([...this.#players.values()].every((p) => !p.isConnected())) {
 			this.#cleanupCallback();
@@ -394,7 +400,7 @@ export class GameRoom {
 	}
 
 	#endGame() {
-		console.log('Game over', this.#id);
+		console.log('Game over', this.id);
 		this.#state.currentPlayer = '';
 		this.#state.phase = 'GAME_OVER';
 	}

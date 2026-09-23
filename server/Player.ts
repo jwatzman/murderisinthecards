@@ -12,6 +12,7 @@ import {
 	serverToClientMessageSchema,
 } from '#common/message';
 import type { GameRoom } from '#server/GameRoom';
+import { newId } from '#server/newId';
 
 const PING_INTERVAL_MS = 2000;
 
@@ -30,14 +31,16 @@ export class Player {
 	readonly #game: GameRoom;
 
 	readonly id: string;
+	readonly reconnectToken: string;
 	state: PlayerState;
 	cards: Card[];
 
-	constructor(ws: WebSocket, game: GameRoom, id: string) {
-		this.#ws = ws;
+	constructor(ws: WebSocket, game: GameRoom) {
+		this.#ws = null;
 		this.#game = game;
 
-		this.id = id;
+		this.id = newId();
+		this.reconnectToken = newId();
 		this.state = {
 			suspect: null,
 			name: '',
@@ -50,7 +53,13 @@ export class Player {
 
 		this.cards = [];
 
-		this.#ws.on('message', (data) => {
+		this.setWebSocket(ws);
+	}
+
+	setWebSocket(ws: WebSocket) {
+		this.#ws?.terminate();
+
+		ws.on('message', (data) => {
 			let parsed: ClientToServerMessage;
 			try {
 				parsed = clientToServerMessageSchema.parse(
@@ -65,40 +74,56 @@ export class Player {
 		});
 
 		let isAlive = true;
-		this.#ws.on('pong', () => (isAlive = true));
+		ws.on('pong', () => (isAlive = true));
 		const interval = setInterval(() => {
 			if (!isAlive) {
-				this.#ws?.terminate();
+				ws.terminate();
 				return;
 			}
 
 			isAlive = false;
-			this.#ws?.ping();
+			ws.ping();
 		}, PING_INTERVAL_MS);
 
-		this.#ws.on('error', (_err) => {
-			this.#ws?.terminate();
+		ws.on('error', (_err) => {
+			ws.terminate();
 		});
 
-		this.#ws.on('close', () => {
+		ws.on('close', () => {
 			clearInterval(interval);
+			ws.terminate();
 
-			// TODO: allow reconnection.
-			this.#ws?.terminate();
-			this.#ws = null;
-			this.#game.playerDisconnected(this);
+			if (this.#ws === ws) {
+				this.#ws = null;
+				this.#game.playerDisconnected(this);
+			}
 		});
+
+		this.#ws = ws;
 	}
 
 	sendMessage(message: ServerToClientMessage) {
-		this.#ws?.send(
+		// The socket may change between the send and the error callback; close over
+		// it in case.
+		const ws = this.#ws;
+
+		ws?.send(
 			JSON.stringify(z.encode(serverToClientMessageSchema, message)),
 			(err) => {
 				if (err) {
-					this.#ws?.terminate();
+					ws?.terminate();
 				}
 			},
 		);
+	}
+
+	sendRoomInfo() {
+		this.sendMessage({
+			type: 'room_info',
+			room: this.#game.id,
+			player: this.id,
+			reconnectToken: this.reconnectToken,
+		});
 	}
 
 	sendCards() {
