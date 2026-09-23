@@ -216,7 +216,7 @@ function DisproveSuggestion() {
 	if (!haveDisprovingCard) {
 		disproveButtons.push(
 			<li key="cannot">
-				<button onClick={handler(null)}>I cannot dispove!</button>
+				<button onClick={handler(null)}>I cannot disprove!</button>
 			</li>,
 		);
 	}

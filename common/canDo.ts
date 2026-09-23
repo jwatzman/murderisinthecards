@@ -170,6 +170,8 @@ export function moveToRoom(
 	}
 
 	if (state.dieRoll === 0) {
+		// TODO: is this actually a correct implementation of the ruleset? I think
+		// you can actually move into the room in this case.
 		return "You can't move any more!";
 	}
 

@@ -1,3 +1,5 @@
+import { randomInt } from 'node:crypto';
+
 import type { WebSocket } from 'ws';
 
 import * as CanDo from '#common/canDo';
@@ -208,7 +210,7 @@ export class GameRoom {
 			return;
 		}
 
-		this.#state.dieRoll = Math.floor(Math.random() * 6) + 1;
+		this.#state.dieRoll = randomInt(1, 7);
 		this.#state.phase = 'MOVEMENT';
 		this.#sendGameMessageToAllPlayers(
 			`${player.state.name} rolls a ${this.#state.dieRoll}`,
