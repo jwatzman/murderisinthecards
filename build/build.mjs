@@ -37,7 +37,7 @@ if (clean) {
 
 const buildOptsBase = {
 	bundle: true,
-	target: 'es2020',
+	target: 'es2024',
 	minify: !dev,
 	sourcemap: 'linked',
 };
