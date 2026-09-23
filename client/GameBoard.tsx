@@ -74,12 +74,12 @@ function Squares() {
 	for (const roomName of allRooms) {
 		const roomConfig = boardConfig.rooms[roomName];
 
-		const [[minX, minY], [maxX, maxY]] = roomConfig.coords;
+		const [[roomMinX, roomMinY], [roomMaxX, roomMaxY]] = roomConfig.coords;
 		const roomStyle = {
-			gridRowStart: minX + 1,
-			gridRowEnd: maxX + 1 + 1,
-			gridColumnStart: minY + 1,
-			gridColumnEnd: maxY + 1 + 1,
+			gridRowStart: roomMinX + 1,
+			gridRowEnd: roomMaxX + 1 + 1,
+			gridColumnStart: roomMinY + 1,
+			gridColumnEnd: roomMaxY + 1 + 1,
 		};
 		rooms.push(
 			<div

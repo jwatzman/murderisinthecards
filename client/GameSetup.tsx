@@ -46,8 +46,8 @@ function SelectSuspect() {
 	const err = CanDo.playerSetup(playerId, gameState, name, suspect);
 	const canSetUp = err === null;
 
-	const disabled = (suspect: Suspect) =>
-		CanDo.playerSetup(playerId, gameState, 'dummy', suspect) !== null;
+	const disabled = (checkSuspect: Suspect) =>
+		CanDo.playerSetup(playerId, gameState, 'dummy', checkSuspect) !== null;
 
 	return (
 		<form onSubmit={submit}>
