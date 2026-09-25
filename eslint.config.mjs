@@ -31,7 +31,7 @@ export default defineConfig(
 		},
 		settings: {
 			'import-x/internal-regex': '^#',
-			react: { version: '18.2' },
+			react: { version: '19.3' },
 		},
 		rules: {
 			eqeqeq: 'error',
